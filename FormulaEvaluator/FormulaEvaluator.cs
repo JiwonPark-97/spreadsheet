@@ -23,6 +23,13 @@ public static class Evaluator
     static Stack<int> value = new Stack<int>();
     static Stack<String> operator = new Stack<String>();
 
+    public delegate int Lookup(String variable_name);
+
+    public static int Evaluate(String expression,
+                               Lookup variableEvaluator)
+    {
+        // TODO...
+    }
 
 }
 
