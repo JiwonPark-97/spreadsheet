@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
-/// Date:      Jan 18 2023
+/// Date:      18-Jan-2023
 /// Course:    CS 3500, University of Utah, School of Computing
 /// Copyright: CS 3500 and Jiwon Park - This work may not 
 ///            be copied for use in Academic Coursework.
