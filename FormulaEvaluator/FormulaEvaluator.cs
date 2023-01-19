@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿
+using System.Text.RegularExpressions;
+/// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
 /// Date:      18-Jan-2023
@@ -20,15 +22,24 @@
 namespace FormulaEvaluator;
 public static class Evaluator
 {
-    static Stack<int> value = new Stack<int>();
-    static Stack<String> operator = new Stack<String>();
 
     public delegate int Lookup(String variable_name);
 
     public static int Evaluate(String expression,
                                Lookup variableEvaluator)
     {
-        // TODO...
+        Stack<int> values = new Stack<int>();
+        Stack<string> operators = new Stack<string>();
+
+        string[] substrings =
+            Regex.Split(expression, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+
+        foreach(string token in substrings)
+        {
+            if(token == )
+        }
+
+        return -1;
     }
 
 }
