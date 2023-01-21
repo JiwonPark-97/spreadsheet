@@ -36,7 +36,78 @@ public static class Evaluator
 
         foreach(string token in substrings)
         {
+
+            // check if token is an integer
             if(token == )
+            {
+                // check the operator stack
+                // if * or / is at the top
+                // pop the value stack
+                // pop the operator stack
+                // apply the popped operator to the popped number and token
+                // push the result onto the value stack
+
+                // otherwise, push token onto the value stack
+            }
+
+
+            // check if token is a variable
+            else if(token == )
+            {
+                // get lookup value of token
+
+                // check the operator stack
+                // if * or / is at the top
+                // pop the value stack
+                // pop the operator stack
+                // apply the popped operator to the popped number and lookup value of token
+                // push the result onto the value stack
+
+                // otherwise, push the lookup value of token onto the value stack
+            }
+
+
+            // check if token is an operator
+
+            // if token is + or -
+            else if (token == "+" || token == "-")
+            {
+                // if + or - at the top of the operator stack
+                // pop the value stack twice
+                // apply the popped operator to the popped numbers
+                // push the result onto the value stack
+
+                // push token onto the operator stack
+
+            }
+
+            // check if token is * or /
+            else if (token == "*" || token == "/")
+            {
+                // push token onto the operator stack
+            }
+
+            // check if token is (
+            else if (token == "(")
+            {
+                // push token onto the operator stack
+            }
+
+            // check if token is )
+            else if(token == ")")
+            {
+                // if + or - is at the top of the operator stack
+                // pop the value stack twice and the operator stack once
+                // apply the popped operator to the popped numbers
+                // push the result onto the value stack
+
+                // the top of the operator stack must be (. pop it.
+
+                // if * or / at the top of the operator stack
+                // pop the value stack twice and the operator stack once
+                // apply the popped operator to the popped numbers
+                // push the result onto the value stack
+            }
         }
 
         return -1;
