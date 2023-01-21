@@ -27,6 +27,6 @@ List any peers (or other people) in the class (or outside for that matter) that 
 
 # References:
 
-    1. Title of page - URL
-    2. Title of page - URL
-    3. Title of page - URL
+    1. How to check if a string is a number in C# - https://www.arungudelli.com/tutorial/c-sharp/check-if-string-is-number/
+    2. How to convert a string to a number (C# Programming Guide) - https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/types/how-to-convert-a-string-to-a-number
+    3. Check if a string contains a letter - https://social.msdn.microsoft.com/Forums/vstudio/en-US/8daa5f84-8535-47b0-b4bf-1669a9682911/check-if-a-string-contains-a-letter?forum=csharpgeneral

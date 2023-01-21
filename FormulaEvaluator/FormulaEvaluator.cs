@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Text.RegularExpressions;
 /// <summary>
 /// Author:    Jiwon Park
@@ -29,30 +30,52 @@ public static class Evaluator
                                Lookup variableEvaluator)
     {
         Stack<int> values = new Stack<int>();
-        Stack<string> operators = new Stack<string>();
+        Stack<char> operators = new Stack<char>();
 
         string[] substrings =
             Regex.Split(expression, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
         foreach(string token in substrings)
         {
+            int value;
+            bool isValue = int.TryParse(token, out value);
 
             // check if token is an integer
-            if(token == )
+            if(isValue)
             {
                 // check the operator stack
                 // if * or / is at the top
-                // pop the value stack
-                // pop the operator stack
-                // apply the popped operator to the popped number and token
-                // push the result onto the value stack
+                if ((operators.Peek()).Equals('*') || (operators.Peek()).Equals('/'))
+                {
+                    // pop the value stack
+                    int tempVal = values.Pop();
+                    // pop the operator stack
+                    char tempOpr = operators.Pop();
+                    // apply the popped operator to the popped number and token
+                    int tempResult;
+                    if (tempOpr == '*')
+                    {
+                        tempResult = tempVal * Int32.Parse(token);
+                    } else
+                    {
+                        tempResult = tempVal / Int32.Parse(token);
+
+                    }
+                    // push the result onto the value stack
+                    values.Push(tempResult);
+                }
+
 
                 // otherwise, push token onto the value stack
+                else
+                {
+                    values.Push(Int32.Parse(token));
+                }
             }
 
 
             // check if token is a variable
-            else if(token == )
+            else if(Regex.IsMatch(token, "[a-zA-Z]"))
             {
                 // get lookup value of token
 
@@ -111,6 +134,12 @@ public static class Evaluator
         }
 
         return -1;
+    }
+
+    private bool isValue(string s)
+    {
+        int value;
+        return int.TryParse(s, out value);
     }
 
 }
