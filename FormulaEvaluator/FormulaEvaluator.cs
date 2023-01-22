@@ -42,7 +42,7 @@ public static class Evaluator
     }
 
     /// <summary>
-    /// Check if the given input string is a vaild variable; consisting of one or more letters followed by one or more digits.
+    /// Determines if the given input string is a vaild variable; consisting of one or more letters followed by one or more digits.
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>
@@ -64,20 +64,20 @@ public static class Evaluator
         Stack<int> values = new Stack<int>();
         Stack<char> operators = new Stack<char>();
 
+        // remove whitespace from the expression
+        expression = Regex.Replace(expression, @"\s", "");
+
         string[] substrings =
             Regex.Split(expression, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
         foreach(string token in substrings)
         {
-            if (token == " ")
-            {
-                continue;
-            }
-            // check if token is an integer or a variable
+   
+            // if token is an integer or a variable
             if (IsValue(token) || IsVariable(token))
             {
-                // get int values from token
-                int tokenVal;
+                // get integer values from token
+                int tokenVal = 0;
 
                 if (IsValue(token))
                 {
@@ -91,7 +91,7 @@ public static class Evaluator
                 // if * or / is at the top
                 if (operators.Count != 0)
                 {
-                    if ((operators.Peek()).Equals('*') || (operators.Peek()).Equals('/'))
+                    if ((operators.Peek()) == '*' || (operators.Peek() == '/'))
                     {
                         // pop the value stack
                         int tempVal = values.Pop();
@@ -113,6 +113,10 @@ public static class Evaluator
 
                         // push the result onto the value stack
                         values.Push(tempResult);
+                    }
+                    else
+                    {
+                        values.Push(tokenVal);
                     }
                 }
 

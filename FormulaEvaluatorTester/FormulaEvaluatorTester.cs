@@ -31,15 +31,20 @@ class FormulaEvaluatorTester
         SplitTest("1 + 2 + 3 / 4 * 5");
         SplitTest("x1/34a*10+0");
 
+        // test StrToInt
 
-        // IsVariableT est // 
+        StrToIntTest("5", 5);
+        StrToIntTest("0", 0);
+        StrToIntTest("10", 10);
+
+
+        // IsVariable Test // 
         // test vaild variables
         IsVariableTest("X1", true);
         IsVariableTest("XxX2", true);
         IsVariableTest("CD2", true);
         IsVariableTest("cd2345", true);
         IsVariableTest("alsdkflaskjdflasj2398475093287459032874957", true);
-
 
         // test invaild variables
         IsVariableTest("X", false);
@@ -88,6 +93,24 @@ class FormulaEvaluatorTester
             Console.WriteLine(t);
         }
         Console.WriteLine("\n");
+
+    }
+
+    public static void StrToIntTest(string num, int expected)
+    {
+        int result = Int32.Parse(num);
+        Console.WriteLine("Testing StrToInt. Input: " + num + ". Expected: " + expected + ". Result: " + result);
+        if (expected == result)
+        {
+            Console.WriteLine("TEST PASSED");
+        }
+        else
+        {
+            Console.WriteLine("*TEST FAILED*");
+
+        }
+        Console.WriteLine("\n");
+
 
     }
 

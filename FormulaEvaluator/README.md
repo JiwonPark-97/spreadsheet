@@ -37,3 +37,4 @@ I have not consulted with others.
     6. a Ruby regular expression editor - https://rubular.com/r/gleAi4duNh
     7. C# - How to convert string to char? - https://stackoverflow.com/questions/33946594/c-sharp-how-to-convert-string-to-char
     8. Stack.Count Property in C# - https://www.geeksforgeeks.org/stack-count-property-in-c-sharp/
+    9. How to trim whitespace between characters - https://stackoverflow.com/questions/3905180/how-to-trim-whitespace-between-characters
