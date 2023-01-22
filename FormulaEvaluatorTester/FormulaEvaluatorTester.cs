@@ -21,7 +21,37 @@ class FormulaEvaluatorTester
         isVariableTest("cakldjflqjw'ofjlsakdj3lksjdlfkja", false);
 
 
+        // test valid integers
+        isValueTest("1", true);
+        isValueTest("0", true);
+        isValueTest("345", true);
+        isValueTest("230948", true);
+
+        // test invalid integers
+        isValueTest("-1", false);
+        isValueTest(" ", false);
+        isValueTest("398a", false);
+        isValueTest("d394857", false);
+
+
     }
+
+    public static void isValueTest(string s, bool expected)
+    {
+        bool result = Evaluator.isValue(s);
+        Console.WriteLine("Testing isValue. Input: " + s + ". Expected: " + expected + ". Result: " + result);
+        if (expected == result)
+        {
+            Console.WriteLine("TEST PASSED");
+        }
+        else
+        {
+            Console.WriteLine("*TEST FAILED*");
+
+        }
+        Console.WriteLine("\n");
+    }
+
 
     public static void isVariableTest(string s, bool expected)
     {

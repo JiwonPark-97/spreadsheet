@@ -51,6 +51,7 @@ public static class Evaluator
         return Regex.IsMatch(s, "^[a-zA-Z]+[0-9]+$");
     }
 
+
     /// <summary>
     /// 
     /// </summary>
@@ -69,9 +70,19 @@ public static class Evaluator
         foreach(string token in substrings)
         {
 
-            // check if token is an integer
-            if (isValue(token))
+            // check if token is an integer or a variable
+            if (isValue(token) || isVariable(token))
             {
+                // get int values from token
+                int tokenVal;
+
+                if (isValue(token))
+                {
+                    tokenVal = Int32.Parse(token);
+                } else
+                {
+                    tokenVal = variableEvaluator(token);
+                }
 
                 // check the operator stack
                 // if * or / is at the top
@@ -87,10 +98,10 @@ public static class Evaluator
                     int tempResult;
                     if (tempOpr == '*')
                     {
-                        tempResult = tempVal * Int32.Parse(token);
+                        tempResult = tempVal * tokenVal;
                     } else
                     {
-                        tempResult = tempVal / Int32.Parse(token);
+                        tempResult = tempVal / tokenVal;
 
                     }
 
@@ -102,24 +113,8 @@ public static class Evaluator
                 // otherwise, push token onto the value stack
                 else
                 {
-                    values.Push(Int32.Parse(token));
+                    values.Push(tokenVal);
                 }
-            }
-
-
-            // check if token is a variable
-            else if(isVariable(token))
-            {
-                // get lookup value of token
-
-                // check the operator stack
-                // if * or / is at the top
-                // pop the value stack
-                // pop the operator stack
-                // apply the popped operator to the popped number and lookup value of token
-                // push the result onto the value stack
-
-                // otherwise, push the lookup value of token onto the value stack
             }
 
 
@@ -129,40 +124,96 @@ public static class Evaluator
             else if (token == "+" || token == "-")
             {
                 // if + or - at the top of the operator stack
-                // pop the value stack twice
-                // apply the popped operator to the popped numbers
-                // push the result onto the value stack
+                if (operators.Peek() == '+' || operators.Peek() == '-')
+                {
+                    // pop the value stack twice and the operator stack once
+                    int val1 = values.Pop();
+                    int val2 = values.Pop();
+                    char op = operators.Pop();
+                    int result;
 
-                // push token onto the operator stack
+                    // apply the popped operator to the popped numbers
+                    if (op == '+')
+                    {
+                        result = val1 + val2;
+                    } else
+                    {
+                        result = val1 - val2;
+                    }
+
+                    // push the result onto the value stack
+                    values.Push(result);
+
+                    // push token onto the operator stack
+                    operators.Push(token.ToCharArray()[0]);
+                }
+
 
             }
 
-            // check if token is * or /
-            else if (token == "*" || token == "/")
+            // check if token is * / or (
+            else if (token == "*" || token == "/" || token == "(")
             {
                 // push token onto the operator stack
-            }
-
-            // check if token is (
-            else if (token == "(")
-            {
-                // push token onto the operator stack
+                operators.Push(token.ToCharArray()[0]);
             }
 
             // check if token is )
             else if(token == ")")
             {
-                // if + or - is at the top of the operator stack
-                // pop the value stack twice and the operator stack once
-                // apply the popped operator to the popped numbers
-                // push the result onto the value stack
+
+                // if + or - at the top of the operator stack
+                if (operators.Peek() == '+' || operators.Peek() == '-')
+                {
+                    // pop the value stack twice and the operator stack once
+                    int val1 = values.Pop();
+                    int val2 = values.Pop();
+                    char op = operators.Pop();
+                    int result;
+
+                    // apply the popped operator to the popped numbers
+                    if (op == '+')
+                    {
+                        result = val1 + val2;
+                    }
+                    else
+                    {
+                        result = val1 - val2;
+                    }
+
+                    // push the result onto the value stack
+                    values.Push(result);
+                }
 
                 // the top of the operator stack must be (. pop it.
+                char tempOp = operators.Pop();
+                if (tempOp != '(')
+                {
+                    Console.WriteLine("No left parenthesis");
+                }
 
                 // if * or / at the top of the operator stack
-                // pop the value stack twice and the operator stack once
-                // apply the popped operator to the popped numbers
-                // push the result onto the value stack
+                if (operators.Peek() == '*' || operators.Peek() == '/')
+                {
+                    // pop the value stack twice and the operator stack once
+                    int val1 = values.Pop();
+                    int val2 = values.Pop();
+                    char op = operators.Pop();
+                    int result;
+
+                    // apply the popped operator to the popped numbers
+                    if (op == '*')
+                    {
+                        result = val1 * val2;
+                    }
+                    else
+                    {
+                        result = val1 / val2;
+                    }
+
+                    // push the result onto the value stack
+                    values.Push(result);
+                }
             }
         }
 

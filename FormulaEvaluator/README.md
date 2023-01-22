@@ -33,3 +33,4 @@ List any peers (or other people) in the class (or outside for that matter) that 
     4. RegEx pattern any two letters followed by six numbers - https://stackoverflow.com/questions/10439666/regex-pattern-any-two-letters-followed-by-six-numbers
     5. REGULAR EXPRESSIONS - https://users.cs.cf.ac.uk/Dave.Marshall/Internet/NEWS/regexp.html
     6. a Ruby regular expression editor - https://rubular.com/r/gleAi4duNh
+    7. C# - How to convert string to char? - https://stackoverflow.com/questions/33946594/c-sharp-how-to-convert-string-to-char
