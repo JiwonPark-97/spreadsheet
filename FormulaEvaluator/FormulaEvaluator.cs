@@ -23,9 +23,40 @@ using System.Text.RegularExpressions;
 namespace FormulaEvaluator;
 public static class Evaluator
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="variable_name"></param>
+    /// <returns></returns>
     public delegate int Lookup(String variable_name);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static bool isValue(string s)
+    {
+        int value;
+        return int.TryParse(s, out value);
+    }
+
+    /// <summary>
+    /// Check if the given input string is a vaild variable; consisting of one or more letters followed by one or more digits.
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static bool isVariable(string s)
+    {
+        return Regex.IsMatch(s, "[a-zA-Z]+[0-9]+");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="expression"></param>
+    /// <param name="variableEvaluator"></param>
+    /// <returns></returns>
     public static int Evaluate(String expression,
                                Lookup variableEvaluator)
     {
@@ -37,20 +68,21 @@ public static class Evaluator
 
         foreach(string token in substrings)
         {
-            int value;
-            bool isValue = int.TryParse(token, out value);
 
             // check if token is an integer
-            if(isValue)
+            if (isValue(token))
             {
+
                 // check the operator stack
                 // if * or / is at the top
                 if ((operators.Peek()).Equals('*') || (operators.Peek()).Equals('/'))
                 {
                     // pop the value stack
                     int tempVal = values.Pop();
+
                     // pop the operator stack
                     char tempOpr = operators.Pop();
+
                     // apply the popped operator to the popped number and token
                     int tempResult;
                     if (tempOpr == '*')
@@ -61,6 +93,7 @@ public static class Evaluator
                         tempResult = tempVal / Int32.Parse(token);
 
                     }
+
                     // push the result onto the value stack
                     values.Push(tempResult);
                 }
@@ -75,7 +108,7 @@ public static class Evaluator
 
 
             // check if token is a variable
-            else if(Regex.IsMatch(token, "[a-zA-Z]"))
+            else if(isVariable(token))
             {
                 // get lookup value of token
 
@@ -133,13 +166,8 @@ public static class Evaluator
             }
         }
 
-        return -1;
-    }
 
-    private bool isValue(string s)
-    {
-        int value;
-        return int.TryParse(s, out value);
+        return -1;
     }
 
 }

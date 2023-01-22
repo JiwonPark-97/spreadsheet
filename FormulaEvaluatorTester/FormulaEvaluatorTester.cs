@@ -1,21 +1,15 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
+﻿using FormulaEvaluator;
 
-string s1 = "1/2/3";
-string[] substrings1 =
-            Regex.Split(s1, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
-
-foreach (var token in substrings1)
+class FormulaEvaluatorTester
 {
-    Console.WriteLine(token);
-}
+    static void Main(string[] args)
+    {
+        isVariableTest("X1", true);
+    }
 
-string s2 = "(5)  2 0";
-string[] substrings2 =
-            Regex.Split(s2, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+    public static void isVariableTest(string s, bool expected)
+    {
+        Console.WriteLine("Testing isVariable. Input: " + s + "Expected: " + expected + "Result: " + Evaluator.isVariable(s));
 
-foreach (var token in substrings2)
-{
-    Console.WriteLine(token);
+    }
 }
