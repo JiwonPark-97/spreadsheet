@@ -70,13 +70,25 @@ class FormulaEvaluatorTester
 
         // Evaluate Test //
         // test vaild expressions
-
+        // simple expression
         EvaluateTest("1", 1);
 
         EvaluateTest("5+5", 10);
-        //EvaluateTest("5-5", 0);
-        //EvaluateTest("5*5", 25);
-        //EvaluateTest("5/5", 1);
+        EvaluateTest("5-5", 0);
+        EvaluateTest("5*5", 25);
+        EvaluateTest("5/5", 1);
+
+        EvaluateTest("(5+5)", 10);
+        EvaluateTest("(5-5)", 0);
+        EvaluateTest("(5*5)", 25);
+        EvaluateTest("(5/5)", 1);
+
+        // complex expression
+        EvaluateTest("(5 +5)/3 +2 ", 5);
+        EvaluateTest("(5-5) * 10 - 3", -3);
+        EvaluateTest("(5*5) * (6 -2)", 100);
+        EvaluateTest("(5/5) / 1 + 2", 3);
+
 
 
 
