@@ -32,3 +32,4 @@ List any peers (or other people) in the class (or outside for that matter) that 
     3. Check if a string contains a letter - https://social.msdn.microsoft.com/Forums/vstudio/en-US/8daa5f84-8535-47b0-b4bf-1669a9682911/check-if-a-string-contains-a-letter?forum=csharpgeneral
     4. RegEx pattern any two letters followed by six numbers - https://stackoverflow.com/questions/10439666/regex-pattern-any-two-letters-followed-by-six-numbers
     5. REGULAR EXPRESSIONS - https://users.cs.cf.ac.uk/Dave.Marshall/Internet/NEWS/regexp.html
+    6. a Ruby regular expression editor - https://rubular.com/r/gleAi4duNh

@@ -48,7 +48,7 @@ public static class Evaluator
     /// <returns></returns>
     public static bool isVariable(string s)
     {
-        return Regex.IsMatch(s, "[a-zA-Z]+[0-9]+");
+        return Regex.IsMatch(s, "^[a-zA-Z]+[0-9]+$");
     }
 
     /// <summary>
