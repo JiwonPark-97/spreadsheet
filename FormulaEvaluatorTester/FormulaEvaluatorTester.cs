@@ -1,4 +1,23 @@
-﻿using System.Linq.Expressions;
+﻿/// <summary>
+/// Author:    Jiwon Park
+/// Partner:   None
+/// Date:      21-Jan-2023
+/// Course:    CS 3500, University of Utah, School of Computing
+/// Copyright: CS 3500 and Jiwon Park - This work may not 
+///            be copied for use in Academic Coursework.
+///
+/// I, Jiwon Park, certify that I wrote this code from scratch and
+/// did not copy it in part or whole from another source.  All 
+/// references used in the completion of the assignments are cited 
+/// in my README file.
+///
+/// File Contents
+///
+///    [... and of course you should describe the contents of the 
+///    file in broad terms here ...]
+/// </summary>
+
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using FormulaEvaluator;
 
@@ -49,7 +68,7 @@ class FormulaEvaluatorTester
 
         EvaluateTest("1", 1);
 
-        //EvaluateTest("5+5", 10);
+        EvaluateTest("5+5", 10);
         //EvaluateTest("5-5", 0);
         //EvaluateTest("5*5", 25);
         //EvaluateTest("5/5", 1);

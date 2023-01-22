@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
-/// Date:      18-Jan-2023
+/// Date:      21-Jan-2023
 /// Course:    CS 3500, University of Utah, School of Computing
 /// Copyright: CS 3500 and Jiwon Park - This work may not 
 ///            be copied for use in Academic Coursework.
@@ -130,9 +130,10 @@ public static class Evaluator
             // if token is '+' or '-'
             else if (token == "+" || token == "-")
             {
+
+                // if + or - at the top of the operator stack
                 if (operators.Count() != 0)
                 {
-                    // if + or - at the top of the operator stack
                     if (operators.Peek() == '+' || operators.Peek() == '-')
                     {
                         // pop the value stack twice and the operator stack once
@@ -248,6 +249,7 @@ public static class Evaluator
             {
                 throw new ArgumentException();
             }
+
         // if operator stack is not empty - there should be exactly one operator (+ or -) and two values.
         } else
         {
