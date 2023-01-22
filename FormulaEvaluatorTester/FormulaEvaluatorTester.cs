@@ -1,45 +1,81 @@
-﻿using FormulaEvaluator;
+﻿using System.Linq.Expressions;
+using System.Text.RegularExpressions;
+using FormulaEvaluator;
 
 class FormulaEvaluatorTester
 {
     static void Main(string[] args)
     {
 
+        // test split
+        SplitTest("5+5");
+        SplitTest("1 + 2 + 3 / 4 * 5");
+        SplitTest("x1/34a*10+0");
+
+
+        // IsVariableT est // 
         // test vaild variables
-        isVariableTest("X1", true);
-        isVariableTest("XxX2", true);
-        isVariableTest("CD2", true);
-        isVariableTest("cd2345", true);
-        isVariableTest("alsdkflaskjdflasj2398475093287459032874957", true);
+        IsVariableTest("X1", true);
+        IsVariableTest("XxX2", true);
+        IsVariableTest("CD2", true);
+        IsVariableTest("cd2345", true);
+        IsVariableTest("alsdkflaskjdflasj2398475093287459032874957", true);
 
 
         // test invaild variables
-        isVariableTest("X", false);
-        isVariableTest("X2X2", false);
-        isVariableTest("CD2a", false);
-        isVariableTest("cd", false);
-        isVariableTest("cakldjflqjw'ofjlsakdj3lksjdlfkja", false);
+        IsVariableTest("X", false);
+        IsVariableTest("X2X2", false);
+        IsVariableTest("CD2a", false);
+        IsVariableTest("cd", false);
+        IsVariableTest("cakldjflqjw'ofjlsakdj3lksjdlfkja", false);
 
 
+        // IsValue Test // 
         // test valid integers
-        isValueTest("1", true);
-        isValueTest("0", true);
-        isValueTest("345", true);
-        isValueTest("230948", true);
+        IsValueTest("1", true);
+        IsValueTest("0", true);
+        IsValueTest("345", true);
+        IsValueTest("230948", true);
 
         // test invalid integers
-        isValueTest("-1", false);
-        isValueTest(" ", false);
-        isValueTest("398a", false);
-        isValueTest("d394857", false);
+        IsValueTest("-1", false);
+        IsValueTest(" ", false);
+        IsValueTest("398a", false);
+        IsValueTest("d394857", false);
+
+
+        // Evaluate Test //
+        // test vaild expressions
+
+        EvaluateTest("1", 1);
+
+        //EvaluateTest("5+5", 10);
+        //EvaluateTest("5-5", 0);
+        //EvaluateTest("5*5", 25);
+        //EvaluateTest("5/5", 1);
+
 
 
     }
 
-    public static void isValueTest(string s, bool expected)
+    public static void SplitTest(string s)
     {
-        bool result = Evaluator.isValue(s);
-        Console.WriteLine("Testing isValue. Input: " + s + ". Expected: " + expected + ". Result: " + result);
+        string[] substrings =
+        Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+
+        Console.WriteLine("Testing split. Input: " + s + ". \nResult: ");
+        foreach (string t in substrings)
+        {
+            Console.WriteLine(t);
+        }
+        Console.WriteLine("\n");
+
+    }
+
+    public static void IsValueTest(string s, bool expected)
+    {
+        bool result = Evaluator.IsValue(s);
+        Console.WriteLine("Testing IsValue. Input: " + s + ". Expected: " + expected + ". Result: " + result);
         if (expected == result)
         {
             Console.WriteLine("TEST PASSED");
@@ -53,10 +89,10 @@ class FormulaEvaluatorTester
     }
 
 
-    public static void isVariableTest(string s, bool expected)
+    public static void IsVariableTest(string s, bool expected)
     {
-        bool result = Evaluator.isVariable(s);
-        Console.WriteLine("Testing isVariable. Input: " + s + ". Expected: " + expected + ". Result: " + result);
+        bool result = Evaluator.IsVariable(s);
+        Console.WriteLine("Testing IsVariable. Input: " + s + ". Expected: " + expected + ". Result: " + result);
         if (expected == result)
         {
             Console.WriteLine("TEST PASSED");
@@ -67,5 +103,22 @@ class FormulaEvaluatorTester
         }
         Console.WriteLine("\n");
 
+    }
+
+    public static void EvaluateTest(string expression, int expected)
+    {
+        int result = Evaluator.Evaluate(expression, null);
+        Console.WriteLine("Testing Evaluate. Input: " + expression + ". Expected: " + expected + ". Result: " + result);
+
+        if (expected == result)
+        {
+            Console.WriteLine("TEST PASSED");
+        }
+        else
+        {
+            Console.WriteLine("*TEST FAILED*");
+
+        }
+        Console.WriteLine("\n");
     }
 }
