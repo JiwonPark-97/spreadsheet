@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 ///
 /// File Contents
 ///
+/// This file contains 
 ///    [... and of course you should describe the contents of the 
 ///    file in broad terms here ...]
 /// </summary>
@@ -24,17 +25,17 @@ namespace FormulaEvaluator;
 public static class Evaluator
 {
     /// <summary>
-    /// Converts a variables to values
+    /// Converts a variables to values.
     /// </summary>
-    /// <param name="variable_name"></param>
-    /// <returns></returns>
+    /// <param name="variable_name"> a variable name </param>
+    /// <returns> a corresponding value to input variable name </returns>
     public delegate int Lookup(String variable_name);
 
     /// <summary>
     /// Removes leading and trailing whitespaces from the given input string. 
     /// </summary>
     /// <param name="s"> a string that whitespaces get removed from </param>
-    /// <returns></returns>
+    /// <returns> a string without leading and trailing whitespaces </returns>
     public static string RemoveWhiteSpace(string s)
     {
         return s.Trim();
@@ -44,7 +45,7 @@ public static class Evaluator
     /// Determines if the given string is a vaild value (non-negative integer)
     /// </summary>
     /// <param name="s"> a string to be checked </param>
-    /// <returns></returns>
+    /// <returns> true if vaild, false otherwise </returns>
     public static bool IsValue(string s)
     {
         int value;
@@ -55,7 +56,7 @@ public static class Evaluator
     /// Determines if the given input string is a vaild variable; consisting of one or more letters followed by one or more digits.
     /// </summary>
     /// <param name="s"> a string to be checked </param>
-    /// <returns></returns>
+    /// <returns> true if vaild, false otherwise </returns>
     public static bool IsVariable(string s)
     {
         return Regex.IsMatch(s, "^[a-zA-Z]+[0-9]+$");
@@ -64,10 +65,10 @@ public static class Evaluator
 
 
     /// <summary>
-    /// 
+    /// Evaluates valid mathematic expressions. 
     /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="variableEvaluator"></param>
+    /// <param name="expression"> an expression to be evaluated </param>
+    /// <param name="variableEvaluator"> a delegate </param>
     /// <returns></returns>
     public static int Evaluate(String expression,
                                Lookup variableEvaluator)

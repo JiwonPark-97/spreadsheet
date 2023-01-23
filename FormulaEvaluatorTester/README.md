@@ -5,16 +5,18 @@ Partner:    None
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       Day-Month-Year Time (when submission was completed) 
+Date:       23-Jan-2023 4.00 am (when submission was completed) 
 Project:    Formula Evaluator
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
 
 # Comments to Evaluators:
 
+I could not find a way to verify that an exception has been thrown (such as assert). Therefore, for invaild expression tests,
+I simply commented in and out each line to make sure each invalid expression throws an exception. Currently, tests for
+invaild expression are commented out.
 
-
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam remaperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+I could not find how to enable VS spell checker on Mac. I checked thoroughly but there might be some typos.
 
 # Assignment Specific Topics
 Any additional feedback or write up required by the assignment.
@@ -26,8 +28,10 @@ checker?) and use your best writing ability.
 
 # Consulted Peers:
 
-I have not consulted with others.
+I have not consulted with others since the instruction and algorithm were clear. Though I referred to the piazza posts.
 
 # References:
 
-    1. Title of page - URL
+    1. Main() and command-line arguments - https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/main-command-line
+    1. AsAssignment One - Formula Evaluator (instruction) - https://docs.google.com/document/d/1eB3YWaXpMuaRg4c28fJFNwlyZwzib10twioAJxu0z0A/edit#
+    2. CS 3500 Piazza posts 

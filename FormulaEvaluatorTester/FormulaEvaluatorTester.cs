@@ -13,7 +13,7 @@
 ///
 /// This file contains a single class that provides tests for Evaluator. 
 ///
-/// There are testing methods called in Main. 
+/// The Main method calls various testing methods to test (helper) methods in Evaluator.
 /// </summary>
 
 using System.Linq.Expressions;
@@ -26,6 +26,7 @@ using FormulaEvaluator;
 /// 
 class FormulaEvaluatorTester
 {
+
     /// <summary>
     /// This invokes testing methods.
     /// </summary>
@@ -33,19 +34,28 @@ class FormulaEvaluatorTester
     static void Main(string[] args)
     {
 
-        // test split
+        // Split Test //
+        Console.WriteLine("********** Test Split **********");
+        Console.WriteLine("\n");
+
         SplitTest("5+5");
         SplitTest("1 + 2 + 3 / 4 * 5");
         SplitTest("x1/34a*10+0");
 
 
-        // RemoveWhiteSpace Test
+        // RemoveWhiteSpace Test //
+        Console.WriteLine("********** Test RemoveWhiteSpace **********");
+        Console.WriteLine("\n");
+
         RemoveWhitespaceTest("5 5");
         RemoveWhitespaceTest("1 + 2 + 3 / 4 * 5");
         RemoveWhitespaceTest("x1/ 34 a*10+0 ");
 
 
-        // test StrToInt
+        // StrToInt Test //
+        Console.WriteLine("********** Test StrToInt **********");
+        Console.WriteLine("\n");
+
         StrToIntTest("5", 5);
         StrToIntTest("0", 0);
         StrToIntTest("10", 10);
@@ -53,7 +63,11 @@ class FormulaEvaluatorTester
         StrToIntTest("-10", -10);
 
 
-        // IsVariable Test // 
+
+        // IsVariable Test //
+        Console.WriteLine("********** Test IsVariable **********");
+        Console.WriteLine("\n");
+
         // test vaild variables
         IsVariableTest("X1", true);
         IsVariableTest("XxX2", true);
@@ -69,7 +83,11 @@ class FormulaEvaluatorTester
         IsVariableTest("cakldjflqjw'ofjlsakdj3lksjdlfkja", false);
 
 
-        // IsValue Test // 
+
+        // IsValue Test //
+        Console.WriteLine("********** Test IsValue **********");
+        Console.WriteLine("\n");
+
         // test valid integers
         IsValueTest("1", true);
         IsValueTest("0", true);
@@ -83,10 +101,15 @@ class FormulaEvaluatorTester
         IsValueTest("d394857", false);
 
 
+
         // Evaluate Test //
+        Console.WriteLine("********** Test Evaluate **********");
+        Console.WriteLine("\n");
+
         // test vaild expressions
         // simple expressions
         EvaluateTest("1", 1);
+        EvaluateTest("(1)", 1);
 
         EvaluateTest("5+5", 10);
         EvaluateTest("5-5", 0);
@@ -104,13 +127,19 @@ class FormulaEvaluatorTester
         EvaluateTest("(1) - 2", -1);
         EvaluateTest("5-10", -5);
 
-        // complex expression
+        // complex expressions
         EvaluateTest("(5 +5)/3 +2 ", 5);
         EvaluateTest("(5-5) * 10 - 3", -3);
         EvaluateTest("(5*5) * (6 -2)", 100);
         EvaluateTest("(5/5) / 1 + 2", 3);
         EvaluateTest("(3/5 * 20) / (4) * (2 + 1)", 0);
         EvaluateTest("(2+ 3) / 7 + 2", 2);
+
+        // expressions with variables
+        EvaluateWithVariableTest("X1", 10);
+        EvaluateWithVariableTest("X1 + X2", 30);
+        EvaluateWithVariableTest("X1/ X3", 0);
+        EvaluateWithVariableTest("((X1) +X2) / X3", 1);
 
 
         // test invaild expressions (simply check if ArgumentException is thrown)
@@ -120,15 +149,42 @@ class FormulaEvaluatorTester
         //EvaluateTest("12 3", -1);
         //EvaluateTest("abcc1a + 3", -1);
         //EvaluateTest("sldkj234a", -1);
-
-
-
-
-
-
-
+        //EvaluateWithVariableTest("X3/ (X1 -X1)", -1);
+        EvaluateWithVariableTest("(X1 + X2)/X4", -1);
 
     }
+
+
+    /// <summary>
+    /// Returns the following variables
+    ///     X1 = 10
+    ///     X2 = 20
+    ///     X3 = 30
+    ///     Everything else is bad
+    /// </summary>
+    /// <param name="variable_name"> the name of the variable to look up.
+    /// shoule be consisting of one or more letters followed by one or more digits </param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"> thrown when a bad variable name is passed in </exception>
+    public static int SimpleLookup(string variable_name)
+    {
+        if (variable_name.Equals("X1"))
+        {
+            return 10;
+        }
+        else if (variable_name.Equals("X2"))
+        {
+            return 20;
+        } else if (variable_name.Equals("X3"))
+        {
+            return 30;
+        } else
+        {
+            throw new ArgumentException();
+        }
+    }
+
+
     /// <summary>
     /// Tests how split works.
     /// </summary>
@@ -188,9 +244,8 @@ class FormulaEvaluatorTester
 
         }
         Console.WriteLine("\n");
-
-
     }
+
     /// <summary>
     /// Tests IsValue method in Evaluator. A vaild value is a non-negative integer.
     /// </summary>
@@ -237,8 +292,8 @@ class FormulaEvaluatorTester
     /// <summary>
     /// Test Evaluate method in Evaluator. 
     /// </summary>
-    /// <param name="expression"></param>
-    /// <param name="expected"></param>
+    /// <param name="expression"> a string of expression to be evaluated </param>
+    /// <param name="expected"> expected integer value after evaluation </param>
     public static void EvaluateTest(string expression, int expected)
     {
         int result = Evaluator.Evaluate(expression, null);
@@ -256,6 +311,26 @@ class FormulaEvaluatorTester
         Console.WriteLine("\n");
     }
 
+    /// <summary>
+    /// Test Evaluate method with variables. 
+    /// </summary>
+    /// <param name="expression"> a string of expression to be evaluated </param>
+    /// <param name="expected"> expected integer value after evaluation</param>
+    public static void EvaluateWithVariableTest(string expression, int expected)
+    {
+        int result = Evaluator.Evaluate(expression, SimpleLookup);
+        Console.WriteLine("Testing Evaluate with variables. Input: " + expression + ". Expected: " + expected + ". Result: " + result);
 
+        if (expected == result)
+        {
+            Console.WriteLine("TEST PASSED");
+        }
+        else
+        {
+            Console.WriteLine("*TEST FAILED*");
+
+        }
+        Console.WriteLine("\n");
+    }
 
 }
