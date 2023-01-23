@@ -32,7 +32,7 @@ public static class Evaluator
     /// Removes leading and trailing whitespaces from the given input string. 
     /// </summary>
     /// <param name="s"> a string that whitespaces get removed from </param>
-    /// <returns> a string without leading and trailing whitespaces </returns>
+    /// <returns> a string with no leading and trailing whitespaces </returns>
     public static string RemoveWhiteSpace(string s)
     {
         return s.Trim();
@@ -65,7 +65,7 @@ public static class Evaluator
     /// Evaluates valid mathematic expressions. 
     /// </summary>
     /// <param name="expression"> an expression to be evaluated </param>
-    /// <param name="variableEvaluator"> a delegate </param>
+    /// <param name="variableEvaluator"> a delegate for converting variables to values </param>
     /// <returns> an integer value after evaluation </returns>
     public static int Evaluate(String expression,
                                Lookup variableEvaluator)
@@ -76,20 +76,20 @@ public static class Evaluator
         string[] substrings =
             Regex.Split(expression, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
-        // remove whitespace from each token (beginning or end)
+        // remove leading and trailing whitespaces from each token
         for (int i = 0; i < substrings.Length; i++)
         {
             string token = substrings[i];
             substrings[i] = RemoveWhiteSpace(token);
         }
 
+        // proceed tokens from left to right
         foreach (string token in substrings)
         {
 
-            // if token is an integer or a variable
             if (IsValue(token) || IsVariable(token))
             {
-                // get integer values from token
+                // get integer values from the token
                 int tokenVal = 0;
 
                 if (IsValue(token))
@@ -101,20 +101,16 @@ public static class Evaluator
                     tokenVal = variableEvaluator(token);
                 }
 
-                // check the operator stack
-                // if * or / is at the top
+                // check the operator stack for '*' or '/' at the top
                 if (operators.Count != 0)
                 {
                     if ((operators.Peek()) == '*' || (operators.Peek() == '/'))
                     {
-                        // pop the value stack
+                        // pop the value and operator stack and apply with the token
                         int tempVal = values.Pop();
-
-                        // pop the operator stack
                         char tempOpr = operators.Pop();
-
-                        // apply the popped operator to the popped number and token
                         int tempResult;
+
                         if (tempOpr == '*')
                         {
                             tempResult = tempVal * tokenVal;
@@ -127,37 +123,33 @@ public static class Evaluator
                             {
                                 tempResult = tempVal / tokenVal;
 
-                                // prevent division by 0
+                            // prevent division by 0
                             }
                             else
+                            {
                                 throw new ArgumentException();
 
-                            {
-
                             }
-
                         }
 
                         // push the result onto the value stack
                         values.Push(tempResult);
                     }
+
+                    // if there isn't '*' or '/' at the top of the operator stack
                     else
                     {
                         values.Push(tokenVal);
                     }
                 }
 
-                // otherwise, push token onto the value stack
+                // if operator stack is empty
                 else
                 {
                     values.Push(tokenVal);
                 }
             }
 
-
-            // check if token is an operator
-
-            // if token is '+' or '-'
             else if (token == "+" || token == "-")
             {
 
@@ -172,7 +164,7 @@ public static class Evaluator
                         char op = operators.Pop();
                         int result;
 
-                        // apply the popped operator to the popped numbers
+                        // apply the popped operator to the popped numbers and push the result onto the value stack
                         if (op == '+')
                         {
                             result = val2 + val1;
@@ -182,7 +174,6 @@ public static class Evaluator
                             result = val2 - val1;
                         }
 
-                        // push the result onto the value stack
                         values.Push(result);
                     }
                 }
@@ -191,18 +182,16 @@ public static class Evaluator
                 operators.Push(token.ToCharArray()[0]);
             }
 
-            // check if token is '*', '/', or '('
             else if (token == "*" || token == "/" || token == "(")
             {
                 // push token onto the operator stack
                 operators.Push(token.ToCharArray()[0]);
             }
 
-            // check if token is ')'
             else if (token == ")")
             {
-
-                if (operators.Count() == 0 || !operators.Contains('('))
+                // there should be '(' on the operator stack. if not, throw an exception
+                if (!operators.Contains('('))
                 {
                     throw new ArgumentException();
                 }
@@ -216,24 +205,24 @@ public static class Evaluator
                     char op = operators.Pop();
                     int result;
 
-                    // apply the popped operator to the popped numbers
+                    // apply the popped operator to the popped numbers and push the result onto the value stack
                     if (op == '+')
                     {
                         result = val2 + val1;
                     }
+
+                    // op == '-'
                     else
                     {
                         result = val2 - val1;
                     }
-
-                    // push the result onto the value stack
                     values.Push(result);
                 }
 
 
-                // the top of the operator stack must be (. pop it.
-
-                if (operators.Count() == 0 || !operators.Contains('('))
+                // the top of the operator stack must be '('. pop it
+                // throw an exception if there isn't '(' on the operator stack
+                if (!operators.Contains('('))
                 {
                     throw new ArgumentException();
                 }
@@ -242,7 +231,6 @@ public static class Evaluator
                     char tempOp = operators.Pop();
 
                 }
-
 
                 // if * or / at the top of the operator stack
                 if (operators.Count() != 0)
@@ -255,13 +243,13 @@ public static class Evaluator
                         char op = operators.Pop();
                         int result;
 
-                        // apply the popped operator to the popped numbers
+                        // apply the popped operator to the popped numbers and push the result onto the value stack
                         if (op == '*')
                         {
                             result = val2 * val1;
                         }
 
-                        // if operator is '/'
+                        // op == '/'
                         else
                         {
                             if (val1 != 0)
@@ -276,16 +264,15 @@ public static class Evaluator
                                 throw new ArgumentException();
                             }
                         }
-
-                        // push the result onto the value stack
                         values.Push(result);
                     }
                 }
 
             }
         }
+        // last token proceeded
 
-        // there should be a single value
+        // if operator stack is empty, there should be a single value
         if (operators.Count() == 0)
         {
             if (values.Count() == 1)
@@ -293,14 +280,14 @@ public static class Evaluator
                 return values.Pop();
             }
 
-            // if there isn't exactly one value on the stack
+            // if there isn't exactly one value on the value stack
             else
             {
                 throw new ArgumentException();
             }
-
-            // if operator stack is not empty - there should be exactly one operator (+ or -) and two values.
         }
+
+        // if operator stack is not empty, there should be exactly one operator (+ or -) and two values.
         else
         {
             if (operators.Count() == 1 && values.Count() == 2)
