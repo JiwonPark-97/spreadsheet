@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
-/// Date:      21-Jan-2023
+/// Date:      22-Jan-2023
 /// Course:    CS 3500, University of Utah, School of Computing
 /// Copyright: CS 3500 and Jiwon Park - This work may not 
 ///            be copied for use in Academic Coursework.
@@ -11,18 +11,25 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// File Contents
+/// This file contains a single class that provides tests for Evaluator. 
 ///
-///    [... and of course you should describe the contents of the 
-///    file in broad terms here ...]
+/// There are testing methods called in Main. 
 /// </summary>
 
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using FormulaEvaluator;
 
+/// <summary>
+/// This class contains Main and testing methods for Evaluator.
+/// </summary>
+/// 
 class FormulaEvaluatorTester
 {
+    /// <summary>
+    /// This invokes testing methods.
+    /// </summary>
+    /// <param name="args"></param>
     static void Main(string[] args)
     {
 
@@ -93,7 +100,10 @@ class FormulaEvaluatorTester
 
 
     }
-
+    /// <summary>
+    /// Tests how split works.
+    /// </summary>
+    /// <param name="s"> a string to be splitted </param>
     public static void SplitTest(string s)
     {
         string[] substrings =
@@ -107,7 +117,11 @@ class FormulaEvaluatorTester
         Console.WriteLine("\n");
 
     }
-
+    /// <summary>
+    /// Tests converting string to int.
+    /// </summary>
+    /// <param name="num"> integer represented in string format </param>
+    /// <param name="expected"> expected integer after conversion </param>
     public static void StrToIntTest(string num, int expected)
     {
         int result = Int32.Parse(num);
@@ -125,7 +139,11 @@ class FormulaEvaluatorTester
 
 
     }
-
+    /// <summary>
+    /// Tests IsValue method in Evaluator. A vaild value is a non-negative integer.
+    /// </summary>
+    /// <param name="s"> a string to be checked </param>
+    /// <param name="expected"> expected bool value. true if vaild, false otherwise </param>
     public static void IsValueTest(string s, bool expected)
     {
         bool result = Evaluator.IsValue(s);
@@ -142,7 +160,11 @@ class FormulaEvaluatorTester
         Console.WriteLine("\n");
     }
 
-
+    /// <summary>
+    /// Tests IsVariable method in Evaluator. A vaild variable is consisting of one or more letters followed by one or more digits.
+    /// </summary>
+    /// <param name="s"> a string to be checked </param>
+    /// <param name="expected"> expected bool value. true if vaild, false otherwise </param>
     public static void IsVariableTest(string s, bool expected)
     {
         bool result = Evaluator.IsVariable(s);
@@ -150,7 +172,8 @@ class FormulaEvaluatorTester
         if (expected == result)
         {
             Console.WriteLine("TEST PASSED");
-        } else
+        }
+        else
         {
             Console.WriteLine("*TEST FAILED*");
 
@@ -159,6 +182,11 @@ class FormulaEvaluatorTester
 
     }
 
+    /// <summary>
+    /// Test Evaluate method in Evaluator. 
+    /// </summary>
+    /// <param name="expression"></param>
+    /// <param name="expected"></param>
     public static void EvaluateTest(string expression, int expected)
     {
         int result = Evaluator.Evaluate(expression, null);
