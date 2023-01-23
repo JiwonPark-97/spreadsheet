@@ -114,12 +114,12 @@ class FormulaEvaluatorTester
 
 
         // test invaild expressions (simply check if ArgumentException is thrown)
-        // simple expressions
         //EvaluateTest("(5+5", -1);
         //EvaluateTest("1 1", -1);
         //EvaluateTest(") 1 + 2", -1);
-        EvaluateTest("12 3", -1);
-        //EvaluateTest(") 1 + 2", -1);
+        //EvaluateTest("12 3", -1);
+        //EvaluateTest("abcc1a + 3", -1);
+        //EvaluateTest("sldkj234a", -1);
 
 
 
