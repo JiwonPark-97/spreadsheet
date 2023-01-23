@@ -43,6 +43,8 @@ class FormulaEvaluatorTester
         StrToIntTest("5", 5);
         StrToIntTest("0", 0);
         StrToIntTest("10", 10);
+        StrToIntTest("-1", -1);
+        StrToIntTest("-10", -10);
 
 
         // IsVariable Test // 
@@ -77,7 +79,7 @@ class FormulaEvaluatorTester
 
         // Evaluate Test //
         // test vaild expressions
-        // simple expression
+        // simple expressions
         EvaluateTest("1", 1);
 
         EvaluateTest("5+5", 10);
@@ -85,10 +87,16 @@ class FormulaEvaluatorTester
         EvaluateTest("5*5", 25);
         EvaluateTest("5/5", 1);
 
+        // simple expressions with parentheses
         EvaluateTest("(5+5)", 10);
         EvaluateTest("(5-5)", 0);
         EvaluateTest("(5*5)", 25);
         EvaluateTest("(5/5)", 1);
+
+        // simple expressions that result in negative values
+        EvaluateTest("0-10", -10);
+        EvaluateTest("(1) - 2", -1);
+        EvaluateTest("5-10", -5);
 
         // complex expression
         EvaluateTest("(5 +5)/3 +2 ", 5);

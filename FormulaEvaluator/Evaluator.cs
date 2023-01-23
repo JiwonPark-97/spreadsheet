@@ -149,11 +149,11 @@ public static class Evaluator
                         // apply the popped operator to the popped numbers
                         if (op == '+')
                         {
-                            result = val1 + val2;
+                            result = val2 + val1;
                         }
                         else
                         {
-                            result = val1 - val2;
+                            result = val2 - val1;
                         }
 
                         // push the result onto the value stack
@@ -194,11 +194,11 @@ public static class Evaluator
                         // apply the popped operator to the popped numbers
                         if (op == '+')
                         {
-                            result = val1 + val2;
+                            result = val2 + val1;
                         }
                         else
                         {
-                            result = val1 - val2;
+                            result = val2 - val1;
                         }
 
                         // push the result onto the value stack
@@ -228,11 +228,11 @@ public static class Evaluator
                         // apply the popped operator to the popped numbers
                         if (op == '*')
                         {
-                            result = val1 * val2;
+                            result = val2 * val1;
                         }
                         else
                         {
-                            result = val1 / val2;
+                            result = val2 / val1;
                         }
 
                         // push the result onto the value stack
@@ -263,12 +263,12 @@ public static class Evaluator
 
             if (op == '+')
             {
-                return val1 + val2;
+                return val2 + val1;
 
             // should be '-'
             } else
             {
-                return val1 - val2;
+                return val2 - val1;
             }
         }
         throw new ArgumentException();
