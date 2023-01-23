@@ -39,7 +39,6 @@ class FormulaEvaluatorTester
         SplitTest("x1/34a*10+0");
 
         // test StrToInt
-
         StrToIntTest("5", 5);
         StrToIntTest("0", 0);
         StrToIntTest("10", 10);
@@ -103,6 +102,15 @@ class FormulaEvaluatorTester
         EvaluateTest("(5-5) * 10 - 3", -3);
         EvaluateTest("(5*5) * (6 -2)", 100);
         EvaluateTest("(5/5) / 1 + 2", 3);
+        EvaluateTest("(3/5 * 20) / (4) * (2 + 1)", 0);
+        EvaluateTest("(2+ 3) / 7 + 2", 2);
+
+
+        // test invaild expressions (check simply if throws ArgumentException)
+        // simple expressions
+        //EvaluateTest("(5+5", 10);
+        EvaluateTest("1 1", 10);
+
 
 
 
@@ -123,8 +131,8 @@ class FormulaEvaluatorTester
             Console.WriteLine(t);
         }
         Console.WriteLine("\n");
-
     }
+
     /// <summary>
     /// Tests converting string to int.
     /// </summary>
@@ -211,4 +219,5 @@ class FormulaEvaluatorTester
         }
         Console.WriteLine("\n");
     }
+
 }

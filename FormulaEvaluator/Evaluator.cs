@@ -64,13 +64,17 @@ public static class Evaluator
         Stack<int> values = new Stack<int>();
         Stack<char> operators = new Stack<char>();
 
-        // remove whitespace from the expression
-        expression = Regex.Replace(expression, @"\s", "");
-
         string[] substrings =
             Regex.Split(expression, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
-        foreach(string token in substrings)
+        // remove whitespace from each token
+        foreach (string token in substrings)
+        {
+            token.Trim();
+        }
+
+
+        foreach (string token in substrings)
         {
    
             // if token is an integer or a variable
@@ -105,9 +109,22 @@ public static class Evaluator
                         {
                             tempResult = tempVal * tokenVal;
                         }
+
+                        // if operator is '/'
                         else
                         {
-                            tempResult = tempVal / tokenVal;
+                            if (tokenVal != 0)
+                            {
+                                tempResult = tempVal / tokenVal;
+
+                            // prevent division by 0
+                            }
+                            else
+                                throw new ArgumentException();
+
+                            {
+
+                            }
 
                         }
 
@@ -230,9 +247,21 @@ public static class Evaluator
                         {
                             result = val2 * val1;
                         }
+
+                        // if operator is '/'
                         else
                         {
-                            result = val2 / val1;
+                            if (val1 != 0)
+                            {
+                                result = val2 / val1;
+
+                            }
+
+                            // prevent division by 0
+                            else
+                            {
+                                throw new ArgumentException();
+                            }
                         }
 
                         // push the result onto the value stack
@@ -243,12 +272,15 @@ public static class Evaluator
             }
         }
 
+        // there should be a single value
         if (operators.Count() == 0)
         {
             if (values.Count() == 1)
             {
                 return values.Pop();
             }
+
+            // if there isn't exactly one value on the stack
             else
             {
                 throw new ArgumentException();
@@ -257,19 +289,30 @@ public static class Evaluator
         // if operator stack is not empty - there should be exactly one operator (+ or -) and two values.
         } else
         {
-            char op = operators.Pop();
-            int val1 = values.Pop();
-            int val2 = values.Pop();
-
-            if (op == '+')
+            if (operators.Count() == 1 && values.Count() == 2)
             {
-                return val2 + val1;
+                char op = operators.Pop();
+                int val1 = values.Pop();
+                int val2 = values.Pop();
 
-            // should be '-'
-            } else
-            {
-                return val2 - val1;
+                if (op == '+')
+                {
+                    return val2 + val1;
+
+                }
+                // should be '-'
+                else
+                {
+                    return val2 - val1;
+                }
+
             }
+            // if there isn't exactly one operator and two values
+            else
+            {
+                throw new ArgumentException();
+            }
+            
         }
         throw new ArgumentException();
     }
