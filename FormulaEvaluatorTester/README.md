@@ -33,5 +33,5 @@ I have not consulted with others since the instruction and the given algorithm w
 # References:
 
     1. Main() and command-line arguments - https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/main-command-line
-    1. AsAssignment One - Formula Evaluator (instruction) - https://docs.google.com/document/d/1eB3YWaXpMuaRg4c28fJFNwlyZwzib10twioAJxu0z0A/edit#
-    2. CS 3500 Piazza posts 
+    2. AsAssignment One - Formula Evaluator (instruction) - https://docs.google.com/document/d/1eB3YWaXpMuaRg4c28fJFNwlyZwzib10twioAJxu0z0A/edit#
+    3. CS 3500 Piazza posts 

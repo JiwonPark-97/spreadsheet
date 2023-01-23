@@ -18,7 +18,6 @@ I also added helper methods (RemoveWhiteSpace, IsValue, and IsVariable) to avoid
 
 I could not find how to enable VS spell checker on Mac. I checked thoroughly but there might be some typos.
 
-
 # Assignment Specific Topics
 
 This section was not required.
