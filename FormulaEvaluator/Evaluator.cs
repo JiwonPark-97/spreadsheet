@@ -31,9 +31,19 @@ public static class Evaluator
     public delegate int Lookup(String variable_name);
 
     /// <summary>
+    /// Removes leading and trailing whitespaces from the given input string. 
+    /// </summary>
+    /// <param name="s"> a string that whitespaces get removed from </param>
+    /// <returns></returns>
+    public static string RemoveWhiteSpace(string s)
+    {
+        return s.Trim();
+    }
+
+    /// <summary>
     /// Determines if the given string is a vaild value (non-negative integer)
     /// </summary>
-    /// <param name="s"></param>
+    /// <param name="s"> a string to be checked </param>
     /// <returns></returns>
     public static bool IsValue(string s)
     {
@@ -44,12 +54,13 @@ public static class Evaluator
     /// <summary>
     /// Determines if the given input string is a vaild variable; consisting of one or more letters followed by one or more digits.
     /// </summary>
-    /// <param name="s"></param>
+    /// <param name="s"> a string to be checked </param>
     /// <returns></returns>
     public static bool IsVariable(string s)
     {
         return Regex.IsMatch(s, "^[a-zA-Z]+[0-9]+$");
     }
+
 
 
     /// <summary>
@@ -67,16 +78,16 @@ public static class Evaluator
         string[] substrings =
             Regex.Split(expression, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
-        // remove whitespace from each token
-        foreach (string token in substrings)
+        // remove whitespace from each token (beginning or end)
+        for (int i = 0; i < substrings.Length; i++)
         {
-            token.Trim();
+            string token = substrings[i];
+            substrings[i] = RemoveWhiteSpace(token);
         }
 
-
         foreach (string token in substrings)
         {
-   
+
             // if token is an integer or a variable
             if (IsValue(token) || IsVariable(token))
             {
@@ -86,7 +97,8 @@ public static class Evaluator
                 if (IsValue(token))
                 {
                     tokenVal = Int32.Parse(token);
-                } else
+                }
+                else
                 {
                     tokenVal = variableEvaluator(token);
                 }
@@ -117,7 +129,7 @@ public static class Evaluator
                             {
                                 tempResult = tempVal / tokenVal;
 
-                            // prevent division by 0
+                                // prevent division by 0
                             }
                             else
                                 throw new ArgumentException();
@@ -194,42 +206,50 @@ public static class Evaluator
             }
 
             // check if token is )
-            else if(token == ")")
+            else if (token == ")")
             {
 
-                // if + or - at the top of the operator stack
-                if (operators.Count() != 0)
+                if (operators.Count() == 0 || !operators.Contains('('))
                 {
-                    if (operators.Peek() == '+' || operators.Peek() == '-')
-                    {
-                        // pop the value stack twice and the operator stack once
-                        int val1 = values.Pop();
-                        int val2 = values.Pop();
-                        char op = operators.Pop();
-                        int result;
-
-                        // apply the popped operator to the popped numbers
-                        if (op == '+')
-                        {
-                            result = val2 + val1;
-                        }
-                        else
-                        {
-                            result = val2 - val1;
-                        }
-
-                        // push the result onto the value stack
-                        values.Push(result);
-                    }
+                    throw new ArgumentException();
                 }
-                
+
+                // if + or - at the top of the operator stack
+                else if (operators.Peek() == '+' || operators.Peek() == '-')
+                {
+                    // pop the value stack twice and the operator stack once
+                    int val1 = values.Pop();
+                    int val2 = values.Pop();
+                    char op = operators.Pop();
+                    int result;
+
+                    // apply the popped operator to the popped numbers
+                    if (op == '+')
+                    {
+                        result = val2 + val1;
+                    }
+                    else
+                    {
+                        result = val2 - val1;
+                    }
+
+                    // push the result onto the value stack
+                    values.Push(result);
+                }
+
 
                 // the top of the operator stack must be (. pop it.
-                char tempOp = operators.Pop();
-                if (tempOp != '(')
+
+                if (operators.Count() == 0 || !operators.Contains('('))
                 {
-                    throw new ArgumentException("No left parenthesis");
+                    throw new ArgumentException();
                 }
+                else
+                {
+                    char tempOp = operators.Pop();
+
+                }
+
 
                 // if * or / at the top of the operator stack
                 if (operators.Count() != 0)
@@ -268,7 +288,7 @@ public static class Evaluator
                         values.Push(result);
                     }
                 }
-                
+
             }
         }
 
@@ -286,8 +306,9 @@ public static class Evaluator
                 throw new ArgumentException();
             }
 
-        // if operator stack is not empty - there should be exactly one operator (+ or -) and two values.
-        } else
+            // if operator stack is not empty - there should be exactly one operator (+ or -) and two values.
+        }
+        else
         {
             if (operators.Count() == 1 && values.Count() == 2)
             {
@@ -312,7 +333,7 @@ public static class Evaluator
             {
                 throw new ArgumentException();
             }
-            
+
         }
         throw new ArgumentException();
     }

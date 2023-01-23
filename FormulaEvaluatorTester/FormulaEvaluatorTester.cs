@@ -38,6 +38,13 @@ class FormulaEvaluatorTester
         SplitTest("1 + 2 + 3 / 4 * 5");
         SplitTest("x1/34a*10+0");
 
+
+        // RemoveWhiteSpace Test
+        RemoveWhitespaceTest("5 5");
+        RemoveWhitespaceTest("1 + 2 + 3 / 4 * 5");
+        RemoveWhitespaceTest("x1/ 34 a*10+0 ");
+
+
         // test StrToInt
         StrToIntTest("5", 5);
         StrToIntTest("0", 0);
@@ -106,10 +113,16 @@ class FormulaEvaluatorTester
         EvaluateTest("(2+ 3) / 7 + 2", 2);
 
 
-        // test invaild expressions (check simply if throws ArgumentException)
+        // test invaild expressions (simply check if ArgumentException is thrown)
         // simple expressions
-        //EvaluateTest("(5+5", 10);
-        EvaluateTest("1 1", 10);
+        //EvaluateTest("(5+5", -1);
+        //EvaluateTest("1 1", -1);
+        //EvaluateTest(") 1 + 2", -1);
+        EvaluateTest("12 3", -1);
+        //EvaluateTest(") 1 + 2", -1);
+
+
+
 
 
 
@@ -126,6 +139,29 @@ class FormulaEvaluatorTester
         Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
         Console.WriteLine("Testing split. Input: " + s + ". \nResult: ");
+        foreach (string t in substrings)
+        {
+            Console.WriteLine(t);
+        }
+        Console.WriteLine("\n");
+    }
+
+    /// <summary>
+    /// Tests removing leading and trailing whitespaces from substrings.
+    /// </summary>
+    /// <param name="s"> an original string to be splitted and whitespaces gets removed from </param>
+    public static void RemoveWhitespaceTest(string s)
+    {
+        string[] substrings =
+        Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+
+        for (int i = 0; i < substrings.Length; i++)
+        {
+            string token = substrings[i];
+            substrings[i] = Evaluator.RemoveWhiteSpace(token);
+        }
+
+        Console.WriteLine("Testing removing whitespace. Input: " + s + ". \nResult: ");
         foreach (string t in substrings)
         {
             Console.WriteLine(t);
@@ -219,5 +255,7 @@ class FormulaEvaluatorTester
         }
         Console.WriteLine("\n");
     }
+
+
 
 }
