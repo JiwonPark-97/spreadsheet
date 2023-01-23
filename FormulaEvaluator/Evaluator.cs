@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
-/// Date:      21-Jan-2023
+/// Date:      23-Jan-2023
 /// Course:    CS 3500, University of Utah, School of Computing
 /// Copyright: CS 3500 and Jiwon Park - This work may not 
 ///            be copied for use in Academic Coursework.
@@ -14,11 +14,8 @@ using System.Text.RegularExpressions;
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// File Contents
-///
-/// This file contains 
-///    [... and of course you should describe the contents of the 
-///    file in broad terms here ...]
+/// This file contains a single class Evaluator that provides the delegate declaration of Lookup
+/// and the Evaluate method along with the helper methods (RemoveWhiteSpace, IsValue, and IsVariable)
 /// </summary>
 
 namespace FormulaEvaluator;
@@ -69,7 +66,7 @@ public static class Evaluator
     /// </summary>
     /// <param name="expression"> an expression to be evaluated </param>
     /// <param name="variableEvaluator"> a delegate </param>
-    /// <returns></returns>
+    /// <returns> an integer value after evaluation </returns>
     public static int Evaluate(String expression,
                                Lookup variableEvaluator)
     {
@@ -150,7 +147,6 @@ public static class Evaluator
                     }
                 }
 
-
                 // otherwise, push token onto the value stack
                 else
                 {
@@ -188,15 +184,11 @@ public static class Evaluator
 
                         // push the result onto the value stack
                         values.Push(result);
-
-
                     }
                 }
+
                 // push token onto the operator stack
                 operators.Push(token.ToCharArray()[0]);
-
-
-
             }
 
             // check if token is '*', '/', or '('
@@ -206,7 +198,7 @@ public static class Evaluator
                 operators.Push(token.ToCharArray()[0]);
             }
 
-            // check if token is )
+            // check if token is ')'
             else if (token == ")")
             {
 

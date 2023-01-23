@@ -12,6 +12,10 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
+I first tested how basic syntaxes (Regex.Split, Trim, TryParse) work through SplitTest, RemoveWhitespaceTest, and StrToIntTest.
+Then, I checked if the helper methods in Evaluator (IsValue, IsVariable) work properly.
+Finally, I made groups of tests for Evaluate method; valid/invalid, simple/complex, with/without variables, etc.
+
 I could not find a way to verify that an exception has been thrown (such as assert). Therefore, for invaild expression tests,
 I simply commented in and out each line to make sure each invalid expression throws an exception. Currently, tests for
 invaild expression are commented out.
@@ -20,13 +24,11 @@ I could not find how to enable VS spell checker on Mac. I checked thoroughly but
 
 # Assignment Specific Topics
 
-I first tested how basic syntaxes (Regex.Split, Trim, TryParse) work through SplitTest, RemoveWhitespaceTest, and StrToIntTest.
-Then, I checked if the helper methods in Evaluator (IsValue, IsVariable) work properly.
-Finally, I made groups of tests for Evaluate method; valid/invalid, simple/complex, with/without variables, etc.
+This section was not required.
 
 # Consulted Peers:
 
-I have not consulted with others since the instruction and algorithm were clear. Though I referred to the piazza posts.
+I have not consulted with others since the instruction and the given algorithm were clear. Though I referred to the piazza posts.
 
 # References:
 

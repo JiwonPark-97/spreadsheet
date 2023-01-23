@@ -11,21 +11,21 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
+I followed the instruction given; declared two empty stacks, splitted the input expression into tokens, and proceeded the tokens from left to right following the given algorithm.
+After proceeding the last token, I checked the operator stack to return the final value.
 
+I also added helper methods (RemoveWhiteSpace, IsValue, and IsVariable) to avoid repeated code and make the code more readable. 
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam remaperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+I could not find how to enable VS spell checker on Mac. I checked thoroughly but there might be some typos.
+
 
 # Assignment Specific Topics
-Any additional feedback or write up required by the assignment.
 
-Leave a space for a new paragraph.
-
-Make sure you spell check your file (did you install the VS spell
-checker?) and use your best writing ability.
+This section was not required.
 
 # Consulted Peers:
 
-I have not consulted with others.
+I have not consulted with others since the instruction and the given algorithm were clear. Though I referred to the piazza posts.
 
 # References:
 
