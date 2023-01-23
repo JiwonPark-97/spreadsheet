@@ -21,7 +21,8 @@ using System.Text.RegularExpressions;
 using FormulaEvaluator;
 
 /// <summary>
-/// This class contains Main and testing methods for Evaluator.
+/// This class contains Main method and various testing methods that are called in Main.
+/// A SimpleLookUp method is provided to pass in to the Evaluate method via the 2nd parameter.
 /// </summary>
 /// 
 class FormulaEvaluatorTester
@@ -150,7 +151,7 @@ class FormulaEvaluatorTester
         //EvaluateTest("abcc1a + 3", -1);
         //EvaluateTest("sldkj234a", -1);
         //EvaluateWithVariableTest("X3/ (X1 -X1)", -1);
-        EvaluateWithVariableTest("(X1 + X2)/X4", -1);
+        //EvaluateWithVariableTest("(X1 + X2)/X4", -1);
 
     }
 
@@ -164,7 +165,7 @@ class FormulaEvaluatorTester
     /// </summary>
     /// <param name="variable_name"> the name of the variable to look up.
     /// shoule be consisting of one or more letters followed by one or more digits </param>
-    /// <returns></returns>
+    /// <returns> a corresponding value to the variable name </returns>
     /// <exception cref="ArgumentException"> thrown when a bad variable name is passed in </exception>
     public static int SimpleLookup(string variable_name)
     {

@@ -19,12 +19,10 @@ invaild expression are commented out.
 I could not find how to enable VS spell checker on Mac. I checked thoroughly but there might be some typos.
 
 # Assignment Specific Topics
-Any additional feedback or write up required by the assignment.
 
-Leave a space for a new paragraph.
-
-Make sure you spell check your file (did you install the VS spell
-checker?) and use your best writing ability.
+I first tested how basic syntaxes (Regex.Split, Trim, TryParse) work through SplitTest, RemoveWhitespaceTest, and StrToIntTest.
+Then, I checked if the helper methods in Evaluator (IsValue, IsVariable) work properly.
+Finally, I made groups of tests for Evaluate method; valid/invalid, simple/complex, with/without variables, etc.
 
 # Consulted Peers:
 
