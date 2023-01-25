@@ -24,3 +24,5 @@ I have not directly consulted with others but referred to the discord server lis
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
     2. 5 C# Collections that Every C# Developer Must Know - https://programmingwithmosh.com/net/csharp-collections/
+    3. Initialize a HashSet in C# - https://www.techiedelight.com/initialize-a-hashset-in-csharp/
+    4. Attemping to add a value to a HashSet doesn't change the amount of values in it - https://stackoverflow.com/questions/20819248/attemping-to-add-a-value-to-a-hashset-doesnt-change-the-amount-of-values-in-it

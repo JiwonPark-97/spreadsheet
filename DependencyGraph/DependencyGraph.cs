@@ -147,10 +147,36 @@ namespace SpreadsheetUtilities
         /// <param name="t"> t cannot be evaluated until s is</param>        /// 
         public void AddDependency(string s, string t)
         {
-            // dependents[t] = s;
-            // dependees[s] = t;
+            // dependents[s] = t;
+            // dependees[t] = s;
 
+            // if s has dependents
+            if (dependents.ContainsKey(s))
+            {
 
+                // prevent sizing up when adding duplicate pair
+                if (dependents[s].Add(t))
+                {
+                    size++;
+                }
+
+            // if s has no dependents
+            } else
+            {
+                dependents.Add(s, new HashSet<string>() {t});
+                size++;
+            }
+
+            // if t has dependees
+            if (dependees.ContainsKey(t))
+            {
+                dependees[t].Add(s);
+
+            // if t has no dependees
+            } else
+            {
+                dependees.Add(t, new HashSet<string>() {s});
+            }
         }
 
 
@@ -161,6 +187,17 @@ namespace SpreadsheetUtilities
         /// <param name="t"></param>
         public void RemoveDependency(string s, string t)
         {
+            if (dependents.ContainsKey(s))
+            {
+                dependents[s].Remove(t);
+                size--;
+            }
+
+            if (dependees.ContainsKey(t))
+            {
+                dependees[t].Remove(s);
+            }
+
         }
 
 
@@ -170,6 +207,18 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
+            int originalSize = dependents[s].Count();
+
+            dependents[s] = new HashSet<string>();
+            foreach(string dependent in newDependents)
+            {
+                dependents[s].Add(dependent);
+            }
+
+            int finalSize = dependents[s].Count();
+
+            size = size - originalSize + finalSize;
+
         }
 
 
@@ -179,6 +228,18 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependees(string s, IEnumerable<string> newDependees)
         {
+            int originalSize = dependees[s].Count();
+
+            dependees[s] = new HashSet<string>();
+            foreach (string dependee in newDependees)
+            {
+                dependees[s].Add(dependee);
+            }
+
+            int finalSize = dependees[s].Count();
+
+            size = size - originalSize + finalSize;
+
         }
 
     }

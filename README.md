@@ -17,4 +17,4 @@ The spreadsheet program is currently capable of evaluating mathematical expressi
 # Time Expenditures:
 
     1. Assignment One:   Predicted Hours:          20        Actual Hours:   32
-    2. Assignment Two:   Predicted Hours:          20        Actual Hours:   
+    2. Assignment Two:   Predicted Hours:          20        Actual Hours:   5 + 
