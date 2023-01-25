@@ -76,7 +76,17 @@ namespace SpreadsheetUtilities
         /// </summary>
         public int this[string s]
         {
-            get { return 0; }
+            get
+            {
+                if (dependees.ContainsKey(s))
+                {
+                    return dependees[s].Count;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
 
 
@@ -85,7 +95,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependents(string s)
         {
-            return false;
+            return dependents.ContainsKey(s);
         }
 
 
@@ -94,7 +104,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependees(string s)
         {
-            return false;
+            return dependees.ContainsKey(s);
         }
 
 
@@ -103,7 +113,12 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<string> GetDependents(string s)
         {
-            return null;
+            HashSet<string> returnSet = new HashSet<string>();
+            if (HasDependents(s))
+            {
+                returnSet = dependents[s];
+            }
+            return returnSet;
         }
 
         /// <summary>
@@ -111,7 +126,12 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<string> GetDependees(string s)
         {
-            return null;
+            HashSet<string> returnSet = new HashSet<string>();
+            if (HasDependees(s))
+            {
+                returnSet = dependees[s];
+            }
+            return returnSet;
         }
 
 
@@ -127,6 +147,10 @@ namespace SpreadsheetUtilities
         /// <param name="t"> t cannot be evaluated until s is</param>        /// 
         public void AddDependency(string s, string t)
         {
+            // dependents[t] = s;
+            // dependees[s] = t;
+
+
         }
 
 

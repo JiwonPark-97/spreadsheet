@@ -18,8 +18,9 @@ This section was not required.
 
 # Consulted Peers:
 
-I have not consulted with others since the instruction and the given algorithm were clear. Though I referred to the piazza posts.
+I have not directly consulted with others but referred to the discord server listed below in reference.
 
 # References:
 
-    1. Title - URL
+    1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
+    2. 5 C# Collections that Every C# Developer Must Know - https://programmingwithmosh.com/net/csharp-collections/
