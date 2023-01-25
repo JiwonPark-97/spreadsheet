@@ -5,7 +5,7 @@ Date:       18-Jan-2023
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       23-Jan-2023 4.00 am (of when submission is ready to be evaluated)
+Date:       27-Jan-2023 11.00 am (of when submission is ready to be evaluated)
 Solution:   Spreadsheet
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
@@ -17,3 +17,4 @@ The spreadsheet program is currently capable of evaluating mathematical expressi
 # Time Expenditures:
 
     1. Assignment One:   Predicted Hours:          20        Actual Hours:   32
+    2. Assignment Two:   Predicted Hours:          20        Actual Hours:   

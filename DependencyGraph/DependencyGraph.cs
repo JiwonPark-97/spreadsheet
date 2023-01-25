@@ -41,11 +41,20 @@ namespace SpreadsheetUtilities
     /// </summary>
     public class DependencyGraph
     {
+
+        Dictionary<String, HashSet<String>> dependents;
+        Dictionary<String, HashSet<String>> dependees;
+        int size;
+
+
         /// <summary>
         /// Creates an empty DependencyGraph.
         /// </summary>
         public DependencyGraph()
         {
+            dependents = new Dictionary<string, HashSet<string>>();
+            dependees = new Dictionary<string, HashSet<string>>();
+            size = 0;
         }
 
 
@@ -54,7 +63,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public int Size
         {
-            get { return 0; }
+            get { return size; }
         }
 
 
