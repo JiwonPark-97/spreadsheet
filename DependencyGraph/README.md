@@ -11,6 +11,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
+I could not figure out how to install test coverage feature to VS on Mac. I tried to cover every line in the DependencyGraph class but not sure.
 
 # Assignment Specific Topics
 
@@ -26,3 +27,4 @@ I have not directly consulted with others but referred to the discord server lis
     2. 5 C# Collections that Every C# Developer Must Know - https://programmingwithmosh.com/net/csharp-collections/
     3. Initialize a HashSet in C# - https://www.techiedelight.com/initialize-a-hashset-in-csharp/
     4. Attemping to add a value to a HashSet doesn't change the amount of values in it - https://stackoverflow.com/questions/20819248/attemping-to-add-a-value-to-a-hashset-doesnt-change-the-amount-of-values-in-it
+    5. C# - Dictionary<TKey, TValue> - https://www.tutorialsteacher.com/csharp/csharp-dictionary
