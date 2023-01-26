@@ -207,17 +207,34 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
-            int originalSize = dependents[s].Count();
-
-            dependents[s] = new HashSet<string>();
-            foreach(string dependent in newDependents)
+            int origianlSize = 0;
+            if (dependents.ContainsKey(s))
             {
-                dependents[s].Add(dependent);
+                HashSet<string> originalDepts = dependents[s];
+                origianlSize = originalDepts.Count();
+                foreach (string dep in originalDepts)
+                {
+                    dependees.Remove(dep);
+                }
             }
+            HashSet<string> newDepts = new HashSet<string>(newDependents);
+            //dependents[s] = (HashSet<String>) newDependents;
+            dependents[s] = newDepts;
+            size = size - origianlSize + newDepts.Count();
 
-            int finalSize = dependents[s].Count();
+            //// add if statement for existence of dependents[s]
 
-            size = size - originalSize + finalSize;
+            //int originalSize = dependents[s].Count();
+
+            //dependents[s] = new HashSet<string>();
+            //foreach(string dependent in newDependents)
+            //{
+            //    dependents[s].Add(dependent);
+            //}
+
+            //int finalSize = dependents[s].Count();
+
+            //size = size - originalSize + finalSize;
 
         }
 
