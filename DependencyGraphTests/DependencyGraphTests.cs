@@ -24,6 +24,16 @@ namespace DevelopmentTests
             Assert.AreEqual(0, t.Size);
         }
 
+        /// <summary>
+        /// Empty graph should contain nothing
+        /// </summary>
+        [TestMethod()]
+        public void ThisEmptyTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            string s = "x";
+            Assert.AreEqual(0, t[s]);
+        }
 
         /// <summary>
         ///Empty graph should contain nothing
@@ -95,7 +105,7 @@ namespace DevelopmentTests
         ///Non-empty graph contains something
         ///</summary>
         [TestMethod()]
-        public void SizeTest()
+        public void SimpleSizeTest()
         {
             DependencyGraph t = new DependencyGraph();
             t.AddDependency("a", "b");
@@ -103,6 +113,34 @@ namespace DevelopmentTests
             t.AddDependency("c", "b");
             t.AddDependency("b", "d");
             Assert.AreEqual(4, t.Size);
+        }
+
+
+        /// <summary>
+        /// Non-empty graph contains something
+        /// </summary>
+        [TestMethod()]
+        public void RemoveTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.AddDependency("a", "b");
+            t.AddDependency("a", "c");
+            t.AddDependency("c", "b");
+            t.AddDependency("b", "d");
+            t.RemoveDependency("a", "b");
+            Assert.AreEqual(3, t.Size);
+        }
+
+
+        [TestMethod()]
+        public void SimpleThisTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.AddDependency("a", "b");
+            t.AddDependency("a", "c");
+            t.AddDependency("c", "b");
+            t.AddDependency("b", "d");
+            Assert.AreEqual(2, t["b"]);
         }
 
 
@@ -212,7 +250,7 @@ namespace DevelopmentTests
             // Add a bunch of dependencies
             for (int i = 0; i < SIZE; i++)
             {
-                for (int j =  i + 1; j < SIZE; j++)
+                for (int j = i + 1; j < SIZE; j++)
                 {
                     t.AddDependency(letters[i], letters[j]);
                     dents[i].Add(letters[j]);
