@@ -9,6 +9,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
+/// <summary>
+/// Author:    Jiwon Park
+/// Partner:   None
+/// Date:      27-Jan-2023
+/// Course:    CS 3500, University of Utah, School of Computing
+/// Copyright: CS 3500 and Jiwon Park - This work may not 
+///            be copied for use in Academic Coursework.
+///
+/// I, Jiwon Park, certify that I wrote this code from scratch and
+/// did not copy it in part or whole from another source.  All 
+/// references used in the completion of the assignments are cited 
+/// in my README file.
+///
+/// This file contains a single class DependencyGraph that represents the relationships between dependents and dependees.
+/// </summary>
+/// 
 namespace SpreadsheetUtilities
 {
 
@@ -160,9 +177,10 @@ namespace SpreadsheetUtilities
                 }
 
             // if s has no dependents
-            } else
+            }
+            else
             {
-                dependents.Add(s, new HashSet<string>() {t});
+                dependents.Add(s, new HashSet<string>() { t });
                 size++;
             }
 
@@ -172,9 +190,10 @@ namespace SpreadsheetUtilities
                 dependees[t].Add(s);
 
             // if t has no dependees
-            } else
+            }
+            else
             {
-                dependees.Add(t, new HashSet<string>() {s});
+                dependees.Add(t, new HashSet<string>() { s });
             }
         }
 
@@ -186,12 +205,14 @@ namespace SpreadsheetUtilities
         /// <param name="t"></param>
         public void RemoveDependency(string s, string t)
         {
+            // remove the pair from dependents
             if (dependents.ContainsKey(s))
             {
                 dependents[s].Remove(t);
                 size--;
             }
 
+            // remove the pair from dependees
             if (dependees.ContainsKey(t))
             {
                 dependees[t].Remove(s);
@@ -207,18 +228,19 @@ namespace SpreadsheetUtilities
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
             IEnumerable<string> originalDependents = GetDependents(s);
-            foreach(string dept in originalDependents)
+
+            // remove all existing pairs
+            foreach (string dept in originalDependents)
             {
                 RemoveDependency(s, dept);
             }
 
-            foreach(string dept in newDependents)
+            // add new pairs
+            foreach (string dept in newDependents)
             {
                 AddDependency(s, dept);
             }
 
-            // redandunt - remove/add dependency already update size
-            //size = size - originalDependents.Count() + newDependents.Count();
         }
 
 
@@ -228,17 +250,19 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependees(string s, IEnumerable<string> newDependees)
         {
-            int originalSize = dependees[s].Count();
+            IEnumerable<string> originalDependees = GetDependees(s);
 
-            dependees[s] = new HashSet<string>();
-            foreach (string dependee in newDependees)
+            // remove all existing pairs
+            foreach (string depe in originalDependees)
             {
-                dependees[s].Add(dependee);
+                RemoveDependency(depe, s);
             }
 
-            int finalSize = dependees[s].Count();
-
-            size = size - originalSize + finalSize;
+            // add new pairs
+            foreach (string depe in newDependees)
+            {
+                AddDependency(depe, s);
+            }
 
         }
 

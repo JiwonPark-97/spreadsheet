@@ -3,6 +3,21 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SpreadsheetUtilities;
 
+/// <summary>
+/// Author:    Jiwon Park
+/// Partner:   None
+/// Date:      27-Jan-2023
+/// Course:    CS 3500, University of Utah, School of Computing
+/// Copyright: CS 3500 and Jiwon Park - This work may not 
+///            be copied for use in Academic Coursework.
+///
+/// I, Jiwon Park, certify that I wrote this code from scratch and
+/// did not copy it in part or whole from another source.  All 
+/// references used in the completion of the assignments are cited 
+/// in my README file.
+///
+/// This file contains a single class that provides unit tests for DependencyGraph. 
+/// </summary>
 
 namespace DevelopmentTests
 {
@@ -31,23 +46,8 @@ namespace DevelopmentTests
         public void ThisEmptyTest()
         {
             DependencyGraph t = new DependencyGraph();
-            string s = "x";
-            Assert.AreEqual(0, t[s]);
+            Assert.AreEqual(0, t["x"]);
         }
-
-        /// <summary>
-        ///Empty graph should contain nothing
-        ///</summary>
-        [TestMethod()]
-        public void SimpleEmptyRemoveTest()
-        {
-            DependencyGraph t = new DependencyGraph();
-            t.AddDependency("x", "y");
-            Assert.AreEqual(1, t.Size);
-            t.RemoveDependency("x", "y");
-            Assert.AreEqual(0, t.Size);
-        }
-
 
         /// <summary>
         ///Empty graph should contain nothing
@@ -66,6 +66,69 @@ namespace DevelopmentTests
             t.RemoveDependency("x", "y");
             Assert.IsFalse(t.GetDependees("y").GetEnumerator().MoveNext());
             Assert.IsFalse(t.GetDependents("x").GetEnumerator().MoveNext());
+        }
+
+        /// <summary>
+        /// Adding new dependency shouldn't fail
+        ///</summary>
+        [TestMethod()]
+        public void SimpleAddTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.AddDependency("x", "y");
+            Assert.AreEqual(1, t.Size);
+            t.AddDependency("y", "z");
+            Assert.AreEqual(2, t.Size);
+        }
+
+        /// <summary>
+        /// Adding duplicates should change nothing
+        ///</summary>
+        [TestMethod()]
+        public void AddDuplicateTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.AddDependency("x", "y");
+            Assert.AreEqual(1, t.Size);
+            t.AddDependency("x", "y");
+            Assert.AreEqual(1, t.Size);
+        }
+
+        /// <summary>
+        /// Removing exsisting dependency shouldn't fail
+        ///</summary>
+        [TestMethod()]
+        public void SimpleRemoveTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.AddDependency("x", "y");
+            Assert.AreEqual(1, t.Size);
+            t.RemoveDependency("x", "y");
+            Assert.AreEqual(0, t.Size);
+        }
+
+        /// <summary>
+        /// Removing from empty graph should change nothing
+        ///</summary>
+        [TestMethod()]
+        public void EmptyRemoveTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.RemoveDependency("x", "y");
+            Assert.AreEqual(0, t.Size);
+        }
+
+        /// <summary>
+        /// Removing non-existing dependency should change nothing
+        ///</summary>
+        [TestMethod()]
+        public void RemoveNonExistTest()
+        {
+            DependencyGraph t = new DependencyGraph();
+            t.AddDependency("x", "y");
+            Assert.AreEqual(1, t.Size);
+            t.RemoveDependency("y", "z");
+            Assert.AreEqual(1, t.Size);
         }
 
 
@@ -131,7 +194,9 @@ namespace DevelopmentTests
             Assert.AreEqual(3, t.Size);
         }
 
-
+        /// <summary>
+        /// Non-empty graph contains something
+        /// </summary>
         [TestMethod()]
         public void SimpleThisTest()
         {
