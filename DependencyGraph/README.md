@@ -11,6 +11,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
+I used dictionary with hashset to represent the dependency graph.
+
 # Assignment Specific Topics
 
 This section was not required.

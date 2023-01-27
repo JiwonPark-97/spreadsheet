@@ -131,7 +131,6 @@ namespace DevelopmentTests
             Assert.AreEqual(1, t.Size);
         }
 
-
         /// <summary>
         ///Replace on an empty DG shouldn't fail
         ///</summary>
@@ -146,8 +145,6 @@ namespace DevelopmentTests
             t.ReplaceDependees("y", new HashSet<string>());
         }
 
-
-
         ///<summary>
         ///It should be possibe to have more than one DG at a time.
         ///</summary>
@@ -160,9 +157,6 @@ namespace DevelopmentTests
             Assert.AreEqual(1, t1.Size);
             Assert.AreEqual(0, t2.Size);
         }
-
-
-
 
         /// <summary>
         ///Non-empty graph contains something
@@ -177,7 +171,6 @@ namespace DevelopmentTests
             t.AddDependency("b", "d");
             Assert.AreEqual(4, t.Size);
         }
-
 
         /// <summary>
         /// Non-empty graph contains something
@@ -207,7 +200,6 @@ namespace DevelopmentTests
             t.AddDependency("b", "d");
             Assert.AreEqual(2, t["b"]);
         }
-
 
         /// <summary>
         ///Non-empty graph contains something
@@ -242,9 +234,6 @@ namespace DevelopmentTests
             Assert.AreEqual("b", e.Current);
             Assert.IsFalse(e.MoveNext());
         }
-
-
-
 
         /// <summary>
         ///Non-empty graph contains something
@@ -283,8 +272,6 @@ namespace DevelopmentTests
             Assert.AreEqual("b", e.Current);
             Assert.IsFalse(e.MoveNext());
         }
-
-
 
         /// <summary>
         ///Using lots of data

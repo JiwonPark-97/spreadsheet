@@ -12,7 +12,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Overview of the Spreadsheet functionality
 
-The spreadsheet program is currently capable of evaluating mathematical expressions and representing cells and their dependencies.
+The spreadsheet program is currently capable of evaluating mathematical expressions and representing dependencies.
 
 # Time Expenditures:
 

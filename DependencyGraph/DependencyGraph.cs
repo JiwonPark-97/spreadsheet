@@ -201,8 +201,8 @@ namespace SpreadsheetUtilities
         /// <summary>
         /// Removes the ordered pair (s,t), if it exists
         /// </summary>
-        /// <param name="s"></param>
-        /// <param name="t"></param>
+        /// <param name="s"> s must be evaluated first. T depends on S </param>
+        /// <param name="t"> t cannot be evaluated until s is </param>
         public void RemoveDependency(string s, string t)
         {
             // remove the pair from dependents
