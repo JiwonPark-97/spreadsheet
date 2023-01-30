@@ -253,15 +253,15 @@ namespace SpreadsheetUtilities
             IEnumerable<string> originalDependees = GetDependees(s);
 
             // remove all existing pairs
-            foreach (string depe in originalDependees)
+            foreach (string dees in originalDependees)
             {
-                RemoveDependency(depe, s);
+                RemoveDependency(dees, s);
             }
 
             // add new pairs
-            foreach (string depe in newDependees)
+            foreach (string dees in newDependees)
             {
-                AddDependency(depe, s);
+                AddDependency(dees, s);
             }
 
         }
