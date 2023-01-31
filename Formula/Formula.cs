@@ -48,26 +48,26 @@ namespace SpreadsheetUtilities
 
     private List<string> tokens;
 
-    private bool IsValidSyntax(string s)
-        {
-            String lpPattern = @"\(";
-            String rpPattern = @"\)";
-            String opPattern = @"[\+\-*/]";
-            String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
-            String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
-            String spacePattern = @"\s+";
+    //private bool SpecificTokenRule(string s)
+    //    {
+    //        String lpPattern = @"\(";
+    //        String rpPattern = @"\)";
+    //        String opPattern = @"[\+\-*/]";
+    //        String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
+    //        String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
+    //        String spacePattern = @"\s+";
 
-            String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
-                                            lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
-            if (Regex.IsMatch(s, pattern))
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
+    //        String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
+    //                                        lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
+    //        if (Regex.IsMatch(s, pattern))
+    //        {
+    //            return true;
+    //        } else
+    //        {
+    //            return false;
+    //        }
             
-        }
+    //    }
 
     /// <summary>
     /// Creates a Formula from a string that consists of an infix expression written as
@@ -112,15 +112,18 @@ namespace SpreadsheetUtilities
 
             // specific token rule
 
-            if (!IsValidSyntax(formula))
-            {
-                throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers.");
-            }
+            //if (!SpecificTokenRule(formula))
+            //{
+            //    throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers.");
+            //}
 
             // one token rule
             if (tokens.Count() == 0)
             {
                 throw new FormulaFormatException("There must be at least one token.");
+            } else
+            {
+                //if (tokens[1] == )
             }
             // right parentheses rule
             // left parentheses rule
