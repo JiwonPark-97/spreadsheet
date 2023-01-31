@@ -45,6 +45,30 @@ namespace SpreadsheetUtilities
   /// </summary>
   public class Formula
   {
+
+    private List<string> tokens;
+
+    private bool IsValidSyntax(string s)
+        {
+            String lpPattern = @"\(";
+            String rpPattern = @"\)";
+            String opPattern = @"[\+\-*/]";
+            String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
+            String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
+            String spacePattern = @"\s+";
+
+            String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
+                                            lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
+            if (Regex.IsMatch(s, pattern))
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+            
+        }
+
     /// <summary>
     /// Creates a Formula from a string that consists of an infix expression written as
     /// described in the class comment.  If the expression is syntactically invalid,
@@ -82,11 +106,32 @@ namespace SpreadsheetUtilities
     /// </summary>
     public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
     {
-            if (isValid(formula))
+            tokens = GetTokens(formula).ToList();
+
+            // parsing rules
+
+            // specific token rule
+
+            if (!IsValidSyntax(formula))
             {
-                //
+                throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers.");
             }
-    }
+
+            // one token rule
+            if (tokens.Count() == 0)
+            {
+                throw new FormulaFormatException("There must be at least one token.");
+            }
+            // right parentheses rule
+            // left parentheses rule
+            // balanced parentheses rule
+            // starting token rule
+            // ending token rule
+            // parenthesis / operator following rule
+            // extra following rule
+
+
+        }
 
     /// <summary>
     /// Evaluates this Formula, using the lookup delegate to determine the values of
