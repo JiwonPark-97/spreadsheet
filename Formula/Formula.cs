@@ -608,7 +608,33 @@ namespace SpreadsheetUtilities
     /// </summary>
     public override bool Equals(object? obj)
     {
-        return false;
+            if (obj == null || !(obj is Formula))
+            {
+                return false;
+            }
+
+            string objStr = obj.ToString();
+            List<string> objToken = GetTokens(objStr).ToList();
+
+            if (objToken.Count() != tokens.Count())
+            {
+                return false;
+            } else
+            {
+                for (int i = 0; i < objToken.Count(); i++)
+                {
+                    if (IsValue(objToken[i]) && IsValue(tokens[i]){
+                        if (double.Parse(objToken[i]) != double.Parse(tokens[i]){
+                            return false;
+                        }
+                    } else
+                    {
+                        return false;
+                    }
+                }
+            }
+            return false;
+
     }
 
     /// <summary>
