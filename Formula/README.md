@@ -25,3 +25,4 @@ I have not directly consulted with others but referred to the discord server lis
 # References:
 
     1. Floating-point numeric types (C# reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
+    2. Why would you use String.Equals over ==? [duplicate] - https://stackoverflow.com/questions/1659097/why-would-you-use-string-equals-over

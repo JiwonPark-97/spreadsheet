@@ -221,7 +221,7 @@ namespace SpreadsheetUtilities
             {
                 if (!isValid(t))
                 {
-                    throw new FormulaFormatException("Invalid variable: " + t + ".");
+                    throw new FormulaFormatException("Given variable name is invalide: " + t + ".");
                 }
             }
 
@@ -350,11 +350,11 @@ namespace SpreadsheetUtilities
                                 {
                                     tempResult = tempVal / tokenVal;
 
-                                    // prevent division by 0
                                 }
+                                // prevent division by 0
                                 else
                                 {
-                                    throw new ArgumentException();
+                                    return new FormulaError("Divison by 0 occured.");
 
                                 }
                             }
@@ -488,7 +488,7 @@ namespace SpreadsheetUtilities
                                 // prevent division by 0
                                 else
                                 {
-                                    throw new ArgumentException();
+                                    return new FormulaError("Divison by 0 occured.");
                                 }
                             }
                             values.Push(result);
@@ -638,7 +638,7 @@ namespace SpreadsheetUtilities
     /// </summary>
     public override int GetHashCode()
     {
-        return 0;
+        return tokens.GetHashCode();
     }
 
     /// <summary>

@@ -179,7 +179,6 @@ public class FormulaTests
 
     // Test Invalid Expression //
 
-
     /// <summary>
     /// Test Specific Token Rule
     /// </summary>
@@ -270,7 +269,54 @@ public class FormulaTests
         Formula f = new Formula(s);
     }
 
+    // Evaluate Tests //
 
+    [TestMethod]
+    public void TestSimpleEvaluate1()
+    {
+        string s = "1 + 2";
+        Formula f = new Formula(s);
+        Assert.AreEqual(3.0, f.Evaluate(null));
+    }
 
+    [TestMethod]
+    public void TestSimpleEvaluate2()
+    {
+        string s = "1 - 2";
+        Formula f = new Formula(s);
+        Assert.AreEqual(-1.0, f.Evaluate(null));
+    }
+
+    [TestMethod]
+    public void TestSimpleEvaluate3()
+    {
+        string s = "1 * 2";
+        Formula f = new Formula(s);
+        Assert.AreEqual(2.0, f.Evaluate(null));
+    }
+
+    [TestMethod]
+    public void TestSimpleEvaluate4()
+    {
+        string s = "1 / 2";
+        Formula f = new Formula(s);
+        Assert.AreEqual(0.5, f.Evaluate(null));
+    }
+
+    [TestMethod]
+    public void TestComplexEvaluate1()
+    {
+        string s = "((1+2) / 3) * 10";
+        Formula f = new Formula(s);
+        Assert.AreEqual(10.0, f.Evaluate(null));
+    }
+
+    [TestMethod]
+    public void TestComplexEvaluate2()
+    {
+        string s = "(10) /((1 +2)-3)";
+        Formula f = new Formula(s);
+        Assert.AreEqual(new FormulaError(""), f.Evaluate(null));
+    }
 
 }
