@@ -78,6 +78,18 @@ namespace SpreadsheetUtilities
             return (Regex.IsMatch(s, pattern));
         }
 
+    private bool SpecificTokenRule(List<string> list)
+        {
+            foreach (string t in list)
+            {
+                if (!(isValue(t) || isOperator(t) || isVariable(t) || isRightParen(t) || isLeftParen(t)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     private bool BalancedParenRule(List<string> list)
         {
             int lp = 0;
@@ -102,7 +114,11 @@ namespace SpreadsheetUtilities
             {
                 if (isLeftParen(list[i]) || isOperator(list[i]))
                 {
-                    return (isValue(list[i + 1]) || isVariable(list[i + 1]) || isLeftParen(list[i + 1]));
+                    if (!(isValue(list[i + 1]) || isVariable(list[i + 1]) || isLeftParen(list[i + 1])))
+                    {
+                        return false;
+                    }
+                    
                 }
             }
             return true;
@@ -191,15 +207,13 @@ namespace SpreadsheetUtilities
             }
 
             // check for invaild variables
-            foreach (string t in tokens)
+            List<string> varList = GetVariables().ToList();
+            foreach (string t in varList)
             {
-                if (isVariable(t))
-                {
-                    if (!isValid(t))
+                 if (!isValid(t))
                     {
                         throw new FormulaFormatException("Invalid variable: " + t + ".");
                     }
-                }
             }
 
             // Check for parsing rules
@@ -214,6 +228,13 @@ namespace SpreadsheetUtilities
             if (!(isValue(tokens[0]) || isVariable(tokens[0]) || isLeftParen(tokens[0])))
             {
                 throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
+
+            }
+
+            // Specific Token Rule
+            if (!SpecificTokenRule(tokens))
+            {
+                throw new FormulaFormatException("the only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).");
 
             }
 

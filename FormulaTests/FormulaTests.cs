@@ -134,11 +134,132 @@ public class FormulaTests
 
     // Constructor Tests //
 
+    // Test Valid Expressions //
+
+    /// <summary>
+    /// Test constructor with simple expression
+    /// </summary>
     [TestMethod]
-    public void TestConstructor()
+    public void TestSimpleConstructor1()
     {
         string s = "1+2+3";
         Formula f = new Formula(s);
     }
+
+    /// <summary>
+    /// Test constructor with simple expression
+    /// </summary>
+    [TestMethod]
+    public void TestSimpleConstructor2()
+    {
+        string s = "(1+2)*3";
+        Formula f = new Formula(s);
+    }
+
+    /// <summary>
+    /// Test constructor with variables and decimal numbers
+    /// </summary>
+    [TestMethod]
+    public void TestComplexConstructor1()
+    {
+        string s = "(1.0+2)*3.5/x1_ * (_123_) - 1.2";
+        Formula f = new Formula(s);
+    }
+
+    /// <summary>
+    /// Test constructor with variables and scientific notations
+    /// </summary>
+    [TestMethod]
+    public void TestComplexConstructor2()
+    {
+        string s = "3.5 - e/0+(_variable1 *variable2) - e";
+        Formula f = new Formula(s);
+    }
+
+
+    // Test Invalid Expression //
+
+
+    /// <summary>
+    /// Test Specific Token Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor1()
+    {
+        string s = "123^ - %_12";
+        Formula f = new Formula(s);
+    }
+
+
+    /// <summary>
+    /// Test One Token Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor2()
+    {
+        string s = " ";
+        Formula f = new Formula(s);
+    }
+
+    /// <summary>
+    /// Test Balanced Parentheses Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor3()
+    {
+        string s = "(1+2*3";
+        Formula f = new Formula(s);
+    }
+
+    /// <summary>
+    /// Test Right Parentheses Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor4()
+    {
+        string s = "(1)+2*3)";
+        Formula f = new Formula(s);
+    }
+
+    /// <summary>
+    /// Test Starting Token Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor5()
+    {
+        string s = "+ 123 -10/x_1";
+        Formula f = new Formula(s);
+    }
+
+
+    /// <summary>
+    /// Test Ending Token Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor6()
+    {
+        string s = "123 -10/x_1 - ";
+        Formula f = new Formula(s);
+    }
+
+    /// <summary>
+    /// Test Parenthesis/Operator Following Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor7()
+    {
+        string s = "((abc -()))";
+        Formula f = new Formula(s);
+    }
+
+
+
 
 }
