@@ -48,10 +48,10 @@ namespace SpreadsheetUtilities
 
     private bool isValue(string s)
         {
-            //double value;
-            //return (double.TryParse(s, out value));
-            string pattern = string.Format(@"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?");
-            return (Regex.IsMatch(s, pattern));
+            double value;
+            return (double.TryParse(s, out value));
+            //string pattern = string.Format(@"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?");
+            //return (Regex.IsMatch(s, pattern));
         }
 
     private bool isOperator(string s)
@@ -202,10 +202,19 @@ namespace SpreadsheetUtilities
                 }
             }
 
+            // Check for parsing rules
+
             // One Token Rule
             if (tokens.Count() == 0)
             {
                 throw new FormulaFormatException("There must be at least one token.");
+            }
+
+            // Starting Token Rule
+            if (!(isValue(tokens[0]) || isVariable(tokens[0]) || isLeftParen(tokens[0])))
+            {
+                throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
+
             }
 
             // Right Parentheses Rule
@@ -222,15 +231,8 @@ namespace SpreadsheetUtilities
 
             }
 
-            // Starting Token Rule
-            if (!(isValue(tokens[0]) || isVariable(tokens[0]) || isLeftParen(tokens[0])))
-            {
-                throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
-
-            }
-
             // Ending Token Rule
-            if (!(isValue(tokens[-1]) || isVariable(tokens[-1]) || isRightParen(tokens[-1])))
+            if (!(isValue(tokens.Last()) || isVariable(tokens.Last()) || isRightParen(tokens.Last())))
             {
                 throw new FormulaFormatException("The last token of an expression must be a number, a variable, or a closing parenthesis.");
 
@@ -291,7 +293,15 @@ namespace SpreadsheetUtilities
     /// </summary>
     public IEnumerable<String> GetVariables()
     {
-      return null;
+            HashSet<string> returnSet = new HashSet<string>();
+            foreach(string t in tokens)
+            {
+                if (isVariable(t))
+                {
+                    returnSet.Add(t);
+                }
+            }
+            return returnSet;
     }
 
     /// <summary>

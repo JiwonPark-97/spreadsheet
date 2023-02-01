@@ -1,12 +1,33 @@
-﻿using System.Text.RegularExpressions;
+﻿/// <summary>
+/// Author:    Jiwon Park
+/// Partner:   None
+/// Date:      3-Feb-2023
+/// Course:    CS 3500, University of Utah, School of Computing
+/// Copyright: CS 3500 and Jiwon Park - This work may not 
+///            be copied for use in Academic Coursework.
+///
+/// I, Jiwon Park, certify that I wrote this code from scratch and
+/// did not copy it in part or whole from another source.  All 
+/// references used in the completion of the assignments are cited 
+/// in my README file.
+///
+/// This file contains a single class that provides unit tests for Formula. 
+///
+/// </summary>
+
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SpreadsheetUtilities;
 
 namespace FormulaTests;
 
 [TestClass]
-public class UnitTest1
+public class FormulaTests
 {
+
+    // GetTokens Tests //
+
+
     /// <summary>
     /// A helper method in Formula class
     /// </summary>
@@ -110,5 +131,14 @@ public class UnitTest1
         Assert.AreEqual(0, tokens.Count());
     }
 
+
+    // Constructor Tests //
+
+    [TestMethod]
+    public void TestConstructor()
+    {
+        string s = "1+2+3";
+        Formula f = new Formula(s);
+    }
 
 }
