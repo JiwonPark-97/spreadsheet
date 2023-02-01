@@ -20,33 +20,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace SpreadsheetUtilities
 {
-  /// <summary>
-  /// Represents formulas written in standard infix notation using standard precedence
-  /// rules.  The allowed symbols are non-negative numbers written using double-precision 
-  /// floating-point syntax (without unary preceeding '-' or '+'); 
-  /// variables that consist of a letter or underscore followed by 
-  /// zero or more letters, underscores, or digits; parentheses; and the four operator 
-  /// symbols +, -, *, and /.  
-  /// 
-  /// Spaces are significant only insofar that they delimit tokens.  For example, "xy" is
-  /// a single variable, "x y" consists of two variables "x" and y; "x23" is a single variable; 
-  /// and "x 23" consists of a variable "x" and a number "23".
-  /// 
-  /// Associated with every formula are two delegates:  a normalizer and a validator.  The
-  /// normalizer is used to convert variables into a canonical form, and the validator is used
-  /// to add extra restrictions on the validity of a variable (beyond the standard requirement 
-  /// that it consist of a letter or underscore followed by zero or more letters, underscores,
-  /// or digits.)  Their use is described in detail in the constructor and method comments.
-  /// </summary>
-  public class Formula
-  {
+    /// <summary>
+    /// Represents formulas written in standard infix notation using standard precedence
+    /// rules.  The allowed symbols are non-negative numbers written using double-precision 
+    /// floating-point syntax (without unary preceeding '-' or '+'); 
+    /// variables that consist of a letter or underscore followed by 
+    /// zero or more letters, underscores, or digits; parentheses; and the four operator 
+    /// symbols +, -, *, and /.  
+    /// 
+    /// Spaces are significant only insofar that they delimit tokens.  For example, "xy" is
+    /// a single variable, "x y" consists of two variables "x" and y; "x23" is a single variable; 
+    /// and "x 23" consists of a variable "x" and a number "23".
+    /// 
+    /// Associated with every formula are two delegates:  a normalizer and a validator.  The
+    /// normalizer is used to convert variables into a canonical form, and the validator is used
+    /// to add extra restrictions on the validity of a variable (beyond the standard requirement 
+    /// that it consist of a letter or underscore followed by zero or more letters, underscores,
+    /// or digits.)  Their use is described in detail in the constructor and method comments.
+    /// </summary>
+    public class Formula
+    {
 
-    private bool isValue(string s)
+        // helper methods for checking type of token //
+
+        private bool IsValue(string s)
         {
             double value;
             return (double.TryParse(s, out value));
@@ -54,35 +57,38 @@ namespace SpreadsheetUtilities
             //return (Regex.IsMatch(s, pattern));
         }
 
-    private bool isOperator(string s)
+        private bool IsOperator(string s)
         {
             string pattern = string.Format(@"[\+\-*/]");
             return (Regex.IsMatch(s, pattern));
         }
 
-    private bool isLeftParen(string s)
+        private bool IsLeftParen(string s)
         {
             string pattern = string.Format(@"\(");
             return (Regex.IsMatch(s, pattern));
         }
 
-    private bool isRightParen(string s)
+        private bool IsRightParen(string s)
         {
             string pattern = string.Format(@"\)");
             return (Regex.IsMatch(s, pattern));
         }
 
-    private bool isVariable(string s)
+        private bool IsVariable(string s)
         {
             string pattern = string.Format(@"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
             return (Regex.IsMatch(s, pattern));
         }
 
-    private bool SpecificTokenRule(List<string> list)
+
+        // helper methods for parsing rules //
+
+        private bool SpecificTokenRule(List<string> list)
         {
             foreach (string t in list)
             {
-                if (!(isValue(t) || isOperator(t) || isVariable(t) || isRightParen(t) || isLeftParen(t)))
+                if (!(IsValue(t) || IsOperator(t) || IsVariable(t) || IsRightParen(t) || IsLeftParen(t)))
                 {
                     return false;
                 }
@@ -90,17 +96,17 @@ namespace SpreadsheetUtilities
             return true;
         }
 
-    private bool BalancedParenRule(List<string> list)
+        private bool BalancedParenRule(List<string> list)
         {
             int lp = 0;
             int rp = 0;
             foreach (string t in list)
             {
-                if (isLeftParen(t))
+                if (IsLeftParen(t))
                 {
                     lp++;
                 }
-                if (isRightParen(t))
+                if (IsRightParen(t))
                 {
                     rp++;
                 }
@@ -108,45 +114,48 @@ namespace SpreadsheetUtilities
             return (lp == rp);
         }
 
-    private bool ParenOprFollowingRule(List<string> list)
+        private bool ParenOprFollowingRule(List<string> list)
         {
-            for (int i = 0; i < list.Count(); i++)
+            for (int i = 0; i < list.Count() - 1; i++)
             {
-                if (isLeftParen(list[i]) || isOperator(list[i]))
+                if (IsLeftParen(list[i]) || IsOperator(list[i]))
                 {
-                    if (!(isValue(list[i + 1]) || isVariable(list[i + 1]) || isLeftParen(list[i + 1])))
+                    if (!(IsValue(list[i + 1]) || IsVariable(list[i + 1]) || IsLeftParen(list[i + 1])))
                     {
                         return false;
                     }
-                    
+
                 }
             }
             return true;
         }
 
-    private bool ExtFollowingRule(List<string> list)
+        private bool XtrFollowingRule(List<string> list)
         {
-            for (int i = 0; i < list.Count(); i++)
+            for (int i = 0; i < list.Count() - 1; i++)
             {
-                if (isValue(list[i]) || isVariable(list[i]) || isRightParen(list[i]))
+                if (IsValue(list[i]) || IsVariable(list[i]) || IsRightParen(list[i]))
                 {
-                    return (isOperator(list[i + 1]) || isRightParen(list[i + 1]));
+                    if (!(IsOperator(list[i + 1]) || IsRightParen(list[i + 1])))
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
         }
 
-    private bool RtParenRule(List<string> list)
+        private bool RtParenRule(List<string> list)
         {
             int lp = 0;
             int rp = 0;
             foreach (string t in list)
             {
-                if (isLeftParen(t))
+                if (IsLeftParen(t))
                 {
                     lp++;
                 }
-                if (isRightParen(t))
+                if (IsRightParen(t))
                 {
                     rp++;
                 }
@@ -158,44 +167,44 @@ namespace SpreadsheetUtilities
             return true;
         }
 
-    private List<string> tokens;
+        private List<string> tokens;
 
-    /// <summary>
-    /// Creates a Formula from a string that consists of an infix expression written as
-    /// described in the class comment.  If the expression is syntactically invalid,
-    /// throws a FormulaFormatException with an explanatory Message.
-    /// 
-    /// The associated normalizer is the identity function, and the associated validator
-    /// maps every string to true.  
-    /// </summary>
-    public Formula(String formula) :
-        this(formula, s => s, s => true)
-    {
-    }
+        /// <summary>
+        /// Creates a Formula from a string that consists of an infix expression written as
+        /// described in the class comment.  If the expression is syntactically invalid,
+        /// throws a FormulaFormatException with an explanatory Message.
+        /// 
+        /// The associated normalizer is the identity function, and the associated validator
+        /// maps every string to true.  
+        /// </summary>
+        public Formula(String formula) :
+            this(formula, s => s, s => true)
+        {
+        }
 
-    /// <summary>
-    /// Creates a Formula from a string that consists of an infix expression written as
-    /// described in the class comment.  If the expression is syntactically incorrect,
-    /// throws a FormulaFormatException with an explanatory Message.
-    /// 
-    /// The associated normalizer and validator are the second and third parameters,
-    /// respectively.  
-    /// 
-    /// If the formula contains a variable v such that normalize(v) is not a legal variable, 
-    /// throws a FormulaFormatException with an explanatory message. 
-    /// 
-    /// If the formula contains a variable v such that isValid(normalize(v)) is false,
-    /// throws a FormulaFormatException with an explanatory message.
-    /// 
-    /// Suppose that N is a method that converts all the letters in a string to upper case, and
-    /// that V is a method that returns true only if a string consists of one letter followed
-    /// by one digit.  Then:
-    /// 
-    /// new Formula("x2+y3", N, V) should succeed
-    /// new Formula("x+y3", N, V) should throw an exception, since V(N("x")) is false
-    /// new Formula("2x+y3", N, V) should throw an exception, since "2x+y3" is syntactically incorrect.
-    /// </summary>
-    public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
+        /// <summary>
+        /// Creates a Formula from a string that consists of an infix expression written as
+        /// described in the class comment.  If the expression is syntactically incorrect,
+        /// throws a FormulaFormatException with an explanatory Message.
+        /// 
+        /// The associated normalizer and validator are the second and third parameters,
+        /// respectively.  
+        /// 
+        /// If the formula contains a variable v such that normalize(v) is not a legal variable, 
+        /// throws a FormulaFormatException with an explanatory message. 
+        /// 
+        /// If the formula contains a variable v such that isValid(normalize(v)) is false,
+        /// throws a FormulaFormatException with an explanatory message.
+        /// 
+        /// Suppose that N is a method that converts all the letters in a string to upper case, and
+        /// that V is a method that returns true only if a string consists of one letter followed
+        /// by one digit.  Then:
+        /// 
+        /// new Formula("x2+y3", N, V) should succeed
+        /// new Formula("x+y3", N, V) should throw an exception, since V(N("x")) is false
+        /// new Formula("2x+y3", N, V) should throw an exception, since "2x+y3" is syntactically incorrect.
+        /// </summary>
+        public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
             // get tokens from formula
             tokens = GetTokens(formula).ToList();
@@ -210,10 +219,10 @@ namespace SpreadsheetUtilities
             List<string> varList = GetVariables().ToList();
             foreach (string t in varList)
             {
-                 if (!isValid(t))
-                    {
-                        throw new FormulaFormatException("Invalid variable: " + t + ".");
-                    }
+                if (!isValid(t))
+                {
+                    throw new FormulaFormatException("Invalid variable: " + t + ".");
+                }
             }
 
             // Check for parsing rules
@@ -225,7 +234,7 @@ namespace SpreadsheetUtilities
             }
 
             // Starting Token Rule
-            if (!(isValue(tokens[0]) || isVariable(tokens[0]) || isLeftParen(tokens[0])))
+            if (!(IsValue(tokens[0]) || IsVariable(tokens[0]) || IsLeftParen(tokens[0])))
             {
                 throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
 
@@ -253,7 +262,7 @@ namespace SpreadsheetUtilities
             }
 
             // Ending Token Rule
-            if (!(isValue(tokens.Last()) || isVariable(tokens.Last()) || isRightParen(tokens.Last())))
+            if (!(IsValue(tokens.Last()) || IsVariable(tokens.Last()) || IsRightParen(tokens.Last())))
             {
                 throw new FormulaFormatException("The last token of an expression must be a number, a variable, or a closing parenthesis.");
 
@@ -267,7 +276,7 @@ namespace SpreadsheetUtilities
             }
 
             // Extra Following Rule
-            if (!ExtFollowingRule(tokens))
+            if (!XtrFollowingRule(tokens))
             {
                 throw new FormulaFormatException("Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.");
 
@@ -296,10 +305,245 @@ namespace SpreadsheetUtilities
         ///
         /// This method should never throw an exception.
         /// </summary>
-  public object Evaluate(Func<string, double> lookup)
-   {
-      return null;
-   }
+        public object Evaluate(Func<string, double> lookup)
+        {
+            Stack<double> values = new Stack<double>();
+            Stack<string> operators = new Stack<string>();
+
+            // proceed tokens from left to right
+            foreach (string token in tokens)
+            {
+
+                if (IsValue(token) || IsVariable(token))
+                {
+                    // get decimal values from the token
+                    double tokenVal = 0;
+
+                    if (IsValue(token))
+                    {
+                        tokenVal = Double.Parse(token);
+                    }
+                    else
+                    {
+                        tokenVal = lookup(token);
+                    }
+
+                    // check the operator stack for '*' or '/' at the top
+                    if (operators.Count != 0)
+                    {
+                        if ((operators.Peek()) == "*" || (operators.Peek() == "/"))
+                        {
+                            // pop the value and operator stack and apply with the token
+                            double tempVal = values.Pop();
+                            string tempOpr = operators.Pop();
+                            double tempResult;
+
+                            if (tempOpr == "*")
+                            {
+                                tempResult = tempVal * tokenVal;
+                            }
+
+                            // if operator is '/'
+                            else
+                            {
+                                if (tokenVal != 0)
+                                {
+                                    tempResult = tempVal / tokenVal;
+
+                                    // prevent division by 0
+                                }
+                                else
+                                {
+                                    throw new ArgumentException();
+
+                                }
+                            }
+
+                            // push the result onto the value stack
+                            values.Push(tempResult);
+                        }
+
+                        // if there isn't '*' or '/' at the top of the operator stack
+                        else
+                        {
+                            values.Push(tokenVal);
+                        }
+                    }
+
+                    // if operator stack is empty
+                    else
+                    {
+                        values.Push(tokenVal);
+                    }
+                }
+
+                else if (token == "+" || token == "-")
+                {
+
+                    // if + or - at the top of the operator stack
+                    if (operators.Count() != 0)
+                    {
+                        if (operators.Peek() == "+" || operators.Peek() == "-")
+                        {
+                            // pop the value stack twice and the operator stack once
+                            double val1 = values.Pop();
+                            double val2 = values.Pop();
+                            string op = operators.Pop();
+                            double result;
+
+                            // apply the popped operator to the popped numbers and push the result onto the value stack
+                            if (op == "+")
+                            {
+                                result = val2 + val1;
+                            }
+                            else
+                            {
+                                result = val2 - val1;
+                            }
+
+                            values.Push(result);
+                        }
+                    }
+
+                    // push token onto the operator stack
+                    operators.Push(token);
+                }
+
+                else if (token == "*" || token == "/" || token == "(")
+                {
+                    // push token onto the operator stack
+                    operators.Push(token);
+                }
+
+                else if (token == ")")
+                {
+                    // there should be '(' on the operator stack. if not, throw an exception
+                    if (!operators.Contains("("))
+                    {
+                        throw new ArgumentException();
+                    }
+
+                    // if + or - at the top of the operator stack
+                    else if (operators.Peek() == "+" || operators.Peek() == "-")
+                    {
+                        // pop the value stack twice and the operator stack once
+                        double val1 = values.Pop();
+                        double val2 = values.Pop();
+                        string op = operators.Pop();
+                        double result;
+
+                        // apply the popped operator to the popped numbers and push the result onto the value stack
+                        if (op == "+")
+                        {
+                            result = val2 + val1;
+                        }
+
+                        // op == "-"
+                        else
+                        {
+                            result = val2 - val1;
+                        }
+                        values.Push(result);
+                    }
+
+
+                    // the top of the operator stack must be '('. pop it
+                    // throw an exception if there isn't '(' on the operator stack
+                    if (!operators.Contains("("))
+                    {
+                        throw new ArgumentException();
+                    }
+                    else
+                    {
+                        string tempOp = operators.Pop();
+
+                    }
+
+                    // if * or / at the top of the operator stack
+                    if (operators.Count() != 0)
+                    {
+                        if (operators.Peek() == "*" || operators.Peek() == "/")
+                        {
+                            // pop the value stack twice and the operator stack once
+                            double val1 = values.Pop();
+                            double val2 = values.Pop();
+                            string op = operators.Pop();
+                            double result;
+
+                            // apply the popped operator to the popped numbers and push the result onto the value stack
+                            if (op == "*")
+                            {
+                                result = val2 * val1;
+                            }
+
+                            // op == "/"
+                            else
+                            {
+                                if (val1 != 0)
+                                {
+                                    result = val2 / val1;
+
+                                }
+
+                                // prevent division by 0
+                                else
+                                {
+                                    throw new ArgumentException();
+                                }
+                            }
+                            values.Push(result);
+                        }
+                    }
+
+                }
+            }
+            // last token proceeded
+
+            // if operator stack is empty, there should be a single value
+            if (operators.Count() == 0)
+            {
+                if (values.Count() == 1)
+                {
+                    return values.Pop();
+                }
+
+                // if there isn't exactly one value on the value stack
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+
+            // if operator stack is not empty, there should be exactly one operator (+ or -) and two values.
+            else
+            {
+                if (operators.Count() == 1 && values.Count() == 2)
+                {
+                    string op = operators.Pop();
+                    double val1 = values.Pop();
+                    double val2 = values.Pop();
+
+                    if (op == "+")
+                    {
+                        return val2 + val1;
+
+                    }
+                    // should be "-"
+                    else
+                    {
+                        return val2 - val1;
+                    }
+
+                }
+                // if there isn't exactly one operator and two values
+                else
+                {
+                    throw new ArgumentException();
+                }
+
+            }
+            throw new ArgumentException();
+        }
 
     /// <summary>
     /// Enumerates the normalized versions of all of the variables that occur in this 
@@ -314,15 +558,15 @@ namespace SpreadsheetUtilities
     /// </summary>
     public IEnumerable<String> GetVariables()
     {
-            HashSet<string> returnSet = new HashSet<string>();
-            foreach(string t in tokens)
+        HashSet<string> returnSet = new HashSet<string>();
+        foreach (string t in tokens)
+        {
+            if (IsVariable(t))
             {
-                if (isVariable(t))
-                {
-                    returnSet.Add(t);
-                }
+                returnSet.Add(t);
             }
-            return returnSet;
+        }
+        return returnSet;
     }
 
     /// <summary>
@@ -337,7 +581,7 @@ namespace SpreadsheetUtilities
     /// </summary>
     public override string ToString()
     {
-      return null;
+        return null;
     }
 
     /// <summary>
@@ -364,7 +608,7 @@ namespace SpreadsheetUtilities
     /// </summary>
     public override bool Equals(object? obj)
     {
-      return false;
+        return false;
     }
 
     /// <summary>
@@ -374,7 +618,7 @@ namespace SpreadsheetUtilities
     /// </summary>
     public static bool operator ==(Formula f1, Formula f2)
     {
-      return false;
+        return false;
     }
 
     /// <summary>
@@ -384,7 +628,7 @@ namespace SpreadsheetUtilities
     /// </summary>
     public static bool operator !=(Formula f1, Formula f2)
     {
-      return false;
+        return false;
     }
 
     /// <summary>
@@ -394,7 +638,7 @@ namespace SpreadsheetUtilities
     /// </summary>
     public override int GetHashCode()
     {
-      return 0;
+        return 0;
     }
 
     /// <summary>
@@ -405,35 +649,35 @@ namespace SpreadsheetUtilities
     /// </summary>
     private static IEnumerable<string> GetTokens(String formula)
     {
-      // Patterns for individual tokens
-      String lpPattern = @"\(";
-      String rpPattern = @"\)";
-      String opPattern = @"[\+\-*/]";
-      String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
-      String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
-      String spacePattern = @"\s+";
+        // Patterns for individual tokens
+        String lpPattern = @"\(";
+        String rpPattern = @"\)";
+        String opPattern = @"[\+\-*/]";
+        String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
+        String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
+        String spacePattern = @"\s+";
 
-      // Overall pattern
-      String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
-                                      lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
+        // Overall pattern
+        String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
+                                        lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
 
-      // Enumerate matching tokens that don't consist solely of white space.
-      foreach (String s in Regex.Split(formula, pattern, RegexOptions.IgnorePatternWhitespace))
-      {
-        if (!Regex.IsMatch(s, @"^\s*$", RegexOptions.Singleline))
+        // Enumerate matching tokens that don't consist solely of white space.
+        foreach (String s in Regex.Split(formula, pattern, RegexOptions.IgnorePatternWhitespace))
         {
-          yield return s;
+            if (!Regex.IsMatch(s, @"^\s*$", RegexOptions.Singleline))
+            {
+                yield return s;
+            }
         }
-      }
 
     }
-  }
+}
 
-  /// <summary>
-  /// Used to report syntactic errors in the argument to the Formula constructor.
-  /// </summary>
-  public class FormulaFormatException : Exception
-  {
+/// <summary>
+/// Used to report syntactic errors in the argument to the Formula constructor.
+/// </summary>
+public class FormulaFormatException : Exception
+{
     /// <summary>
     /// Constructs a FormulaFormatException containing the explanatory message.
     /// </summary>
@@ -441,13 +685,13 @@ namespace SpreadsheetUtilities
         : base(message)
     {
     }
-  }
+}
 
-  /// <summary>
-  /// Used as a possible return value of the Formula.Evaluate method.
-  /// </summary>
-  public struct FormulaError
-  {
+/// <summary>
+/// Used as a possible return value of the Formula.Evaluate method.
+/// </summary>
+public struct FormulaError
+{
     /// <summary>
     /// Constructs a FormulaError containing the explanatory reason.
     /// </summary>
@@ -455,14 +699,14 @@ namespace SpreadsheetUtilities
     public FormulaError(String reason)
         : this()
     {
-      Reason = reason;
+        Reason = reason;
     }
 
     /// <summary>
     ///  The reason why this FormulaError was created.
     /// </summary>
     public string Reason { get; private set; }
-  }
+    }
 }
 
 

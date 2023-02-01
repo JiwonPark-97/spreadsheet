@@ -259,6 +259,17 @@ public class FormulaTests
         Formula f = new Formula(s);
     }
 
+    /// <summary>
+    /// Test Extra Following Rule
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor8()
+    {
+        string s = "1.23 (abc_ + 5) 1";
+        Formula f = new Formula(s);
+    }
+
 
 
 
