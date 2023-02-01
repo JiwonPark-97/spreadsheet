@@ -12,7 +12,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-I used dictionary with hashset to represent the dependency graph.
+In the constructor, I checked all parsing rules.
 
 # Assignment Specific Topics
 
@@ -24,8 +24,4 @@ I have not directly consulted with others but referred to the discord server lis
 
 # References:
 
-    1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
-    2. 5 C# Collections that Every C# Developer Must Know - https://programmingwithmosh.com/net/csharp-collections/
-    3. Initialize a HashSet in C# - https://www.techiedelight.com/initialize-a-hashset-in-csharp/
-    4. Attemping to add a value to a HashSet doesn't change the amount of values in it - https://stackoverflow.com/questions/20819248/attemping-to-add-a-value-to-a-hashset-doesnt-change-the-amount-of-values-in-it
-    5. C# - Dictionary<TKey, TValue> - https://www.tutorialsteacher.com/csharp/csharp-dictionary
+    1. Floating-point numeric types (C# reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types

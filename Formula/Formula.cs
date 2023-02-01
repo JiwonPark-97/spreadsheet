@@ -46,28 +46,103 @@ namespace SpreadsheetUtilities
   public class Formula
   {
 
+    private bool isValue(string s)
+        {
+            //double value;
+            //return (double.TryParse(s, out value));
+            string pattern = string.Format(@"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?");
+            return (Regex.IsMatch(s, pattern));
+        }
+
+    private bool isOperator(string s)
+        {
+            string pattern = string.Format(@"[\+\-*/]");
+            return (Regex.IsMatch(s, pattern));
+        }
+
+    private bool isLeftParen(string s)
+        {
+            string pattern = string.Format(@"\(");
+            return (Regex.IsMatch(s, pattern));
+        }
+
+    private bool isRightParen(string s)
+        {
+            string pattern = string.Format(@"\)");
+            return (Regex.IsMatch(s, pattern));
+        }
+
+    private bool isVariable(string s)
+        {
+            string pattern = string.Format(@"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
+            return (Regex.IsMatch(s, pattern));
+        }
+
+    private bool BalancedParenRule(List<string> list)
+        {
+            int lp = 0;
+            int rp = 0;
+            foreach (string t in list)
+            {
+                if (isLeftParen(t))
+                {
+                    lp++;
+                }
+                if (isRightParen(t))
+                {
+                    rp++;
+                }
+            }
+            return (lp == rp);
+        }
+
+    private bool ParenOprFollowingRule(List<string> list)
+        {
+            for (int i = 0; i < list.Count(); i++)
+            {
+                if (isLeftParen(list[i]) || isOperator(list[i]))
+                {
+                    return (isValue(list[i + 1]) || isVariable(list[i + 1]) || isLeftParen(list[i + 1]));
+                }
+            }
+            return true;
+        }
+
+    private bool ExtFollowingRule(List<string> list)
+        {
+            for (int i = 0; i < list.Count(); i++)
+            {
+                if (isValue(list[i]) || isVariable(list[i]) || isRightParen(list[i]))
+                {
+                    return (isOperator(list[i + 1]) || isRightParen(list[i + 1]));
+                }
+            }
+            return true;
+        }
+
+    private bool RtParenRule(List<string> list)
+        {
+            int lp = 0;
+            int rp = 0;
+            foreach (string t in list)
+            {
+                if (isLeftParen(t))
+                {
+                    lp++;
+                }
+                if (isRightParen(t))
+                {
+                    rp++;
+                }
+                if (lp < rp)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     private List<string> tokens;
-
-    //private bool SpecificTokenRule(string s)
-    //    {
-    //        String lpPattern = @"\(";
-    //        String rpPattern = @"\)";
-    //        String opPattern = @"[\+\-*/]";
-    //        String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
-    //        String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
-    //        String spacePattern = @"\s+";
-
-    //        String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
-    //                                        lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
-    //        if (Regex.IsMatch(s, pattern))
-    //        {
-    //            return true;
-    //        } else
-    //        {
-    //            return false;
-    //        }
-            
-    //    }
 
     /// <summary>
     /// Creates a Formula from a string that consists of an infix expression written as
@@ -105,59 +180,81 @@ namespace SpreadsheetUtilities
     /// new Formula("2x+y3", N, V) should throw an exception, since "2x+y3" is syntactically incorrect.
     /// </summary>
     public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
-    {
+        {
             tokens = GetTokens(formula).ToList();
 
-            // parsing rules
-
-            // specific token rule
-
-            //if (!SpecificTokenRule(formula))
-            //{
-            //    throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers.");
-            //}
-
-            // one token rule
+            // One Token Rule
             if (tokens.Count() == 0)
             {
                 throw new FormulaFormatException("There must be at least one token.");
-            } else
-            {
-                //if (tokens[1] == )
             }
-            // right parentheses rule
-            // left parentheses rule
-            // balanced parentheses rule
-            // starting token rule
-            // ending token rule
-            // parenthesis / operator following rule
-            // extra following rule
 
+            // Right Parentheses Rule
+            if (!RtParenRule(tokens))
+            {
+                throw new FormulaFormatException("When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.");
+
+            }
+
+            // Balanced Parentheses Rule
+            if (!BalancedParenRule(tokens))
+            {
+                throw new FormulaFormatException("The total number of opening parentheses must equal the total number of closing parentheses.");
+
+            }
+
+            // Starting Token Rule
+            if (!(isValue(tokens[0]) || isVariable(tokens[0]) || isLeftParen(tokens[0])))
+            {
+                throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
+
+            }
+
+            // Ending Token Rule
+            if (!(isValue(tokens[-1]) || isVariable(tokens[-1]) || isRightParen(tokens[-1])))
+            {
+                throw new FormulaFormatException("The last token of an expression must be a number, a variable, or a closing parenthesis.");
+
+            }
+
+            // Parenthesis/Operator Following Rule
+            if (!ParenOprFollowingRule(tokens))
+            {
+                throw new FormulaFormatException("Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.");
+
+            }
+
+            // Extra Following Rule
+            if (!ExtFollowingRule(tokens))
+            {
+                throw new FormulaFormatException("Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.");
+
+            }
 
         }
 
-    /// <summary>
-    /// Evaluates this Formula, using the lookup delegate to determine the values of
-    /// variables.  When a variable symbol v needs to be determined, it should be looked up
-    /// via lookup(normalize(v)). (Here, normalize is the normalizer that was passed to 
-    /// the constructor.)
-    /// 
-    /// For example, if L("x") is 2, L("X") is 4, and N is a method that converts all the letters 
-    /// in a string to upper case:
-    /// 
-    /// new Formula("x+7", N, s => true).Evaluate(L) is 11
-    /// new Formula("x+7").Evaluate(L) is 9
-    /// 
-    /// Given a variable symbol as its parameter, lookup returns the variable's value 
-    /// (if it has one) or throws an ArgumentException (otherwise).
-    /// 
-    /// If no undefined variables or divisions by zero are encountered when evaluating 
-    /// this Formula, the value is returned.  Otherwise, a FormulaError is returned.  
-    /// The Reason property of the FormulaError should have a meaningful explanation.
-    ///
-    /// This method should never throw an exception.
-    /// </summary>
-    public object Evaluate(Func<string, double> lookup)
+        /// <summary>
+        /// Evaluates this Formula, using the lookup delegate to determine the values of
+        /// variables.  When a variable symbol v needs to be determined, it should be looked up
+        /// via lookup(normalize(v)). (Here, normalize is the normalizer that was passed to 
+        /// the constructor.)
+        /// 
+        /// For example, if L("x") is 2, L("X") is 4, and N is a method that converts all the letters 
+        /// in a string to upper case:
+        /// 
+        /// new Formula("x+7", N, s => true).Evaluate(L) is 11
+        /// new Formula("x+7").Evaluate(L) is 9
+        /// 
+        /// Given a variable symbol as its parameter, lookup returns the variable's value 
+        /// (if it has one) or throws an ArgumentException (otherwise).
+        /// 
+        /// If no undefined variables or divisions by zero are encountered when evaluating 
+        /// this Formula, the value is returned.  Otherwise, a FormulaError is returned.  
+        /// The Reason property of the FormulaError should have a meaningful explanation.
+        ///
+        /// This method should never throw an exception.
+        /// </summary>
+        public object Evaluate(Func<string, double> lookup)
     {
       return null;
     }
