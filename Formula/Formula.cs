@@ -181,7 +181,26 @@ namespace SpreadsheetUtilities
     /// </summary>
     public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
+            // get tokens from formula
             tokens = GetTokens(formula).ToList();
+
+            // normalize tokens
+            for (int i = 0; i < tokens.Count(); i++)
+            {
+                tokens[i] = normalize(tokens[i]);
+            }
+
+            // check for invaild variables
+            foreach (string t in tokens)
+            {
+                if (isVariable(t))
+                {
+                    if (!isValid(t))
+                    {
+                        throw new FormulaFormatException("Invalid variable: " + t + ".");
+                    }
+                }
+            }
 
             // One Token Rule
             if (tokens.Count() == 0)
@@ -254,10 +273,10 @@ namespace SpreadsheetUtilities
         ///
         /// This method should never throw an exception.
         /// </summary>
-        public object Evaluate(Func<string, double> lookup)
-    {
+  public object Evaluate(Func<string, double> lookup)
+   {
       return null;
-    }
+   }
 
     /// <summary>
     /// Enumerates the normalized versions of all of the variables that occur in this 
