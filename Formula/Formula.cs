@@ -49,30 +49,55 @@ namespace SpreadsheetUtilities
 
         // helper methods for checking type of token //
 
+        /// <summary>
+        /// Return if an input token is a numeric value
+        /// </summary>
+        /// <param name="s" an input token </param>
         private bool IsValue(string s)
         {
             double value;
             return (double.TryParse(s, out value));
         }
 
+        /// <summary>
+        /// Return if an input token is an operator
+        /// </summary>
+        /// <param name="s"> an input token </param>
         private bool IsOperator(string s)
         {
             string pattern = string.Format(@"[\+\-*/]");
             return (Regex.IsMatch(s, pattern));
         }
 
+        /// <summary>
+        /// Return if an input token is a left parenthesis
+        /// </summary>
+        /// <param name="s"> an input token </param>
+        /// <returns></returns>
         private bool IsLeftParen(string s)
         {
             string pattern = string.Format(@"\(");
             return (Regex.IsMatch(s, pattern));
         }
 
+        /// <summary>
+        /// Return if an input token is a right parenthesis
+        /// </summary>
+        /// <param name="s"> an input token </param>
+        /// <returns></returns>
         private bool IsRightParen(string s)
         {
             string pattern = string.Format(@"\)");
             return (Regex.IsMatch(s, pattern));
         }
 
+        /// <summary>
+        /// Return if an input token is a variable.
+        /// Any letter or underscore followed by any number of letters and/or digits and/or underscores
+        /// would be considered as valid variable names.
+        /// </summary>
+        /// <param name="s"> an input token </param>
+        /// <returns></returns>
         private bool IsVariable(string s)
         {
             string pattern = string.Format(@"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
@@ -326,10 +351,17 @@ namespace SpreadsheetUtilities
                     }
                     else
                     {
-                        tokenVal = lookup(token);
+                        try
+                        {
+                            tokenVal = lookup(token);
+                        }
+                        catch (ArgumentException)
+                        {
+                            return new FormulaError("Undefined variable " + token);
+                        }
                     }
 
-                    // check the operator stack for '*' or '/' at the top
+                    // check the operator stack for "*" or "/" at the top
                     if (operators.Count != 0)
                     {
                         if ((operators.Peek()) == "*" || (operators.Peek() == "/"))
@@ -344,7 +376,7 @@ namespace SpreadsheetUtilities
                                 tempResult = tempVal * tokenVal;
                             }
 
-                            // if operator is '/'
+                            // if operator is "/"
                             else
                             {
                                 if (tokenVal != 0)
@@ -690,7 +722,8 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override int GetHashCode()
         {
-            return tokens.GetHashCode();
+            string str = string.Join("", tokens);
+            return str.GetHashCode();
         }
 
         /// <summary>

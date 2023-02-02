@@ -18,4 +18,4 @@ The spreadsheet program is currently capable of evaluating mathematical expressi
 
     1. Assignment One:       Predicted Hours:          20        Actual Hours:   32             Note: Spent extra hours figiting git.
     2. Assignment Two:       Predicted Hours:          20        Actual Hours:   22             Note: Spent extra hours installing coverage tool on Mac.
-    3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   2+2+5+3        Note: 
+    3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   2+2+5+3+2      Note: 

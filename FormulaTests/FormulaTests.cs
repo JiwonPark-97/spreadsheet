@@ -25,17 +25,15 @@ namespace FormulaTests;
 public class FormulaTests
 {
 
-    // GetTokens Tests //
-
+    // **************** GetTokens Tests **************** //
 
     /// <summary>
     /// A helper method in Formula class
     /// </summary>
-    /// <param name="formula"> a formula </param>
+    /// <param name="formula"> a formula expression </param>
     /// <returns> IEnumerable of composed tokens </returns>
     private static IEnumerable<string> GetTokens(String formula)
     {
-        // Patterns for individual tokens
         String lpPattern = @"\(";
         String rpPattern = @"\)";
         String opPattern = @"[\+\-*/]";
@@ -43,11 +41,9 @@ public class FormulaTests
         String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
         String spacePattern = @"\s+";
 
-        // Overall pattern
         String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
                                         lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
 
-        // Enumerate matching tokens that don't consist solely of white space.
         foreach (String s in Regex.Split(formula, pattern, RegexOptions.IgnorePatternWhitespace))
         {
             if (!Regex.IsMatch(s, @"^\s*$", RegexOptions.Singleline))
@@ -55,7 +51,6 @@ public class FormulaTests
                 yield return s;
             }
         }
-
     }
 
     /// <summary>
@@ -132,7 +127,7 @@ public class FormulaTests
     }
 
 
-    // Constructor Tests //
+    // **************** Constructor Tests **************** //
 
     // Test Valid Expressions //
 
@@ -235,7 +230,6 @@ public class FormulaTests
         Formula f = new Formula(s);
     }
 
-
     /// <summary>
     /// Test Ending Token Rule
     /// </summary>
@@ -269,7 +263,10 @@ public class FormulaTests
         Formula f = new Formula(s);
     }
 
-    // Evaluate Tests //
+
+    // **************** Evaluate Tests **************** //
+
+    // Test without variables //
 
     [TestMethod]
     public void TestSimpleEvaluate1()
@@ -314,10 +311,201 @@ public class FormulaTests
     [TestMethod]
     public void TestComplexEvaluate2()
     {
-        string s = "(10) /((1 +2)-3)";
+        string s = "(1) +3/3-(10-9 )";
         Formula f = new Formula(s);
-        //Assert.AreEqual(new FormulaError(""), f.Evaluate(null));
+        Assert.AreEqual(1.0, f.Evaluate(null));
+    }
+
+    [TestMethod]
+    public void TestFormulaErrorEvaluate1()
+    {
+        string s = "1/0";
+        Formula f = new Formula(s);
         Assert.IsInstanceOfType(f.Evaluate(null), typeof(FormulaError));
     }
+
+    [TestMethod]
+    public void TestFormulaErrorEvaluate2()
+    {
+        string s = "3 /(1 - (1 / 1))";
+        Formula f = new Formula(s);
+        Assert.IsInstanceOfType(f.Evaluate(null), typeof(FormulaError));
+    }
+
+    [TestMethod]
+    public void TestFormulaErrorEvaluate3()
+    {
+        string s = "(10) /((1 +2)-3)";
+        Formula f = new Formula(s);
+        Assert.IsInstanceOfType(f.Evaluate(null), typeof(FormulaError));
+    }
+
+
+    // Test with variables, normalizer, and validator //
+
+    /// <summary>
+    /// A lookup for variables. Everything else other than the variable names defined below is bad.
+    /// </summary>
+    /// <param name="variable_name"> the name of the variable to look up.
+    /// any letter or underscore followed by any number of letters and/or digits
+    /// and/or underscores would form valid variable namess </param>
+    /// <returns> a corresponding value to the variable name </returns>
+    /// <exception cref="ArgumentException"> thrown when a bad variable name is passed in </exception>
+    public static double Lookup(string variable_name)
+    {
+        if (variable_name.Equals("x1"))
+        {
+            return 10;
+        }
+        else if (variable_name.Equals("x2"))
+        {
+            return 20;
+        }
+        else if (variable_name.Equals("x3"))
+        {
+            return 30;
+        }
+        else if (variable_name.Equals("_variable_"))
+        {
+            return 1;
+        }
+        else if (variable_name.Equals("_x1"))
+        {
+            return 2;
+        }
+        else
+        {
+            throw new ArgumentException();
+        }
+    }
+
+    /// <summary>
+    /// A normalizer for variables. Returns a lowercased variable name
+    /// </summary>
+    /// <param name="variable_name"> a variable name to be normalized </param>
+    public static string Normalizer(string variable_name)
+    {
+        return variable_name.ToLower();
+    }
+
+    /// <summary>
+    /// Returns if a given variable name is valid.
+    /// Any lowercase letter or underscore followed by any number of lowercase letters and/or digits and/or underscores would form valid variable names.
+    /// </summary>
+    /// <param name="variable_name"> a variable name to be determined </param>
+    public static bool Validator(string variable_name)
+    {
+        string pattern = string.Format(@"[a-z_](?: [a-z_]|\d)*");
+        return (Regex.IsMatch(variable_name, pattern));
+    }
+
+    /// <summary>
+    /// Test for simple variables
+    /// </summary>
+    [TestMethod]
+    public void TestVariableEvaluate1()
+    {
+        string s = "x1 + x2 * x3";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.AreEqual(610.0, f.Evaluate(Lookup));
+    }
+
+    /// <summary>
+    /// Test for yet-normalized variables
+    /// </summary>
+    [TestMethod]
+    public void TestVariableEvaluate2()
+    {
+        string s = "X1 + 2";
+        Formula f = new Formula(s,Normalizer, Validator);
+        Assert.AreEqual(12.0, f.Evaluate(Lookup));
+    }
+
+    /// <summary>
+    /// Test for yet-normalized variables
+    /// </summary>
+    [TestMethod]
+    public void TestVariableEvaluate3()
+    {
+        string s = "(X1 + X2)/(X3)";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.AreEqual(1.0, f.Evaluate(Lookup));
+    }
+
+    /// <summary>
+    /// Test for yet-normalized variables
+    /// </summary>
+    [TestMethod]
+    public void TestVariableEvaluate4()
+    {
+        string s = "(_X1 + X2)/(_Variable_)";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.AreEqual(22.0, f.Evaluate(Lookup));
+    }
+
+    /// <summary>
+    /// Test for division by 0
+    /// </summary>
+    [TestMethod]
+    public void TestVariableEvaluate5()
+    {
+        string s = "(x2)/(X1-x1)";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.IsInstanceOfType(f.Evaluate(Lookup), typeof(FormulaError));
+    }
+
+    /// <summary>
+    /// Test for undefined variable
+    /// </summary>
+    [TestMethod]
+    public void TestVariableEvaluate6()
+    {
+        string s = "(xx2)/(X1-_variable_)";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.IsInstanceOfType(f.Evaluate(Lookup), typeof(FormulaError));
+    }
+
+
+    // **************** GetVariables Tests **************** //
+
+    /// <summary>
+    /// Test GetVariables method
+    /// </summary>
+    [TestMethod]
+    public void TestGetVariables1()
+    {
+        string s = "x1 + x2";
+        Formula f = new Formula(s, Normalizer, Validator);
+        List<string> variables = f.GetVariables().ToList();
+        Assert.AreEqual(2, variables.Count());
+        Assert.AreEqual("x1", variables[0]);
+        Assert.AreEqual("x2", variables[1]);
+    }
+
+    /// <summary>
+    /// Test GetVariables method with yet-normalized variables
+    /// </summary>
+    [TestMethod]
+    public void TestGetVariables2()
+    {
+        string s = "(_X1 + X2)/(_Variable_)";
+        Formula f = new Formula(s, Normalizer, Validator);
+        List<string> variables = f.GetVariables().ToList();
+        Assert.AreEqual(3, variables.Count());
+        Assert.AreEqual("_x1", variables[0]);
+        Assert.AreEqual("x2", variables[1]);
+        Assert.AreEqual("_variable_", variables[2]);
+    }
+
+    // **************** ToString Tests **************** //
+
+    // **************** Equals Tests **************** //
+
+    // **************** == Tests **************** //
+
+    // **************** != Tests **************** //
+
+    // **************** GetHashCode Tests **************** //
+
 
 }
