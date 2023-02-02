@@ -13,7 +13,6 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-To the given unit test starter, I added tests for this[] method, adding duplicates, and removing non-existing pairs.
 
 # Assignment Specific Topics
 
@@ -26,3 +25,4 @@ I have not directly consulted with others but referred to the discord server lis
 # References:
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
+    2. 

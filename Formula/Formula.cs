@@ -582,7 +582,8 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override string ToString()
         {
-            return null;
+            string returnStr = string.Join("", tokens);
+            return returnStr;
         }
 
         /// <summary>

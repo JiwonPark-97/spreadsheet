@@ -24,5 +24,9 @@ I have not directly consulted with others but referred to the discord server lis
 
 # References:
 
-    1. Floating-point numeric types (C# reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
-    2. Why would you use String.Equals over ==? [duplicate] - https://stackoverflow.com/questions/1659097/why-would-you-use-string-equals-over
+    1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
+    2. Floating-point numeric types (C# reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
+    3. Why would you use String.Equals over ==? [duplicate] - https://stackoverflow.com/questions/1659097/why-would-you-use-string-equals-over
+    4. Double.Parse Method - https://learn.microsoft.com/en-us/dotnet/api/system.double.parse?view=net-7.0
+    5. Convert a list to a string in C# - https://stackoverflow.com/questions/4981390/convert-a-list-to-a-string-in-c-sharp
+    6. 

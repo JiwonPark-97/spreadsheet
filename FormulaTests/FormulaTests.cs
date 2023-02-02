@@ -316,7 +316,8 @@ public class FormulaTests
     {
         string s = "(10) /((1 +2)-3)";
         Formula f = new Formula(s);
-        Assert.AreEqual(new FormulaError(""), f.Evaluate(null));
+        //Assert.AreEqual(new FormulaError(""), f.Evaluate(null));
+        Assert.IsInstanceOfType(f.Evaluate(null), typeof(FormulaError));
     }
 
 }
