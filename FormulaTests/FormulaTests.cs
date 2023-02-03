@@ -499,13 +499,230 @@ public class FormulaTests
 
     // **************** ToString Tests **************** //
 
+    /// <summary>
+    /// Test ToString with whitespaces
+    /// </summary>
+    [TestMethod]
+    public void TestToString1()
+    {
+        string s = "x1 + x2-3";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.AreEqual("x1+x2-3", f.ToString());
+    }
+
+    /// <summary>
+    /// Test ToString with yet-normalized variables
+    /// </summary>
+    [TestMethod]
+    public void TestToString2()
+    {
+        string s = "X1 + X2 +(3)";
+        Formula f = new Formula(s, Normalizer, Validator);
+        Assert.AreEqual("x1+x2+(3)", f.ToString());
+    }
+
+    /// <summary>
+    /// Test ToString with same formulas
+    /// </summary>
+    [TestMethod]
+    public void TestToString3()
+    {
+        string s = "x1+x2-x3/_variable_";
+        Formula f = new Formula(s, Normalizer, Validator);
+
+        string expected = "x1+x2-x3/_variable_";
+        Assert.AreEqual(expected, f.ToString());
+    }
+
+    /// <summary>
+    /// Test ToString with same formulas (after nomalized)
+    /// </summary>
+    [TestMethod]
+    public void TestToString4()
+    {
+        string s = "X1+X2-x3/_VARIABLE_";
+        Formula f = new Formula(s, Normalizer, Validator);
+
+        string expected = "x1+x2-x3/_variable_";
+        Assert.AreEqual(expected, f.ToString());
+    }
+
     // **************** Equals Tests **************** //
+
+    /// <summary>
+    /// Test Equals with same string inputs
+    /// </summary>
+    [TestMethod]
+    public void TestEquals1()
+    {
+        string s1 = "1 +x2";
+        string s2 = "1 +x2";
+
+        Formula f1 = new Formula(s1);
+        Formula f2 = new Formula(s2);
+
+        Assert.IsTrue(f1.Equals(f2));
+    }
+
+    /// <summary>
+    /// Test Equals with null
+    /// </summary>
+    [TestMethod]
+    public void TestEquals2()
+    {
+        string s = "x1 +x2";
+        Formula f = new Formula(s);
+
+        Assert.IsFalse(f.Equals(null));
+    }
+
+    /// <summary>
+    /// Test Equals without normalizer
+    /// </summary>
+    [TestMethod]
+    public void TestEquals3()
+    {
+        string s1 = "X1 + X2";
+        string s2 = "x1+x2";
+
+        Formula f1 = new Formula(s1);
+        Formula f2 = new Formula(s2);
+
+        Assert.IsFalse(f1.Equals(f2));
+    }
+
+    /// <summary>
+    /// Test Equals with normalizer
+    /// </summary>
+    [TestMethod]
+    public void TestEquals4()
+    {
+        string s1 = "X1 + X2";
+        string s2 = "x1+x2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsTrue(f1.Equals(f2));
+    }
+
 
     // **************** == Tests **************** //
 
+    /// <summary>
+    /// Test == method
+    /// </summary>
+    [TestMethod]
+    public void TestEqualEqual1()
+    {
+        string s1 = "1 +2";
+        string s2 = "1   +  2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsTrue(f1 == f2);
+    }
+
+    /// <summary>
+    /// Test == method
+    /// </summary>
+    [TestMethod]
+    public void TestEqualEqual2()
+    {
+        string s1 = "X1 + X2";
+        string s2 = "x1+x2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsTrue(f1 == f2);
+    }
+
+    /// <summary>
+    /// Test == with empty strings
+    /// </summary>
+    [TestMethod]
+    public void TestEqualEqual3()
+    {
+        string s1 = "_abc  +1";
+        string s2 = "_ABC-1";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsFalse(f1 == f2);
+    }
+
     // **************** != Tests **************** //
+
+    [TestMethod]
+    public void TestNonEqual1()
+    {
+        string s1 = "1 +2";
+        string s2 = "1   +  2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsFalse(f1 != f2);
+    }
+
+    [TestMethod]
+    public void TestNonEqual2()
+    {
+        string s1 = "X1 + X2";
+        string s2 = "x1+x2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsFalse(f1 != f2);
+    }
+
+
+    [TestMethod]
+    public void TestNonEqual3()
+    {
+        string s1 = "_abc  +1";
+        string s2 = "_ABC-1";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsTrue(f1 != f2);
+    }
 
     // **************** GetHashCode Tests **************** //
 
+    /// <summary>
+    /// Equal formulas should return same hash code
+    /// </summary>
+    [TestMethod]
+    public void TestGetHashCode1()
+    {
+        string s1 = "1+2";
+        string s2 = "1+2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.AreEqual(f1.GetHashCode(), f2.GetHashCode());
+    }
+
+    /// <summary>
+    /// Equal formulas should return same hash code
+    /// </summary>
+    [TestMethod]
+    public void TestGetHashCode2()
+    {
+        string s1 = "x1+ X2";
+        string s2 = "X1 +  x2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.AreEqual(f1.GetHashCode(), f2.GetHashCode());
+    }
 
 }

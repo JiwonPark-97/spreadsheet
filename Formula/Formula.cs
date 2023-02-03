@@ -229,6 +229,12 @@ namespace SpreadsheetUtilities
         /// </summary>
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
+            // check for null input before getting tokens
+            if (formula == null)
+            {
+                throw new FormulaFormatException("Input can't be null");
+            }
+
             // get tokens from formula
             tokens = GetTokens(formula).ToList();
 
@@ -247,7 +253,7 @@ namespace SpreadsheetUtilities
             {
                 if (!isValid(t))
                 {
-                    throw new FormulaFormatException("Given variable name is invalide: " + t + ".");
+                    throw new FormulaFormatException("Given variable name is invalide: " + t);
                 }
             }
 
@@ -269,7 +275,7 @@ namespace SpreadsheetUtilities
             // Specific Token Rule
             if (!SpecificTokenRule(tokens))
             {
-                throw new FormulaFormatException("the only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).");
+                throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).");
 
             }
 
@@ -698,8 +704,8 @@ namespace SpreadsheetUtilities
         /// <summary>
         ///   <change> We are now using Non-Nullable objects.  Thus neither f1 nor f2 can be null!</change>
         /// Reports whether f1 == f2, using the notion of equality from the Equals method.
-        /// 
         /// </summary>
+        /// <Nullable>enable</Nullable>
         public static bool operator ==(Formula f1, Formula f2)
         {
             return f1.Equals(f2);
@@ -710,6 +716,7 @@ namespace SpreadsheetUtilities
         ///   <change> Note: != should almost always be not ==, if you get my meaning </change>
         ///   Reports whether f1 != f2, using the notion of equality from the Equals method.
         /// </summary>
+        /// <Nullable>enable</Nullable>
         public static bool operator !=(Formula f1, Formula f2)
         {
             return !(f1.Equals(f2));
