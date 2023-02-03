@@ -417,9 +417,9 @@ public class FormulaTests
     [TestMethod]
     public void TestComplexEvaluate4()
     {
-        string s = "(1 * 2 *3.0) + 1";
+        string s = "(1 +2) *3.0*3";
         Formula f = new Formula(s);
-        Assert.AreEqual(7.0, f.Evaluate(null));
+        Assert.AreEqual(27.0, f.Evaluate(null));
     }
 
 
