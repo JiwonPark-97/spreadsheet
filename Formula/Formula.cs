@@ -292,49 +292,42 @@ namespace SpreadsheetUtilities
             if (!(IsValue(tokens[0]) || IsVariable(tokens[0]) || IsLeftParen(tokens[0])))
             {
                 throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
-
             }
 
             // Specific Token Rule
             if (!SpecificTokenRule(tokens))
             {
                 throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).");
-
             }
 
             // Right Parentheses Rule
             if (!RtParenRule(tokens))
             {
                 throw new FormulaFormatException("When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.");
-
             }
 
             // Balanced Parentheses Rule
             if (!BalancedParenRule(tokens))
             {
                 throw new FormulaFormatException("The total number of opening parentheses must equal the total number of closing parentheses.");
-
             }
 
             // Ending Token Rule
             if (!(IsValue(tokens.Last()) || IsVariable(tokens.Last()) || IsRightParen(tokens.Last())))
             {
                 throw new FormulaFormatException("The last token of an expression must be a number, a variable, or a closing parenthesis.");
-
             }
 
             // Parenthesis/Operator Following Rule
             if (!ParenOprFollowingRule(tokens))
             {
                 throw new FormulaFormatException("Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.");
-
             }
 
             // Extra Following Rule
             if (!XtrFollowingRule(tokens))
             {
                 throw new FormulaFormatException("Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.");
-
             }
 
             // normalize tokens
@@ -387,7 +380,6 @@ namespace SpreadsheetUtilities
             // proceed tokens from left to right
             foreach (string token in tokens)
             {
-
                 if (IsValue(token) || IsVariable(token))
                 {
 
@@ -439,7 +431,6 @@ namespace SpreadsheetUtilities
                                 else
                                 {
                                     return new FormulaError("Divison by 0 occured.");
-
                                 }
                             }
 
@@ -484,7 +475,6 @@ namespace SpreadsheetUtilities
                             {
                                 result = val2 - val1;
                             }
-
                             values.Push(result);
                         }
                     }
@@ -528,7 +518,7 @@ namespace SpreadsheetUtilities
 
                     // the top of the operator stack must be "(". pop it
                     
-                        string tempOp = operators.Pop();
+                    string tempOp = operators.Pop();
 
                     // if "*" or "/" at the top of the operator stack
                     if (operators.Count() != 0)
@@ -592,9 +582,7 @@ namespace SpreadsheetUtilities
                     {
                         return val2 - val1;
                     }
-
                 }
-
         }
 
         /// <summary>

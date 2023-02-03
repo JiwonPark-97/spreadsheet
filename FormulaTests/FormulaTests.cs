@@ -11,7 +11,7 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// This file contains a single class that provides unit tests for Formula. 
+/// This file contains a single class that provides unit tests for Formula file. 
 ///
 /// </summary>
 
@@ -25,6 +25,7 @@ namespace FormulaTests;
 public class FormulaTests
 {
 
+    // **************** Setup **************** //
 
     /// <summary>
     /// A lookup for variables. Everything else other than the variable names defined below is bad.
@@ -357,6 +358,9 @@ public class FormulaTests
 
     // Test without variables //
 
+    /// <summary>
+    /// Test Evaluate with simple values
+    /// </summary>
     [TestMethod]
     public void TestSimpleEvaluate1()
     {
@@ -365,6 +369,9 @@ public class FormulaTests
         Assert.AreEqual(3.0, f.Evaluate(null));
     }
 
+    /// <summary>
+    /// Test Evaluate with simple values
+    /// </summary>
     [TestMethod]
     public void TestSimpleEvaluate2()
     {
@@ -373,6 +380,9 @@ public class FormulaTests
         Assert.AreEqual(-1.0, f.Evaluate(null));
     }
 
+    /// <summary>
+    /// Test Evaluate with simple values
+    /// </summary>
     [TestMethod]
     public void TestSimpleEvaluate3()
     {
@@ -381,6 +391,9 @@ public class FormulaTests
         Assert.AreEqual(2.0, f.Evaluate(null));
     }
 
+    /// <summary>
+    /// Test Evaluate with simple values
+    /// </summary>
     [TestMethod]
     public void TestSimpleEvaluate4()
     {
@@ -389,6 +402,9 @@ public class FormulaTests
         Assert.AreEqual(0.5, f.Evaluate(null));
     }
 
+    /// <summary>
+    /// Test Evaluate with multiple operators
+    /// </summary>
     [TestMethod]
     public void TestComplexEvaluate1()
     {
@@ -397,6 +413,9 @@ public class FormulaTests
         Assert.AreEqual(10.0, f.Evaluate(null));
     }
 
+    /// <summary>
+    /// Test Evaluate with multiple operators
+    /// </summary>
     [TestMethod]
     public void TestComplexEvaluate2()
     {
@@ -405,6 +424,9 @@ public class FormulaTests
         Assert.AreEqual(1.0, f.Evaluate(null));
     }
 
+    /// <summary>
+    /// Test Evaluate with multiple operators
+    /// </summary>
     [TestMethod]
     public void TestComplexEvaluate3()
     {
@@ -413,7 +435,9 @@ public class FormulaTests
         Assert.AreEqual(-3.0, f.Evaluate(null));
     }
 
-
+    /// <summary>
+    /// Test Evaluate with multiple operators
+    /// </summary>
     [TestMethod]
     public void TestComplexEvaluate4()
     {
@@ -425,6 +449,9 @@ public class FormulaTests
 
     // Test FormulaError //
 
+    /// <summary>
+    /// Test for division by 0
+    /// </summary>
     [TestMethod]
     public void TestFormulaErrorEvaluate1()
     {
@@ -433,6 +460,9 @@ public class FormulaTests
         Assert.IsInstanceOfType(f.Evaluate(null), typeof(FormulaError));
     }
 
+    /// <summary>
+    /// Test for division by 0
+    /// </summary>
     [TestMethod]
     public void TestFormulaErrorEvaluate2()
     {
@@ -441,6 +471,9 @@ public class FormulaTests
         Assert.IsInstanceOfType(f.Evaluate(null), typeof(FormulaError));
     }
 
+    /// <summary>
+    /// Test for division by 0
+    /// </summary>
     [TestMethod]
     public void TestFormulaErrorEvaluate3()
     {
@@ -549,6 +582,7 @@ public class FormulaTests
         Assert.AreEqual("x2", variables[1]);
         Assert.AreEqual("_variable_", variables[2]);
     }
+
 
     // **************** ToString Tests **************** //
 
@@ -689,6 +723,9 @@ public class FormulaTests
         Assert.IsTrue(f1.Equals(f2));
     }
 
+    /// <summary>
+    /// Test Equals with normalizer
+    /// </summary>
     [TestMethod]
     public void TestEquals7()
     {

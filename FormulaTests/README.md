@@ -13,7 +13,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-I tested every public/private method with unit tests. The code coverage is currently ___%.
+I tested every public/private method with unit tests. The code in Formula file is 100% covered.
 
 # Assignment Specific Topics
 

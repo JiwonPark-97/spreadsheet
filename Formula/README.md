@@ -12,7 +12,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-I added private helper methods for checking types of tokens and verifying each parsing rule. 
+I added private helper methods for checking token types and the parsing rule. 
 
 # Assignment Specific Topics
 
