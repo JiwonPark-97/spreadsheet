@@ -12,7 +12,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-I added private helper methods for each parsing rule. 
+I added private helper methods for checking types of tokens and verifying each parsing rule. 
 
 # Assignment Specific Topics
 
@@ -30,4 +30,3 @@ I have not directly consulted with others but referred to the discord server lis
     4. Double.Parse Method - https://learn.microsoft.com/en-us/dotnet/api/system.double.parse?view=net-7.0
     5. Convert a list to a string in C# - https://stackoverflow.com/questions/4981390/convert-a-list-to-a-string-in-c-sharp
     6. try-catch (C# Reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/try-catch
-    7. 

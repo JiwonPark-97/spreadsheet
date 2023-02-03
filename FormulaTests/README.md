@@ -27,4 +27,3 @@ I have not directly consulted with others but referred to the discord server lis
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
     2. C# | ToLower() Method - https://www.geeksforgeeks.org/c-sharp-tolower-method/
-    3. 

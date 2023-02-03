@@ -773,6 +773,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override int GetHashCode()
         {
+            // get hash code from converted-to-string formula
             string str = string.Join("", tokens);
             return str.GetHashCode();
         }
