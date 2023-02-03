@@ -689,6 +689,18 @@ public class FormulaTests
         Assert.IsTrue(f1.Equals(f2));
     }
 
+    [TestMethod]
+    public void TestEquals7()
+    {
+        string s1 = "X1 + X2";
+        string s2 = "1+x2";
+
+        Formula f1 = new Formula(s1, Normalizer, Validator);
+        Formula f2 = new Formula(s2, Normalizer, Validator);
+
+        Assert.IsFalse(f1.Equals(f2));
+    }
+
 
     // **************** == Tests **************** //
 
