@@ -263,6 +263,27 @@ public class FormulaTests
         Formula f = new Formula(s);
     }
 
+    /// <summary>
+    /// Test for null input
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor9()
+    {
+        Formula f = new Formula(null);
+    }
+
+    /// <summary>
+    /// Test for invalid variable
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void TestInvalidConstructor10()
+    {
+        string s = "%%";
+        Formula f = new Formula(s, null, Validator);
+    }
+
 
     // **************** Evaluate Tests **************** //
 
@@ -416,9 +437,9 @@ public class FormulaTests
     [TestMethod]
     public void TestVariableEvaluate2()
     {
-        string s = "X1 + 2";
+        string s = "X1 - 2";
         Formula f = new Formula(s,Normalizer, Validator);
-        Assert.AreEqual(12.0, f.Evaluate(Lookup));
+        Assert.AreEqual(8.0, f.Evaluate(Lookup));
     }
 
     /// <summary>
@@ -438,9 +459,9 @@ public class FormulaTests
     [TestMethod]
     public void TestVariableEvaluate4()
     {
-        string s = "(_X1 + X2)/(_Variable_)";
+        string s = "(_X1 * X2 * x1)/(_Variable_)";
         Formula f = new Formula(s, Normalizer, Validator);
-        Assert.AreEqual(22.0, f.Evaluate(Lookup));
+        Assert.AreEqual(400.0, f.Evaluate(Lookup));
     }
 
     /// <summary>
@@ -565,13 +586,28 @@ public class FormulaTests
     }
 
     /// <summary>
-    /// Test Equals with formulas that have different numbers of tokens
+    /// Test with different values
     /// </summary>
     [TestMethod]
     public void TestEquals2()
     {
-        string s1 = "x1 +x2";
-        string s2 = "1+ 2+ x1";
+        string s1 = "1 +x2";
+        string s2 = "3.0 +x2";
+
+        Formula f1 = new Formula(s1);
+        Formula f2 = new Formula(s2);
+
+        Assert.IsFalse(f1.Equals(f2));
+    }
+
+    /// <summary>
+    /// Test Equals with formulas that have different numbers of tokens
+    /// </summary>
+    [TestMethod]
+    public void TestEquals3()
+    {
+        string s1 = "1 +x2";
+        string s2 = "x1+ 2+ x1";
 
         Formula f1 = new Formula(s1);
         Formula f2 = new Formula(s2);
@@ -583,7 +619,7 @@ public class FormulaTests
     /// Test Equals with null
     /// </summary>
     [TestMethod]
-    public void TestEquals3()
+    public void TestEquals4()
     {
         string s = "x1 +x2";
         Formula f = new Formula(s);
@@ -595,7 +631,7 @@ public class FormulaTests
     /// Test Equals without normalizer
     /// </summary>
     [TestMethod]
-    public void TestEquals4()
+    public void TestEquals5()
     {
         string s1 = "X1 + X2";
         string s2 = "x1+x2";
@@ -610,7 +646,7 @@ public class FormulaTests
     /// Test Equals with normalizer
     /// </summary>
     [TestMethod]
-    public void TestEquals5()
+    public void TestEquals6()
     {
         string s1 = "X1 + X2";
         string s2 = "x1+x2";

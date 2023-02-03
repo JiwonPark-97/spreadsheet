@@ -289,7 +289,7 @@ namespace SpreadsheetUtilities
                 }
             }
 
-            // check for invaild variables
+            // check for invalid variables
             List<string> varList = GetVariables().ToList();
             foreach (string t in varList)
             {
@@ -501,14 +501,9 @@ namespace SpreadsheetUtilities
 
                 else if (token == ")")
                 {
-                    // there should be "(" on the operator stack. if not, throw an exception
-                    if (!operators.Contains("("))
-                    {
-                        throw new ArgumentException();
-                    }
 
                     // if "+" or "-" at the top of the operator stack
-                    else if (operators.Peek() == "+" || operators.Peek() == "-")
+                    if (operators.Peek() == "+" || operators.Peek() == "-")
                     {
                         // pop the value stack twice and the operator stack once
                         double val1 = values.Pop();
@@ -532,16 +527,8 @@ namespace SpreadsheetUtilities
 
 
                     // the top of the operator stack must be "(". pop it
-                    // throw an exception if there isn't "(" on the operator stack
-                    if (!operators.Contains("("))
-                    {
-                        throw new ArgumentException();
-                    }
-                    else
-                    {
+                    
                         string tempOp = operators.Pop();
-
-                    }
 
                     // if "*" or "/" at the top of the operator stack
                     if (operators.Count() != 0)
@@ -585,23 +572,12 @@ namespace SpreadsheetUtilities
             // if operator stack is empty, there should be a single value
             if (operators.Count() == 0)
             {
-                if (values.Count() == 1)
-                {
-                    return values.Pop();
-                }
-
-                // if there isn't exactly one value on the value stack
-                else
-                {
-                    throw new ArgumentException();
-                }
+                return values.Pop();
             }
 
             // if operator stack is not empty, there should be exactly one operator (+ or -) and two values.
             else
             {
-                if (operators.Count() == 1 && values.Count() == 2)
-                {
                     string op = operators.Pop();
                     double val1 = values.Pop();
                     double val2 = values.Pop();
@@ -618,14 +594,7 @@ namespace SpreadsheetUtilities
                     }
 
                 }
-                // if there isn't exactly one operator and two values
-                else
-                {
-                    throw new ArgumentException();
-                }
 
-            }
-            throw new ArgumentException();
         }
 
         /// <summary>
