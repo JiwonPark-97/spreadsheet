@@ -280,25 +280,6 @@ namespace SpreadsheetUtilities
             // get tokens from formula
             tokens = GetTokens(formula).ToList();
 
-            // normalize tokens
-            for (int i = 0; i < tokens.Count(); i++)
-            {
-                if (IsVariable(tokens[i]))
-                {
-                    tokens[i] = normalize(tokens[i]);
-                }
-            }
-
-            // check for invalid variables
-            List<string> varList = GetVariables().ToList();
-            foreach (string t in varList)
-            {
-                if (!isValid(t))
-                {
-                    throw new FormulaFormatException("Given variable name is invalide: " + t);
-                }
-            }
-
             // After tokenizing, verify the following rules are all held
 
             // One Token Rule
@@ -354,6 +335,25 @@ namespace SpreadsheetUtilities
             {
                 throw new FormulaFormatException("Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.");
 
+            }
+
+            // normalize tokens
+            for (int i = 0; i < tokens.Count(); i++)
+            {
+                if (IsVariable(tokens[i]))
+                {
+                    tokens[i] = normalize(tokens[i]);
+                }
+            }
+
+            // check for invalid variables
+            List<string> varList = GetVariables().ToList();
+            foreach (string t in varList)
+            {
+                if (!isValid(t))
+                {
+                    throw new FormulaFormatException("Given variable name is invalide: " + t);
+                }
             }
 
         }

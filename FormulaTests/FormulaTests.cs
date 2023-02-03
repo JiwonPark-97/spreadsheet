@@ -25,6 +25,74 @@ namespace FormulaTests;
 public class FormulaTests
 {
 
+
+    /// <summary>
+    /// A lookup for variables. Everything else other than the variable names defined below is bad.
+    /// </summary>
+    /// <param name="variable_name"> the name of the variable to look up.
+    /// any letter or underscore followed by any number of letters and/or digits
+    /// and/or underscores would form valid variable namess </param>
+    /// <returns> a corresponding value to the variable name </returns>
+    /// <exception cref="ArgumentException"> thrown when a bad variable name is passed in </exception>
+    public static double Lookup(string variable_name)
+    {
+        if (variable_name.Equals("x1"))
+        {
+            return 10;
+        }
+        else if (variable_name.Equals("x2"))
+        {
+            return 20;
+        }
+        else if (variable_name.Equals("x3"))
+        {
+            return 30;
+        }
+        else if (variable_name.Equals("_variable_"))
+        {
+            return 1;
+        }
+        else if (variable_name.Equals("_x1"))
+        {
+            return 2;
+        }
+        else
+        {
+            throw new ArgumentException();
+        }
+    }
+
+    /// <summary>
+    /// A normalizer for variables. Returns a lowercased variable name
+    /// </summary>
+    /// <param name="variable_name"> a variable name to be normalized </param>
+    public static string Normalizer(string variable_name)
+    {
+        return variable_name.ToLower();
+    }
+
+    /// <summary>
+    /// Returns if a given variable name is valid.
+    /// Any lowercase letter or underscore followed by any number of lowercase letters and/or digits and/or underscores would form valid variable names.
+    /// </summary>
+    /// <param name="variable_name"> a variable name to be determined </param>
+    public static bool Validator(string variable_name)
+    {
+        string pattern = string.Format(@"[a-z_](?: [a-z_]|\d)*");
+        return (Regex.IsMatch(variable_name, pattern));
+    }
+
+    /// <summary>
+    /// Returns if a given variable name is valid.
+    /// Any one or more letters followed by one or more digits would from valid variable names.
+    /// </summary>
+    /// <param name="variable_name"> a variable name to be determined </param>
+    public static bool Validator2(string variable_name)
+    {
+        string pattern = string.Format("^[a-zA-Z]+[0-9]+$");
+        return (Regex.IsMatch(variable_name, pattern));
+    }
+
     // **************** GetTokens Tests **************** //
 
     /// <summary>
@@ -280,8 +348,8 @@ public class FormulaTests
     [ExpectedException(typeof(FormulaFormatException))]
     public void TestInvalidConstructor10()
     {
-        string s = "%%";
-        Formula f = new Formula(s, null, Validator);
+        string s = "_x";
+        Formula f = new Formula(s, Normalizer, Validator2);
     }
 
 
@@ -338,6 +406,26 @@ public class FormulaTests
     }
 
     [TestMethod]
+    public void TestComplexEvaluate3()
+    {
+        string s = "(1 - 2 -3.0) + 1";
+        Formula f = new Formula(s);
+        Assert.AreEqual(-3.0, f.Evaluate(null));
+    }
+
+
+    [TestMethod]
+    public void TestComplexEvaluate4()
+    {
+        string s = "(1 * 2 *3.0) + 1";
+        Formula f = new Formula(s);
+        Assert.AreEqual(7.0, f.Evaluate(null));
+    }
+
+
+    // Test FormulaError //
+
+    [TestMethod]
     public void TestFormulaErrorEvaluate1()
     {
         string s = "1/0";
@@ -363,62 +451,6 @@ public class FormulaTests
 
 
     // Test with variables, normalizer, and validator //
-
-    /// <summary>
-    /// A lookup for variables. Everything else other than the variable names defined below is bad.
-    /// </summary>
-    /// <param name="variable_name"> the name of the variable to look up.
-    /// any letter or underscore followed by any number of letters and/or digits
-    /// and/or underscores would form valid variable namess </param>
-    /// <returns> a corresponding value to the variable name </returns>
-    /// <exception cref="ArgumentException"> thrown when a bad variable name is passed in </exception>
-    public static double Lookup(string variable_name)
-    {
-        if (variable_name.Equals("x1"))
-        {
-            return 10;
-        }
-        else if (variable_name.Equals("x2"))
-        {
-            return 20;
-        }
-        else if (variable_name.Equals("x3"))
-        {
-            return 30;
-        }
-        else if (variable_name.Equals("_variable_"))
-        {
-            return 1;
-        }
-        else if (variable_name.Equals("_x1"))
-        {
-            return 2;
-        }
-        else
-        {
-            throw new ArgumentException();
-        }
-    }
-
-    /// <summary>
-    /// A normalizer for variables. Returns a lowercased variable name
-    /// </summary>
-    /// <param name="variable_name"> a variable name to be normalized </param>
-    public static string Normalizer(string variable_name)
-    {
-        return variable_name.ToLower();
-    }
-
-    /// <summary>
-    /// Returns if a given variable name is valid.
-    /// Any lowercase letter or underscore followed by any number of lowercase letters and/or digits and/or underscores would form valid variable names.
-    /// </summary>
-    /// <param name="variable_name"> a variable name to be determined </param>
-    public static bool Validator(string variable_name)
-    {
-        string pattern = string.Format(@"[a-z_](?: [a-z_]|\d)*");
-        return (Regex.IsMatch(variable_name, pattern));
-    }
 
     /// <summary>
     /// Test for simple variables
