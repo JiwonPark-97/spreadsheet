@@ -565,10 +565,25 @@ public class FormulaTests
     }
 
     /// <summary>
-    /// Test Equals with null
+    /// Test Equals with formulas that have different numbers of tokens
     /// </summary>
     [TestMethod]
     public void TestEquals2()
+    {
+        string s1 = "x1 +x2";
+        string s2 = "1+ 2+ x1";
+
+        Formula f1 = new Formula(s1);
+        Formula f2 = new Formula(s2);
+
+        Assert.IsFalse(f1.Equals(f2));
+    }
+
+    /// <summary>
+    /// Test Equals with null
+    /// </summary>
+    [TestMethod]
+    public void TestEquals3()
     {
         string s = "x1 +x2";
         Formula f = new Formula(s);
@@ -580,7 +595,7 @@ public class FormulaTests
     /// Test Equals without normalizer
     /// </summary>
     [TestMethod]
-    public void TestEquals3()
+    public void TestEquals4()
     {
         string s1 = "X1 + X2";
         string s2 = "x1+x2";
@@ -595,7 +610,7 @@ public class FormulaTests
     /// Test Equals with normalizer
     /// </summary>
     [TestMethod]
-    public void TestEquals4()
+    public void TestEquals5()
     {
         string s1 = "X1 + X2";
         string s2 = "x1+x2";
@@ -610,7 +625,7 @@ public class FormulaTests
     // **************** == Tests **************** //
 
     /// <summary>
-    /// Test == method
+    /// Test == with values
     /// </summary>
     [TestMethod]
     public void TestEqualEqual1()
@@ -625,7 +640,7 @@ public class FormulaTests
     }
 
     /// <summary>
-    /// Test == method
+    /// Test == with variables
     /// </summary>
     [TestMethod]
     public void TestEqualEqual2()
@@ -640,7 +655,7 @@ public class FormulaTests
     }
 
     /// <summary>
-    /// Test == with empty strings
+    /// Test == with unequal formulas 
     /// </summary>
     [TestMethod]
     public void TestEqualEqual3()
@@ -656,6 +671,9 @@ public class FormulaTests
 
     // **************** != Tests **************** //
 
+    /// <summary>
+    /// Test != with values
+    /// </summary>
     [TestMethod]
     public void TestNonEqual1()
     {
@@ -668,6 +686,9 @@ public class FormulaTests
         Assert.IsFalse(f1 != f2);
     }
 
+    /// <summary>
+    /// Test != with variables
+    /// </summary>
     [TestMethod]
     public void TestNonEqual2()
     {
@@ -680,7 +701,9 @@ public class FormulaTests
         Assert.IsFalse(f1 != f2);
     }
 
-
+    /// <summary>
+    /// Test != with variables
+    /// </summary>
     [TestMethod]
     public void TestNonEqual3()
     {

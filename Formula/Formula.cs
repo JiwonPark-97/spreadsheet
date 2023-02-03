@@ -16,6 +16,25 @@
 //  (Version 1.2) Changed the definition of equality with regards
 //                to numeric tokens
 
+/// <summary>
+/// Author:    Jiwon Park
+/// Partner:   None
+/// Date:      3-Feb-2023
+/// Course:    CS 3500, University of Utah, School of Computing
+/// Copyright: CS 3500 and Jiwon Park - This work may not 
+///            be copied for use in Academic Coursework.
+///
+/// I, Jiwon Park, certify that I wrote this code from scratch and
+/// did not copy it in part or whole from another source.  All 
+/// references used in the completion of the assignments are cited 
+/// in my README file.
+///
+/// This file contains two classes Formula and FormulaFormatException, and a struct FormulaError.
+/// Formula stores and check for a valid expression with normalizer and validator (if given), 
+/// and FormulaFormatException is used to report syntactic errors in a formula.
+/// FormulaError returns value from the Formula's Evaluator method when the input formula is bad.
+/// </summary>
+
 
 using System;
 using System.Collections.Generic;
@@ -50,66 +69,68 @@ namespace SpreadsheetUtilities
         // helper methods for checking type of token //
 
         /// <summary>
-        /// Return if an input token is a numeric value
+        /// Returns if an input token is a numeric value
         /// </summary>
-        /// <param name="s" an input token </param>
-        private bool IsValue(string s)
+        /// <param name="token" a token </param>
+        private bool IsValue(string token)
         {
             double value;
-            return (double.TryParse(s, out value));
+            return (double.TryParse(token, out value));
         }
 
         /// <summary>
-        /// Return if an input token is an operator
+        /// Returns if an input token is an operator
         /// </summary>
-        /// <param name="s"> an input token </param>
-        private bool IsOperator(string s)
+        /// <param name="token"> a token </param>
+        private bool IsOperator(string token)
         {
             string pattern = string.Format(@"[\+\-*/]");
-            return (Regex.IsMatch(s, pattern));
+            return (Regex.IsMatch(token, pattern));
         }
 
         /// <summary>
-        /// Return if an input token is a left parenthesis
+        /// Returns if an input token is a left parenthesis
         /// </summary>
-        /// <param name="s"> an input token </param>
-        /// <returns></returns>
-        private bool IsLeftParen(string s)
+        /// <param name="token"> a token </param>
+        private bool IsLeftParen(string token)
         {
             string pattern = string.Format(@"\(");
-            return (Regex.IsMatch(s, pattern));
+            return (Regex.IsMatch(token, pattern));
         }
 
         /// <summary>
-        /// Return if an input token is a right parenthesis
+        /// Returns if an input token is a right parenthesis
         /// </summary>
-        /// <param name="s"> an input token </param>
-        /// <returns></returns>
-        private bool IsRightParen(string s)
+        /// <param name="token"> a token </param>
+        private bool IsRightParen(string token)
         {
             string pattern = string.Format(@"\)");
-            return (Regex.IsMatch(s, pattern));
+            return (Regex.IsMatch(token, pattern));
         }
 
         /// <summary>
-        /// Return if an input token is a variable.
+        /// Returns if an input token is a variable.
         /// Any letter or underscore followed by any number of letters and/or digits and/or underscores
         /// would be considered as valid variable names.
         /// </summary>
-        /// <param name="s"> an input token </param>
-        /// <returns></returns>
-        private bool IsVariable(string s)
+        /// <param name="token"> a token </param>
+        private bool IsVariable(string token)
         {
             string pattern = string.Format(@"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
-            return (Regex.IsMatch(s, pattern));
+            return (Regex.IsMatch(token, pattern));
         }
 
 
         // helper methods for parsing rules //
 
-        private bool SpecificTokenRule(List<string> list)
+        /// <summary>
+        /// Returns if the specific token rule is held:
+        /// The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).
+        /// </summary>
+        /// <param name="tokens"> a list of tokens </param>
+        private bool SpecificTokenRule(List<string> tokens)
         {
-            foreach (string t in list)
+            foreach (string t in tokens)
             {
                 if (!(IsValue(t) || IsOperator(t) || IsVariable(t) || IsRightParen(t) || IsLeftParen(t)))
                 {
@@ -119,6 +140,11 @@ namespace SpreadsheetUtilities
             return true;
         }
 
+        /// <summary>
+        /// Returns if the balanced parentheses rule is held:
+        /// The total number of opening parentheses must equal the total number of closing parentheses.
+        /// </summary>
+        /// <param name="tokens"> a list of tokens </param>
         private bool BalancedParenRule(List<string> list)
         {
             int lp = 0;
@@ -137,6 +163,11 @@ namespace SpreadsheetUtilities
             return (lp == rp);
         }
 
+        /// <summary>
+        /// Returns if the parenthesis/operator following rule is held:
+        /// Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
+        /// </summary>
+        /// <param name="tokens"> a list of tokens </param>
         private bool ParenOprFollowingRule(List<string> list)
         {
             for (int i = 0; i < list.Count() - 1; i++)
@@ -153,6 +184,11 @@ namespace SpreadsheetUtilities
             return true;
         }
 
+        /// <summary>
+        /// Returns if the extra following rule is held:
+        /// Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
+        /// </summary>
+        /// <param name="tokens"> a list of tokens </param>
         private bool XtrFollowingRule(List<string> list)
         {
             for (int i = 0; i < list.Count() - 1; i++)
@@ -168,6 +204,11 @@ namespace SpreadsheetUtilities
             return true;
         }
 
+        /// <summary>
+        /// Returns if the right parentheses rule is held:
+        /// When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.
+        /// </summary>
+        /// <param name="tokens"> a list of tokens </param>
         private bool RtParenRule(List<string> list)
         {
             int lp = 0;
@@ -189,6 +230,7 @@ namespace SpreadsheetUtilities
             }
             return true;
         }
+
 
         private List<string> tokens;
 
@@ -257,7 +299,7 @@ namespace SpreadsheetUtilities
                 }
             }
 
-            // Check for parsing rules
+            // After tokenizing, verify the following rules are all held
 
             // One Token Rule
             if (tokens.Count() == 0)
@@ -348,6 +390,7 @@ namespace SpreadsheetUtilities
 
                 if (IsValue(token) || IsVariable(token))
                 {
+
                     // get decimal values from the token
                     double tokenVal = 0;
 
@@ -355,6 +398,8 @@ namespace SpreadsheetUtilities
                     {
                         tokenVal = Double.Parse(token);
                     }
+
+                    // if token is variable, check if defined
                     else
                     {
                         try
@@ -402,7 +447,7 @@ namespace SpreadsheetUtilities
                             values.Push(tempResult);
                         }
 
-                        // if there isn't '*' or '/' at the top of the operator stack
+                        // if there isn't "*" or "/" at the top of the operator stack
                         else
                         {
                             values.Push(tokenVal);
@@ -419,7 +464,7 @@ namespace SpreadsheetUtilities
                 else if (token == "+" || token == "-")
                 {
 
-                    // if + or - at the top of the operator stack
+                    // if "+" or "-" at the top of the operator stack
                     if (operators.Count() != 0)
                     {
                         if (operators.Peek() == "+" || operators.Peek() == "-")
@@ -456,13 +501,13 @@ namespace SpreadsheetUtilities
 
                 else if (token == ")")
                 {
-                    // there should be '(' on the operator stack. if not, throw an exception
+                    // there should be "(" on the operator stack. if not, throw an exception
                     if (!operators.Contains("("))
                     {
                         throw new ArgumentException();
                     }
 
-                    // if + or - at the top of the operator stack
+                    // if "+" or "-" at the top of the operator stack
                     else if (operators.Peek() == "+" || operators.Peek() == "-")
                     {
                         // pop the value stack twice and the operator stack once
@@ -486,8 +531,8 @@ namespace SpreadsheetUtilities
                     }
 
 
-                    // the top of the operator stack must be '('. pop it
-                    // throw an exception if there isn't '(' on the operator stack
+                    // the top of the operator stack must be "(". pop it
+                    // throw an exception if there isn't "(" on the operator stack
                     if (!operators.Contains("("))
                     {
                         throw new ArgumentException();
@@ -498,7 +543,7 @@ namespace SpreadsheetUtilities
 
                     }
 
-                    // if * or / at the top of the operator stack
+                    // if "*" or "/" at the top of the operator stack
                     if (operators.Count() != 0)
                     {
                         if (operators.Peek() == "*" || operators.Peek() == "/")
@@ -521,7 +566,6 @@ namespace SpreadsheetUtilities
                                 if (val1 != 0)
                                 {
                                     result = val2 / val1;
-
                                 }
 
                                 // prevent division by 0
