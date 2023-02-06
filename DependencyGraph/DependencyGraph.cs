@@ -111,7 +111,15 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependents(string s)
         {
-            return dependents.ContainsKey(s);
+            if (dependents.ContainsKey(s))
+            {
+                HashSet<string> deps = dependents[s];
+                if (deps.Count() > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
@@ -120,7 +128,15 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependees(string s)
         {
-            return dependees.ContainsKey(s);
+            if (dependees.ContainsKey(s))
+            {
+                HashSet<string> dees = dependees[s];
+                if (dees.Count() > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
