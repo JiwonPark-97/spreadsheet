@@ -37,6 +37,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -84,7 +85,7 @@ namespace SpreadsheetUtilities
         /// <param name="token"> a token </param>
         private bool IsOperator(string token)
         {
-            string pattern = string.Format(@"[\+\-*/]");
+            string pattern = string.Format(@"[\+\-*/]$");
             return (Regex.IsMatch(token, pattern));
         }
 
@@ -94,8 +95,9 @@ namespace SpreadsheetUtilities
         /// <param name="token"> a token </param>
         private bool IsLeftParen(string token)
         {
-            string pattern = string.Format(@"\(");
-            return (Regex.IsMatch(token, pattern));
+            //string pattern = string.Format(@"\(");
+            //return (Regex.IsMatch(token, pattern));
+            return token == "(";
         }
 
         /// <summary>
@@ -104,8 +106,9 @@ namespace SpreadsheetUtilities
         /// <param name="token"> a token </param>
         private bool IsRightParen(string token)
         {
-            string pattern = string.Format(@"\)");
-            return (Regex.IsMatch(token, pattern));
+            //string pattern = string.Format(@"\)");
+            //return (Regex.IsMatch(token, pattern));
+            return token == ")";
         }
 
         /// <summary>
@@ -120,25 +123,7 @@ namespace SpreadsheetUtilities
             return (Regex.IsMatch(token, pattern));
         }
 
-
         // helper methods for parsing rules //
-
-        /// <summary>
-        /// Returns if the specific token rule is held:
-        /// The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).
-        /// </summary>
-        /// <param name="tokens"> a list of tokens </param>
-        private bool SpecificTokenRule(List<string> tokens)
-        {
-            foreach (string t in tokens)
-            {
-                if (!(IsValue(t) || IsOperator(t) || IsVariable(t) || IsRightParen(t) || IsLeftParen(t)))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
 
         /// <summary>
         /// Returns if the balanced parentheses rule is held:
@@ -161,47 +146,6 @@ namespace SpreadsheetUtilities
                 }
             }
             return (lp == rp);
-        }
-
-        /// <summary>
-        /// Returns if the parenthesis/operator following rule is held:
-        /// Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
-        /// </summary>
-        /// <param name="tokens"> a list of tokens </param>
-        private bool ParenOprFollowingRule(List<string> list)
-        {
-            for (int i = 0; i < list.Count() - 1; i++)
-            {
-                if (IsLeftParen(list[i]) || IsOperator(list[i]))
-                {
-                    if (!(IsValue(list[i + 1]) || IsVariable(list[i + 1]) || IsLeftParen(list[i + 1])))
-                    {
-                        return false;
-                    }
-
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Returns if the extra following rule is held:
-        /// Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
-        /// </summary>
-        /// <param name="tokens"> a list of tokens </param>
-        private bool XtrFollowingRule(List<string> list)
-        {
-            for (int i = 0; i < list.Count() - 1; i++)
-            {
-                if (IsValue(list[i]) || IsVariable(list[i]) || IsRightParen(list[i]))
-                {
-                    if (!(IsOperator(list[i + 1]) || IsRightParen(list[i + 1])))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
 
         /// <summary>
@@ -294,10 +238,10 @@ namespace SpreadsheetUtilities
                 throw new FormulaFormatException("The first token of an expression must be a number, a variable, or an opening parenthesis.");
             }
 
-            // Specific Token Rule
-            if (!SpecificTokenRule(tokens))
+            // Ending Token Rule
+            if (!(IsValue(tokens.Last()) || IsVariable(tokens.Last()) || IsRightParen(tokens.Last())))
             {
-                throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).");
+                throw new FormulaFormatException("The last token of an expression must be a number, a variable, or a closing parenthesis.");
             }
 
             // Right Parentheses Rule
@@ -312,23 +256,34 @@ namespace SpreadsheetUtilities
                 throw new FormulaFormatException("The total number of opening parentheses must equal the total number of closing parentheses.");
             }
 
-            // Ending Token Rule
-            if (!(IsValue(tokens.Last()) || IsVariable(tokens.Last()) || IsRightParen(tokens.Last())))
+            for (int i = 0; i < tokens.Count() - 1; i++)
             {
-                throw new FormulaFormatException("The last token of an expression must be a number, a variable, or a closing parenthesis.");
+
+                // Parenthesis/Operator Following Rule
+                if (IsLeftParen(tokens[i]) || IsOperator(tokens[i]))
+                {
+                    if (!(IsValue(tokens[i + 1]) || IsVariable(tokens[i + 1]) || IsLeftParen(tokens[i + 1])))
+                    {
+                        throw new FormulaFormatException("Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.");
+                    }
+
+                // Extra Following Rule
+                }
+                else if (IsValue(tokens[i]) || IsVariable(tokens[i]) || IsRightParen(tokens[i]))
+                {
+                    if (!(IsOperator(tokens[i + 1]) || IsRightParen(tokens[i + 1])))
+                    {
+                        throw new FormulaFormatException("Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.");
+                    }
+                }
+
+                // Specific Token Rule
+                else
+                {
+                    throw new FormulaFormatException("The only valid tokens are (, ), +, -, *, /, variables, and decimal real numbers (including scientific notation).");
+                }
             }
 
-            // Parenthesis/Operator Following Rule
-            if (!ParenOprFollowingRule(tokens))
-            {
-                throw new FormulaFormatException("Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.");
-            }
-
-            // Extra Following Rule
-            if (!XtrFollowingRule(tokens))
-            {
-                throw new FormulaFormatException("Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.");
-            }
 
             // normalize tokens
             for (int i = 0; i < tokens.Count(); i++)
@@ -348,7 +303,6 @@ namespace SpreadsheetUtilities
                     throw new FormulaFormatException("Given variable name is invalide: " + t);
                 }
             }
-
         }
 
         /// <summary>
@@ -621,8 +575,19 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override string ToString()
         {
-            string returnStr = string.Join("", tokens);
-            return returnStr;
+
+            // Two equal formulas that (as defined by equals) should return the exact same string in their ToString method. (according to @607 on Piazza)
+            for (int i = 0; i < tokens.Count(); i++)
+            {
+                if (IsValue(tokens[i]))
+                {
+                    double value = double.Parse(tokens[i]);
+                    tokens[i] = value.ToString();
+                }
+            }
+            string returnstr = string.Join("", tokens);
+            return returnstr;
+
         }
 
         /// <summary>
@@ -681,13 +646,14 @@ namespace SpreadsheetUtilities
                             return false;
                         }
 
-                    // if two token types are different
-                    } else
+                        // if two token types are different
+                    }
+                    else
                     {
                         return false;
                     }
 
-                // compare variable and operator tokens (variables already normalized in constructor)
+                    // compare variable and operator tokens (variables already normalized in constructor)
                 }
                 else
                 {
@@ -696,9 +662,7 @@ namespace SpreadsheetUtilities
                         return false;
                     }
                 }
-
             }
-
             return true;
         }
 
@@ -731,7 +695,7 @@ namespace SpreadsheetUtilities
         public override int GetHashCode()
         {
             // get hash code from converted-to-string formula
-            string str = string.Join("", tokens);
+            string str = tokens.ToString();
             return str.GetHashCode();
         }
 

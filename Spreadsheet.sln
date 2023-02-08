@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spreadsheet", "Spreadsheet\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{78446817-2253-42EB-AF4C-D32265985BE1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentThreeGradingTests", "AssignmentThreeGradingTests\AssignmentThreeGradingTests.csproj", "{F9651FF6-7356-40AC-9114-F70F51C95B4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{78446817-2253-42EB-AF4C-D32265985BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78446817-2253-42EB-AF4C-D32265985BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78446817-2253-42EB-AF4C-D32265985BE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

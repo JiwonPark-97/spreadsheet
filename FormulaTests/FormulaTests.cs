@@ -240,6 +240,16 @@ public class FormulaTests
         Formula f = new Formula(s);
     }
 
+    /// <summary>
+    /// Test constructor with variables and scientific notations
+    /// </summary>
+    [TestMethod]
+    public void TestComplexConstructor3()
+    {
+        string s = "(((((2+3*X1)/(7e-5+X2-X4))*X5+.0005e+92)-8.2)*3.14159) * ((x2+3.1)-.00000000008)";
+        Formula f = new Formula(s);
+    }
+
 
     // Test Invalid Expression //
 
@@ -634,6 +644,29 @@ public class FormulaTests
         Assert.AreEqual(expected, f.ToString());
     }
 
+    /// <summary>
+    /// Test ToString with different formulas
+    /// </summary>
+    [TestMethod]
+    public void TestToString5()
+    {
+        Formula f1 = new Formula("x1+2", Normalizer, Validator);
+        Formula f2 = new Formula("3+ 4", Normalizer, Validator);
+        Assert.AreNotEqual(f1.ToString(), f2.ToString());
+    }
+
+    /// <summary>
+    /// Test ToString with different formulas
+    /// </summary>
+    [TestMethod]
+    public void TestToString6()
+    {
+        Formula f1 = new Formula("2*5");
+        Formula f2 = new Formula("3/8*2+(7)");
+        Assert.AreNotEqual(f1.ToString(), f2.ToString());
+    }
+
+
     // **************** Equals Tests **************** //
 
     /// <summary>
@@ -864,5 +897,18 @@ public class FormulaTests
 
         Assert.AreEqual(f1.GetHashCode(), f2.GetHashCode());
     }
+
+    /// <summary>
+    /// Unequal formulas
+    /// </summary>
+    [TestMethod]
+    public void TestGetHashCode3()
+    {
+        Formula f1 = new Formula("2*5");
+        Formula f2 = new Formula("3/8*2");
+        Assert.AreNotEqual(f1.GetHashCode(), f2.GetHashCode());
+    }
+
+
 
 }
