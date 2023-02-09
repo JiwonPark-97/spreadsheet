@@ -587,7 +587,6 @@ namespace SpreadsheetUtilities
             }
             string returnstr = string.Join("", tokens);
             return returnstr;
-
         }
 
         /// <summary>
@@ -695,7 +694,7 @@ namespace SpreadsheetUtilities
         public override int GetHashCode()
         {
             // get hash code from converted-to-string formula
-            string str = tokens.ToString();
+            string str = this.ToString();
             return str.GetHashCode();
         }
 

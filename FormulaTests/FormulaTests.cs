@@ -905,10 +905,19 @@ public class FormulaTests
     public void TestGetHashCode3()
     {
         Formula f1 = new Formula("2*5");
-        Formula f2 = new Formula("3/8*2");
+        Formula f2 = new Formula("3");
         Assert.AreNotEqual(f1.GetHashCode(), f2.GetHashCode());
     }
 
-
+    /// <summary>
+    /// Unequal formulas
+    /// </summary>
+    [TestMethod]
+    public void TestGetHashCode4()
+    {
+        Formula f1 = new Formula("2");
+        Formula f2 = new Formula("3+1");
+        Assert.AreNotEqual(f1.GetHashCode(), f2.GetHashCode());
+    }
 
 }
