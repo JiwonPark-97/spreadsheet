@@ -27,4 +27,5 @@ I have not directly consulted with others but referred to the discord server lis
     2. Cell class (Piazza post @791) - https://utah.instructure.com/courses/834041/external_tools/90790
     3. Get dictionary value by key - https://stackoverflow.com/questions/12169443/get-dictionary-value-by-key
     4. How do I get the list of keys in a Dictionary? - https://stackoverflow.com/questions/1276763/how-do-i-get-the-list-of-keys-in-a-dictionary
-    5. 
+    5. Different ways of adding to Dictionary - https://stackoverflow.com/questions/1838476/different-ways-of-adding-to-dictionary
+    6. 

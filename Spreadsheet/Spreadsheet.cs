@@ -17,6 +17,7 @@
 using System;
 using System.Text.RegularExpressions;
 using SpreadsheetUtilities;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SS
 {
@@ -26,6 +27,11 @@ namespace SS
         /// A dictionary representing all cells. Key contains cell names and value contains Cells.
         /// </summary>
         private Dictionary<string, Cell> cells;
+
+        /// <summary>
+        /// A DependencyGraph representing dependencies of cells.
+        /// </summary>
+        private DependencyGraph dg;
 
         /// <summary>
         /// 
@@ -89,6 +95,7 @@ namespace SS
 		public Spreadsheet()
 		{
             cells = new Dictionary<string, Cell>();
+            dg = new DependencyGraph();
         }
 
         /// <summary>
@@ -172,13 +179,12 @@ namespace SS
                 throw new InvalidNameException();
             }
 
-            Cell cell;
-            cells.TryGetValue(name, out cell);
+            cells[name] = new Cell(name, number);
 
-            cell.SetContents(number);
+            dg.ReplaceDependees(name, new HashSet<string>());
 
-            //TODO: return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
-            return null;
+            // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
+            return GetCellsToRecalculate(name).ToHashSet();
         }
 
         /// <summary>
@@ -208,7 +214,15 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, string text)
         {
-            throw new NotImplementedException();
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
+
+            cells[name] = new Cell(name, text);
+
+            // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
+            return GetCellsToRecalculate(name).ToHashSet();
         }
 
         /// <summary>
@@ -245,7 +259,15 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, Formula formula)
         {
-            throw new NotImplementedException();
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
+
+            cells[name] = new Cell(name, formula);
+
+            // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
+            return GetCellsToRecalculate(name).ToHashSet();
         }
 
         /// <summary>
@@ -279,7 +301,12 @@ namespace SS
         /// </returns>
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
-            throw new NotImplementedException();
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
+
+            return dg.GetDependents(name);
         }
     }
 }
