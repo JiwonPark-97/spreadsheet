@@ -15,14 +15,21 @@
 /// </summary>
 
 using System;
+using System.Text.RegularExpressions;
 using SpreadsheetUtilities;
 
 namespace SS
 {
 	public class Spreadsheet : AbstractSpreadsheet
     {
+        /// <summary>
+        /// A dictionary representing all cells. Key contains cell names and value contains Cells.
+        /// </summary>
         private Dictionary<string, Cell> cells;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private class Cell
         {
             string name;
@@ -33,12 +40,14 @@ namespace SS
             {
                 this.name = name;
                 contents = number;
+                value = number;
             }
 
             public Cell(string name, string text)
             {
                 this.name = name;
                 contents = text;
+                value = text;
             }
 
             public Cell(string name, Formula formula)
@@ -46,11 +55,51 @@ namespace SS
                 this.name = name;
                 contents = formula;
             }
+
+            // getters
+
+            public string GetName()
+            {
+                return name;
+            }
+
+            public object GetContents()
+            {
+                return contents;
+            }
+
+            public object GetValue()
+            {
+                return value;
+            }
+
+            // setters
+
+            public void SetName(string name)
+            {
+                this.name = name;
+            }
+
+            public void SetContents(object contents)
+            {
+                this.contents = contents;
+            }
         }
 
 		public Spreadsheet()
 		{
             cells = new Dictionary<string, Cell>();
+        }
+
+        /// <summary>
+        /// A helper method for checking validity of a cell name
+        /// </summary>
+        /// <param name="name"> a cell name </param>
+        /// <returns> true if valid, false otherwise </returns>
+        private bool IsValid(string name)
+        {
+            string pattern = string.Format(@"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
+            return (Regex.IsMatch(name, pattern));
         }
 
         /// <summary>
@@ -69,7 +118,19 @@ namespace SS
         /// </returns>
         public override object GetCellContents(string name)
         {
-            throw new NotImplementedException();
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
+
+            Cell cell;
+            if (!cells.TryGetValue(name, out cell))
+            {
+                // if the cell is empty, contents is an empty string
+                return "";
+            }
+
+            return cell.GetContents();
         }
 
         /// <summary>
@@ -78,7 +139,8 @@ namespace SS
         /// </summary>
         public override IEnumerable<string> GetNamesOfAllNonemptyCells()
         {
-            throw new NotImplementedException();
+            List<string> keys = new List<string>(cells.Keys);
+            return keys;
         }
 
         /// <summary>
@@ -105,7 +167,18 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, double number)
         {
-            throw new NotImplementedException();
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
+
+            Cell cell;
+            cells.TryGetValue(name, out cell);
+
+            cell.SetContents(number);
+
+            //TODO: return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
+            return null;
         }
 
         /// <summary>

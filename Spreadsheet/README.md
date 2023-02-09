@@ -25,4 +25,6 @@ I have not directly consulted with others but referred to the discord server lis
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
     2. Cell class (Piazza post @791) - https://utah.instructure.com/courses/834041/external_tools/90790
-    3. 
+    3. Get dictionary value by key - https://stackoverflow.com/questions/12169443/get-dictionary-value-by-key
+    4. How do I get the list of keys in a Dictionary? - https://stackoverflow.com/questions/1276763/how-do-i-get-the-list-of-keys-in-a-dictionary
+    5. 
