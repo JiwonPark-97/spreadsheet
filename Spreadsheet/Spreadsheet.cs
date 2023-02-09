@@ -21,9 +21,37 @@ namespace SS
 {
 	public class Spreadsheet : AbstractSpreadsheet
     {
+        private Dictionary<string, Cell> cells;
+
+        private class Cell
+        {
+            string name;
+            object contents;
+            object value;
+
+            public Cell(string name, double number)
+            {
+                this.name = name;
+                contents = number;
+            }
+
+            public Cell(string name, string text)
+            {
+                this.name = name;
+                contents = text;
+            }
+
+            public Cell(string name, Formula formula)
+            {
+                this.name = name;
+                contents = formula;
+            }
+        }
+
 		public Spreadsheet()
 		{
-		}
+            cells = new Dictionary<string, Cell>();
+        }
 
         /// <summary>
         ///   Returns the contents (as opposed to the value) of the named cell.

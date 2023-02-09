@@ -24,4 +24,5 @@ I have not directly consulted with others but referred to the discord server lis
 # References:
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
-    2. 
+    2. Cell class (Piazza post @791) - https://utah.instructure.com/courses/834041/external_tools/90790
+    3. 
