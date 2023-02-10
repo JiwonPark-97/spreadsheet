@@ -21,10 +21,78 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SS
 {
+
+    /// <summary>
+    /// <para>
+    ///     A spreadsheet consists of an infinite number of named cells.
+    /// </para>
+    /// <para>
+    ///     A string is a valid cell name if and only if:
+    /// </para>
+    /// <list type="number">
+    ///      <item> its first character is an underscore or a letter</item>
+    ///      <item> its remaining characters (if any) are underscores and/or letters and/or digits</item>
+    /// </list>   
+    /// <para>
+    ///     Note that this is the same as the definition of valid variable from the Formula class assignment.
+    /// </para>
+    /// 
+    /// <para>
+    ///     For example, "x", "_", "x2", "y_15", and "___" are all valid cell  names, but
+    ///     "25", "2x", and "&amp;" are not.  Cell names are case sensitive, so "x" and "X" are
+    ///     different cell names.
+    /// </para>
+    /// 
+    /// <para>
+    ///     A spreadsheet contains a cell corresponding to every possible cell name.  (This
+    ///     means that a spreadsheet contains an infinite number of cells.)  In addition to 
+    ///     a name, each cell has a contents and a value.  The distinction is important.
+    /// </para>
+    /// 
+    /// <para>
+    ///     The contents of a cell can be (1) a string, (2) a double, or (3) a Formula.  If the
+    ///     contents is an empty string, we say that the cell is empty.  (By analogy, the contents
+    ///     of a cell in Excel is what is displayed on the editing line when the cell is selected.)
+    /// </para>
+    /// 
+    /// <para>
+    ///     In a new spreadsheet, the contents of every cell is the empty string. Note: 
+    ///     this is by definition (it is IMPLIED, not stored).
+    /// </para>
+    /// 
+    /// <para>
+    ///     The value of a cell can be (1) a string, (2) a double, or (3) a FormulaError.  
+    ///     (By analogy, the value of an Excel cell is what is displayed in that cell's position
+    ///     in the grid.)
+    /// </para>
+    /// 
+    /// <list type="number">
+    ///   <item>If a cell's contents is a string, its value is that string.</item>
+    /// 
+    ///   <item>If a cell's contents is a double, its value is that double.</item>
+    /// 
+    ///   <item>
+    ///      If a cell's contents is a Formula, its value is either a double or a FormulaError,
+    ///      as reported by the Evaluate method of the Formula class.  The value of a Formula,
+    ///      of course, can depend on the values of variables.  The value of a variable is the 
+    ///      value of the spreadsheet cell it names (if that cell's value is a double) or 
+    ///      is undefined (otherwise).
+    ///   </item>
+    /// 
+    /// </list>
+    /// 
+    /// <para>
+    ///     Spreadsheets are never allowed to contain a combination of Formulas that establish
+    ///     a circular dependency.  A circular dependency exists when a cell depends on itself.
+    ///     For example, suppose that A1 contains B1*2, B1 contains C1*2, and C1 contains A1*2.
+    ///     A1 depends on B1, which depends on C1, which depends on A1.  That's a circular
+    ///     dependency.
+    /// </para>
+    /// </summary>
 	public class Spreadsheet : AbstractSpreadsheet
     {
         /// <summary>
-        /// A dictionary representing all cells. Key contains cell names and value contains Cells.
+        /// A dictionary representing all nonempty cells. Key contains cell names and value contains Cells.
         /// </summary>
         private Dictionary<string, Cell> cells;
 
@@ -34,7 +102,7 @@ namespace SS
         private DependencyGraph dg;
 
         /// <summary>
-        /// 
+        /// Represents a cell. 
         /// </summary>
         private class Cell
         {
@@ -60,6 +128,9 @@ namespace SS
             {
                 this.name = name;
                 contents = formula;
+
+                // The API does not specify any need for evaluation in assignment 4.
+                value = formula.Evaluate(null);
             }
 
             // getters
@@ -105,7 +176,7 @@ namespace SS
         /// <returns> true if valid, false otherwise </returns>
         private bool IsValid(string name)
         {
-            string pattern = string.Format(@"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
+            string pattern = string.Format(@"^[a-zA-Z_](?: [a-zA-Z_]|\d)*$");
             return (Regex.IsMatch(name, pattern));
         }
 
@@ -219,7 +290,15 @@ namespace SS
                 throw new InvalidNameException();
             }
 
-            cells[name] = new Cell(name, text);
+            // If the contents is an empty string, the cell is empty - remove from cells
+            if (text == "")
+            {
+                cells.Remove(name);
+            }
+            else
+            {
+                cells[name] = new Cell(name, text);
+            }
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToHashSet();
@@ -265,6 +344,12 @@ namespace SS
             }
 
             cells[name] = new Cell(name, formula);
+
+            HashSet<string> variables = formula.GetVariables().ToHashSet();
+            foreach (string variable in variables)
+            {
+                dg.AddDependency(variable, name);
+            }
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToHashSet();
