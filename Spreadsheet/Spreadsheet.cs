@@ -130,7 +130,7 @@ namespace SS
                 contents = formula;
 
                 // The API does not specify any need for evaluation in assignment 4.
-                value = formula.Evaluate(null);
+                //value = formula.Evaluate(null);
             }
 
             // getters
