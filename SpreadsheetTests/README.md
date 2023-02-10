@@ -12,8 +12,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-    I tested every public method directly and private/protected method indirectly. To test GetDirectDependents method,
-    I added a new test class ProtectedMethodTests that inherits Spreadsheet class.
+    I tested every public method directly and private/protected method indirectly. To test protected methods,
+    I added a new test class ProtectedMethodTests that inherits from Spreadsheet class.
 
 # Assignment Specific Topics
 

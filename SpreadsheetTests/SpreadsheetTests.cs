@@ -11,9 +11,9 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// This file contains two test classes SpreadsheetTests and ProtectedMethodTests
-/// that contains unit tests for Spreadsheet class.
-/// ProtectedMethodTests class inherits from Spreadsheet class to test protected method. 
+/// This file contains two test classes SpreadsheetTests and ProtectedMethodTests. 
+/// SpreadsheetTests contains unit tests for Spreadsheet class and 
+/// ProtectedMethodTests class inherits from Spreadsheet class to test protected methods. 
 /// </summary>
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,11 +28,10 @@ namespace SpreadsheetTests;
 [TestClass]
 public class SpreadsheetTests
 {
-
     // **************** GetCellContents Tests **************** //
 
     /// <summary>
-    /// Named cell is empty
+    /// Empty cell should return an empty string
     /// </summary>
     [TestMethod]
     public void GetCellContentsTest1()
@@ -97,8 +96,12 @@ public class SpreadsheetTests
         Assert.AreEqual(new Formula("1+2"), sheet.GetCellContents("a1"));
     }
 
+
     // **************** GetNamesOfAllNonemptyCells Tests **************** //
 
+    /// <summary>
+    /// Simple GetNamesOfAllNonemptyCells
+    /// </summary>
     [TestMethod]
     public void GetNamesOfAllNonemptyCellsTest1()
     {
@@ -106,9 +109,13 @@ public class SpreadsheetTests
         sheet.SetCellContents("a1", 1);
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
-        names.Contains("a1");
+        Assert.IsTrue(names.Contains("a1"));
+        Assert.AreEqual(1, names.Count());
     }
 
+    /// <summary>
+    /// Simple GetNamesOfAllNonemptyCells
+    /// </summary>
     [TestMethod]
     public void GetNamesOfAllNonemptyCellsTest2()
     {
@@ -119,11 +126,14 @@ public class SpreadsheetTests
         sheet.SetCellContents("c1", f);
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
-        names.Contains("a1");
-        names.Contains("b1");
-        names.Contains("c1");
+        Assert.IsTrue(names.Contains("a1"));
+        Assert.IsTrue(names.Contains("b1"));
+        Assert.IsTrue(names.Contains("c1"));
     }
 
+    /// <summary>
+    /// Simple GetNamesOfAllNonemptyCells
+    /// </summary>
     [TestMethod]
     public void GetNamesOfAllNonemptyCellsTest3()
     {
@@ -134,15 +144,18 @@ public class SpreadsheetTests
         sheet.SetCellContents("A", f);
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
-        names.Contains("a1");
-        names.Contains("_");
-        names.Contains("A");
+        Assert.IsTrue(names.Contains("a1"));
+        Assert.IsTrue(names.Contains("_"));
+        Assert.IsTrue(names.Contains("A"));
     }
 
     // **************** SetCellContents Tests **************** //
 
     // number contents //
 
+    /// <summary>
+    /// Simple SetCellContents
+    /// </summary>
     [TestMethod]
     public void SetCellContentsTest1()
     {
@@ -155,7 +168,9 @@ public class SpreadsheetTests
         Assert.AreEqual(3.5, sheet.GetCellContents("b_"));
         Assert.AreEqual(10.0, sheet.GetCellContents("_c"));
     }
-
+    /// <summary>
+    /// Simple SetCellContents
+    /// </summary>
     [TestMethod]
     public void SetCellContentsTest2()
     {
@@ -194,6 +209,9 @@ public class SpreadsheetTests
 
     // string contents //
 
+    /// <summary>
+    /// Simple SetCellContents
+    /// </summary>
     [TestMethod]
     public void SetCellContentsTest6()
     {
@@ -241,7 +259,7 @@ public class SpreadsheetTests
     }
 
     /// <summary>
-    /// Empty text means empty cell. Should remove from cells
+    /// Empty text means empty cell. Should be removed from cells
     /// </summary>
     [TestMethod]
     public void SetCellContentsTest10()
@@ -365,7 +383,7 @@ public class SpreadsheetTests
 }
 
 /// <summary>
-/// 
+/// This class contains unit tests for protected methods
 /// </summary>
 [TestClass]
 public class ProtectedMethodTests : Spreadsheet

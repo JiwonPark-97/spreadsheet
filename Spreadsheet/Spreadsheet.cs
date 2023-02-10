@@ -11,7 +11,7 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// File content
+/// This File contains a single class Spreadsheet that inherits from AbstractSpreadsheet. 
 /// </summary>
 
 using System;
@@ -130,7 +130,6 @@ namespace SS
                 contents = formula;
 
                 // The API does not specify any need for evaluation in assignment 4.
-                //value = formula.Evaluate(null);
             }
 
             /// <summary>
@@ -143,6 +142,9 @@ namespace SS
             }
         }
 
+        /// <summary>
+        /// A constructor that creates an empty spreadsheet
+        /// </summary>
 		public Spreadsheet()
 		{
             cells = new Dictionary<string, Cell>();
@@ -187,7 +189,6 @@ namespace SS
                 // if the cell is empty, contents is an empty string
                 return "";
             }
-
             return cell.GetContents();
         }
 
@@ -323,7 +324,6 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, Formula formula)
         {
-            //if (object.ReferenceEquals(formula, null));
             if (formula is null)
             {
                 throw new ArgumentNullException();

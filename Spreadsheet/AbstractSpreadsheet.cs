@@ -317,9 +317,17 @@ namespace SS
 
         /// <summary>
         /// A helper for the GetCellsToRecalculate method.
-        /// 
-        ///   -- You should fully comment what is going on below using XML tags as appropriate --
+        /// It checks for each dependent of the 'name' cell and throws CircularException
+        /// if the 'name' cell directly/indirectly depends on itself. 
+        ///
+        /// Through recursion, it keeps track of 'visited' cells to check every direct/indirect dependency
+        /// until throwing CircularException.
         /// </summary>
+        /// <param name="start"> the first cell to visit </param>
+        /// <param name="name"> </param>
+        /// <param name="visited"> Set of visited cells </param>
+        /// <param name="changed"> LinkedList of recalculated cells </param>
+        /// <exception cref="CircularException"></exception>
         private void Visit(String start, String name, ISet<String> visited, LinkedList<String> changed)
         {
             visited.Add(name);
