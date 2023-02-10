@@ -285,14 +285,14 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, string text)
         {
-            if (name == null || !IsValid(name))
-            {
-                throw new InvalidNameException();
-            }
-
             if (text == null)
             {
                 throw new ArgumentNullException();
+            }
+
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
             }
 
             // If the contents is an empty string, the cell is empty - remove from cells
@@ -343,23 +343,33 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, Formula formula)
         {
-            if (name == null || !IsValid(name))
-            {
-                throw new InvalidNameException();
-            }
-
             if (formula == null)
             {
                 throw new ArgumentNullException();
             }
 
-            cells[name] = new Cell(name, formula);
+            if (name == null || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
 
             HashSet<string> variables = formula.GetVariables().ToHashSet();
             foreach (string variable in variables)
             {
                 dg.AddDependency(variable, name);
             }
+
+            // TODO: handle circular exception.
+            // if name is in its GetCellsToRecalculate - throw?
+            // GetCellsToRecalculate always returns name itself. remove the first item and check?
+            List<string> cellsDependingOnName = GetCellsToRecalculate(name).ToList();
+            cellsDependingOnName.RemoveAt(0);
+            if (cellsDependingOnName.Contains(name))
+            {
+                throw new CircularException();
+            }
+
+            cells[name] = new Cell(name, formula);
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToHashSet();
