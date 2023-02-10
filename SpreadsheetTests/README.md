@@ -5,7 +5,7 @@ Partner:    None
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       10-Feb-2023 11.50 am (when submission was completed) 
+Date:       10-Feb-2023 3.30 pm (when submission was completed) 
 Project:    Spreadsheet
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
