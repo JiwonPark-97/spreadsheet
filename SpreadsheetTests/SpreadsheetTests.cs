@@ -281,6 +281,66 @@ public class SpreadsheetTests
         sheet.SetCellContents("a1", new Formula("a3+3"));
         sheet.SetCellContents("a2", new Formula("a1+1"));
         sheet.SetCellContents("a3", new Formula("a2+2"));
-
     }
+
+    /// <summary>
+    /// Should throw CircularException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(CircularException))]
+    public void SetCellContentsTest14()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("_1", new Formula("_a+3"));
+        sheet.SetCellContents("_a", new Formula("_1+1"));
+        sheet.SetCellContents("_A", new Formula("_1*_a"));
+    }
+
+    /// <summary>
+    /// Should throw CircularException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(CircularException))]
+    public void SetCellContentsTest15()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("x1", new Formula("x1-1"));
+    }
+
+    /// <summary>
+    /// Should throw CircularException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(CircularException))]
+    public void SetCellContentsTest16()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("x1", new Formula("1"));
+        sheet.SetCellContents("x2", new Formula("x5+x1"));
+        sheet.SetCellContents("x3", new Formula("x1+3"));
+        sheet.SetCellContents("x4", new Formula("x2+2+x3"));
+        sheet.SetCellContents("x5", new Formula("x1+x2"));
+    }
+
+    /// <summary>
+    /// Shoud return a set consisting of name and names that depend on named cell directly or indirectly.
+    /// </summary>
+    [TestMethod]
+    public void SetCellContentsTest17()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("x1", new Formula("1"));
+        sheet.SetCellContents("x2", new Formula("2* x3"));
+        sheet.SetCellContents("x3", new Formula("x1/ 3"));
+        sheet.SetCellContents("x4", new Formula("x2 -2"));
+
+        List<string> names = sheet.SetCellContents("x1", 3).ToList();
+
+        Assert.AreEqual(4, names.Count());
+        Assert.AreEqual("x1", names[0]);
+        Assert.AreEqual("x3", names[1]);
+        Assert.AreEqual("x2", names[2]);
+        Assert.AreEqual("x4", names[3]);
+    }
+
 }

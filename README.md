@@ -12,11 +12,15 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Overview of the Spreadsheet functionality
 
-The spreadsheet program is currently capable of evaluating mathematical expressions, representing dependencies, and storing expressions to evaluate. 
+    The spreadsheet program is currently capable of:
+        1. evaluating mathematical expressions
+        2. representing dependencies
+        3. storing expressions to evaluate
+        4. representing cells and their contents and dependencies.
 
 # Time Expenditures:
 
     1. Assignment One:       Predicted Hours:          20        Actual Hours:   32             Note: Spent extra hours figiting git.
     2. Assignment Two:       Predicted Hours:          20        Actual Hours:   22             Note: Spent extra hours installing coverage tool on Mac.
     3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   21             Note: Spent extra hours covering 100% code.
-    4. Assignmnet Four:      Predicted Hours:          20        Actual Hours:   3+3            Note: 
+    4. Assignmnet Four:      Predicted Hours:          20        Actual Hours:   10             Note: -

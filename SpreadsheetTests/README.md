@@ -12,16 +12,17 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
+    I tested every public method directly and private/protected method indirectly. The code coverage is ___%.
 
 # Assignment Specific Topics
 
-This section was not required.
+    This section was not required.
 
 # Consulted Peers:
 
-I have not directly consulted with others but referred to the discord server listed below in reference.
+    I have not directly consulted with others but referred to the discord server listed below in reference.
 
 # References:
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
-    2. 
+    2. NullReferenceException Class - https://learn.microsoft.com/en-us/dotnet/api/system.nullreferenceexception?view=net-7.0
