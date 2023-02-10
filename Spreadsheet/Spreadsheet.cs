@@ -290,6 +290,11 @@ namespace SS
                 throw new InvalidNameException();
             }
 
+            if (text == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             // If the contents is an empty string, the cell is empty - remove from cells
             if (text == "")
             {
@@ -341,6 +346,11 @@ namespace SS
             if (name == null || !IsValid(name))
             {
                 throw new InvalidNameException();
+            }
+
+            if (formula == null)
+            {
+                throw new ArgumentNullException();
             }
 
             cells[name] = new Cell(name, formula);
