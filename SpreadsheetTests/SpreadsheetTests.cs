@@ -235,6 +235,20 @@ public class SpreadsheetTests
         sheet.SetCellContents("a1", (string)null);
     }
 
+    /// <summary>
+    /// Empty text means empty cell. Should remove from cells
+    /// </summary>
+    [TestMethod]
+    public void SetCellContentsTest10()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("_1", 1);
+        Assert.AreEqual(1, sheet.GetNamesOfAllNonemptyCells().Count());
+        sheet.SetCellContents("_1", "");
+        Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
+    }
+
+
     // Formula contents //
 
     /// <summary>
@@ -242,7 +256,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void SetCellContentsTest10()
+    public void SetCellContentsTest11()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("a1", (Formula)null);
@@ -253,7 +267,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest11()
+    public void SetCellContentsTest12()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents(null, new Formula("1+2"));
@@ -264,7 +278,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest12()
+    public void SetCellContentsTest13()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("1_", new Formula("1+2"));
@@ -275,7 +289,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest13()
+    public void SetCellContentsTest14()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("a1", new Formula("a3+3"));
@@ -288,7 +302,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest14()
+    public void SetCellContentsTest15()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("_1", new Formula("_a+3"));
@@ -301,7 +315,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest15()
+    public void SetCellContentsTest16()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("x1", new Formula("x1-1"));
@@ -312,7 +326,7 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest16()
+    public void SetCellContentsTest17()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("x1", new Formula("1"));
@@ -326,7 +340,7 @@ public class SpreadsheetTests
     /// Shoud return a set consisting of name and names that depend on named cell directly or indirectly.
     /// </summary>
     [TestMethod]
-    public void SetCellContentsTest17()
+    public void SetCellContentsTest18()
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("x1", new Formula("1"));

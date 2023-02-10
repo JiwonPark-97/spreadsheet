@@ -133,33 +133,13 @@ namespace SS
                 //value = formula.Evaluate(null);
             }
 
-            // getters
-
-            public string GetName()
-            {
-                return name;
-            }
-
+            /// <summary>
+            /// Getter for contents
+            /// </summary>
+            /// <returns> contents </returns>
             public object GetContents()
             {
                 return contents;
-            }
-
-            public object GetValue()
-            {
-                return value;
-            }
-
-            // setters
-
-            public void SetName(string name)
-            {
-                this.name = name;
-            }
-
-            public void SetContents(object contents)
-            {
-                this.contents = contents;
             }
         }
 
@@ -360,10 +340,11 @@ namespace SS
                 dg.AddDependency(variable, name);
             }
 
-            // TODO: handle circular exception.
-            // if name is in its GetCellsToRecalculate - throw?
-            // GetCellsToRecalculate always returns name itself. remove the first item and check?
+            // handle CircularException
+            // get cells depending on named cell
             List<string> cellsDependingOnName = GetCellsToRecalculate(name).ToList();
+
+            // remove name itself (at first)
             cellsDependingOnName.RemoveAt(0);
             if (cellsDependingOnName.Contains(name))
             {
