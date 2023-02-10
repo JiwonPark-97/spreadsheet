@@ -11,7 +11,9 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// File content
+/// This file contains two test classes SpreadsheetTests and ProtectedMethodTests
+/// that contains unit tests for Spreadsheet class.
+/// ProtectedMethodTests class inherits from Spreadsheet class to test protected method. 
 /// </summary>
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,6 +22,9 @@ using SS;
 
 namespace SpreadsheetTests;
 
+/// <summary>
+/// This class provides unit tests for Spreadsheet
+/// </summary>
 [TestClass]
 public class SpreadsheetTests
 {
@@ -357,4 +362,34 @@ public class SpreadsheetTests
         Assert.AreEqual("x4", names[3]);
     }
 
+}
+
+/// <summary>
+/// 
+/// </summary>
+[TestClass]
+public class ProtectedMethodTests : Spreadsheet
+{
+    // **************** GetCellsToRecalculate Tests **************** //
+
+    /// <summary>
+    /// Shoud throw InvalidNameException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(InvalidNameException))]
+    public void GetCellsToRecalculateTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        GetCellsToRecalculate("");
+    }
+
+    /// <summary>
+    /// Shoud throw InvalidNameException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(InvalidNameException))]
+    public void GetCellsToRecalculateTest2()
+    {
+        GetCellsToRecalculate((string)null);
+    }
 }

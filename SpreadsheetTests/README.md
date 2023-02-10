@@ -12,7 +12,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-    I tested every public method directly and private/protected method indirectly. The code coverage is ___%.
+    I tested every public method directly and private/protected method indirectly. To test GetDirectDependents method,
+    I added a new test class ProtectedMethodTests that inherits Spreadsheet class.
 
 # Assignment Specific Topics
 
@@ -26,3 +27,4 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
     2. NullReferenceException Class - https://learn.microsoft.com/en-us/dotnet/api/system.nullreferenceexception?view=net-7.0
+    3. Unit testing C# protected methods - https://stackoverflow.com/questions/13416223/unit-testing-c-sharp-protected-methods
