@@ -176,7 +176,7 @@ namespace SS
         /// <returns> true if valid, false otherwise </returns>
         private bool IsValid(string name)
         {
-            string pattern = string.Format(@"^[a-zA-Z_](?: [a-zA-Z_]|\d)*$");
+            string pattern = string.Format(@"^[a-zA-Z_](?: [a-zA-Z_]|\d)*");
             return (Regex.IsMatch(name, pattern));
         }
 
@@ -343,7 +343,8 @@ namespace SS
         /// </returns>
         public override ISet<string> SetCellContents(string name, Formula formula)
         {
-            if (formula == null)
+            //if (object.ReferenceEquals(formula, null));
+            if (formula is null)
             {
                 throw new ArgumentNullException();
             }

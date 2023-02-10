@@ -32,7 +32,7 @@ public class SpreadsheetTests
     [TestMethod]
     public void GetCellContentsTest1()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         Assert.AreEqual("", sheet.GetCellContents("a1"));
     }
 
@@ -43,7 +43,7 @@ public class SpreadsheetTests
     [ExpectedException(typeof(InvalidNameException))]
     public void GetCellContentsTest2()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         Assert.AreEqual("", sheet.GetCellContents(""));
     }
 
@@ -54,7 +54,7 @@ public class SpreadsheetTests
     [ExpectedException(typeof(InvalidNameException))]
     public void GetCellContentsTest3()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         Assert.AreEqual("", sheet.GetCellContents(null));
     }
 
@@ -64,7 +64,7 @@ public class SpreadsheetTests
     [TestMethod]
     public void GetCellContentsTest4()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("a1", 10);
         Assert.AreEqual(10.0, sheet.GetCellContents("a1"));
     }
@@ -75,7 +75,7 @@ public class SpreadsheetTests
     [TestMethod]
     public void GetCellContentsTest5()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("a1", "abc");
         Assert.AreEqual("abc", sheet.GetCellContents("a1"));
     }
@@ -86,7 +86,7 @@ public class SpreadsheetTests
     [TestMethod]
     public void GetCellContentsTest6()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         Formula f = new Formula("1+2");
         sheet.SetCellContents("a1", f);
         Assert.AreEqual(new Formula("1+2"), sheet.GetCellContents("a1"));
@@ -94,18 +94,20 @@ public class SpreadsheetTests
 
     // **************** GetNamesOfAllNonemptyCells Tests **************** //
 
+    [TestMethod]
     public void GetNamesOfAllNonemptyCellsTest1()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         sheet.SetCellContents("a1", 1);
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
         names.Contains("a1");
     }
 
+    [TestMethod]
     public void GetNamesOfAllNonemptyCellsTest2()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         Formula f = new Formula("1+2");
         sheet.SetCellContents("a1", 1);
         sheet.SetCellContents("b1", "a");
@@ -117,9 +119,10 @@ public class SpreadsheetTests
         names.Contains("c1");
     }
 
+    [TestMethod]
     public void GetNamesOfAllNonemptyCellsTest3()
     {
-        AbstractSpreadsheet sheet = new Spreadsheet();
+        Spreadsheet sheet = new Spreadsheet();
         Formula f = new Formula("1+2");
         sheet.SetCellContents("a1", 1);
         sheet.SetCellContents("_", "a");
@@ -134,6 +137,33 @@ public class SpreadsheetTests
     // **************** SetCellContents Tests **************** //
 
     // number contents //
+
+    [TestMethod]
+    public void SetCellContentsTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("a", 1);
+        sheet.SetCellContents("b_", 3.5);
+        sheet.SetCellContents("_c", 10);
+
+        Assert.AreEqual(1.0, sheet.GetCellContents("a"));
+        Assert.AreEqual(3.5, sheet.GetCellContents("b_"));
+        Assert.AreEqual(10.0, sheet.GetCellContents("_c"));
+    }
+
+    [TestMethod]
+    public void SetCellContentsTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetCellContents("A1", 10);
+        sheet.SetCellContents("A2", 10e-1);
+        sheet.SetCellContents("A3", 5.1234);
+
+        Assert.AreEqual(10.0, sheet.GetCellContents("A1"));
+        Assert.AreEqual(10e-1, sheet.GetCellContents("A2"));
+        Assert.AreEqual(5.1234, sheet.GetCellContents("A3"));
+    }
+
 
     // string contents //
 
