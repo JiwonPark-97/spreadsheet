@@ -12,7 +12,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
 
-    I defined a Cell class with getters and setters.I also added a helper method IsValid that checks the validity of a cell name.
+    I defined a Cell class with a getter for contents. I also added a helper method IsValid that checks the validity of a cell name.
 
 # Assignment Specific Topics
 

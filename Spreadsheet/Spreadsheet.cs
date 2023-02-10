@@ -334,24 +334,16 @@ namespace SS
                 throw new InvalidNameException();
             }
 
+            // handle CircularException
+            GetCellsToRecalculate(name);
+
+            cells[name] = new Cell(name, formula);
+
             HashSet<string> variables = formula.GetVariables().ToHashSet();
             foreach (string variable in variables)
             {
                 dg.AddDependency(variable, name);
             }
-
-            // handle CircularException
-            // get cells depending on named cell
-            List<string> cellsDependingOnName = GetCellsToRecalculate(name).ToList();
-
-            // remove name itself (at first)
-            cellsDependingOnName.RemoveAt(0);
-            if (cellsDependingOnName.Contains(name))
-            {
-                throw new CircularException();
-            }
-
-            cells[name] = new Cell(name, formula);
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToHashSet();
