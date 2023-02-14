@@ -1,6 +1,4 @@
-﻿/// Added a new branch
-
-/// <summary>
+﻿/// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
 /// Date:      10-Feb-2023
