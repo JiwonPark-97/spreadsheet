@@ -618,51 +618,7 @@ namespace SpreadsheetUtilities
                 return false;
             }
 
-            // get tokens from input obj
-            List<string> objTokens = GetTokens(obj.ToString()).ToList();
-
-            // if numbers of tokens are different
-            if (objTokens.Count() != tokens.Count())
-            {
-                return false;
-            }
-
-            // now loop over
-            for (int i = 0; i < objTokens.Count(); i++)
-            {
-                // compare numeric tokens
-                if (IsValue(objTokens[i]))
-                {
-                    if (IsValue(tokens[i]))
-                    {
-                        // string to double
-                        double objVal = double.Parse(objTokens[i]);
-                        double thisVal = double.Parse(tokens[i]);
-
-                        // double to string, then compare
-                        if (objVal.ToString() != thisVal.ToString())
-                        {
-                            return false;
-                        }
-
-                        // if two token types are different
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-                    // compare variable and operator tokens (variables already normalized in constructor)
-                }
-                else
-                {
-                    if (objTokens[i] != tokens[i])
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
+            return this.GetHashCode() == obj.GetHashCode();
         }
 
         /// <summary>
