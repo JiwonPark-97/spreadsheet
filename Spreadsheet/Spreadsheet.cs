@@ -19,7 +19,7 @@ using System.Text.RegularExpressions;
 using SpreadsheetUtilities;
 using static System.Net.Mime.MediaTypeNames;
 
-// Added AS5 branch
+// Fixing old code
 namespace SS
 {
 
