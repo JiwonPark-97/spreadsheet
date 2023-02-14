@@ -613,7 +613,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override bool Equals(object? obj)
         {
-            if (obj == null || !(obj is Formula))
+            if (obj is null || obj is not Formula)
             {
                 return false;
             }
