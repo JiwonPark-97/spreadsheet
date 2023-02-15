@@ -28,12 +28,27 @@ namespace SS
         private DependencyGraph dg;
         private bool changed;
 
+        public Spreadsheet() : base(s => true, s => s, "default")
+        {
+            cells = new Dictionary<string, Cell>();
+            dg = new DependencyGraph();
+            changed = false;
+        }
+
         public Spreadsheet(Func<string, bool> isValid, Func<string, string> normalize, string version) : base(isValid, normalize, version)
         {
             cells = new Dictionary<string, Cell>();
             dg = new DependencyGraph();
             changed = false;
         }
+
+        public Spreadsheet(string pathToFile, Func<string, bool> isValid, Func<string, string> normalize, string version) : base(isValid, normalize, version)
+        {
+            cells = new Dictionary<string, Cell>();
+            dg = new DependencyGraph();
+            changed = false;
+        }
+
 
         public override bool Changed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
 
@@ -43,6 +58,8 @@ namespace SS
             {
                 throw new InvalidNameException();
             }
+
+            name = Normalize(name);
 
             Cell? cell;
             if (!cells.TryGetValue(name, out cell))
@@ -59,6 +76,8 @@ namespace SS
             {
                 throw new InvalidNameException();
             }
+
+            Normalize(name);
 
             Cell? cell;
             if (!cells.TryGetValue(name, out cell))
@@ -87,7 +106,26 @@ namespace SS
 
         public override IList<string> SetContentsOfCell(string name, string content)
         {
-            throw new NotImplementedException();
+            if (!IsValidName(name) || !IsValid(name))
+            {
+                throw new InvalidNameException();
+            }
+
+            // when a valid cell name 'token' comes in as a parameter, should replace it with Normalize(token)
+            Normalize(name);
+
+            double number;
+            if (double.TryParse(content, out number))
+            {
+                return SetCellContents(name, number);
+            } else if (content[0] == '=')
+            {
+                Formula formula = new Formula(content, Normalize, IsValid);
+                return SetCellContents(name, formula);
+            } else
+            {
+                return SetCellContents(name, content);
+            }
         }
 
         protected override IEnumerable<string> GetDirectDependents(string name)
@@ -97,19 +135,21 @@ namespace SS
                 throw new InvalidNameException();
             }
 
+            Normalize(name);
+
             return dg.GetDependents(name);
         }
 
         protected override IList<string> SetCellContents(string name, double number)
         {
-            if (IsValidName(name) || !IsValid(name))
-            {
-                throw new InvalidNameException();
-            }
+            // error checking handled in SetContentsOfCell
+            Normalize(name);
 
             cells[name] = new Cell(name, number);
 
             dg.ReplaceDependees(name, new HashSet<string>());
+            changed = true;
+
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
@@ -117,10 +157,9 @@ namespace SS
 
         protected override IList<string> SetCellContents(string name, string text)
         {
-            if (!IsValidName(name) || !IsValid(name))
-            {
-                throw new InvalidNameException();
-            }
+            // error checking handled in SetContentsOfCell
+
+            Normalize(name);
 
             // If the contents is an empty string, the cell is empty - remove from cells
             if (text == "")
@@ -131,6 +170,8 @@ namespace SS
             {
                 cells[name] = new Cell(name, text);
             }
+            dg.ReplaceDependees(name, new HashSet<string>());
+            changed = true;
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
@@ -138,10 +179,9 @@ namespace SS
 
         protected override IList<string> SetCellContents(string name, Formula formula)
         {
-            if (!IsValidName(name) || !IsValid(name))
-            {
-                throw new InvalidNameException();
-            }
+            // error checking handled in SetContentsOfCell
+
+            Normalize(name);
 
             // handle CircularException
             GetCellsToRecalculate(name);
@@ -153,6 +193,7 @@ namespace SS
             {
                 dg.AddDependency(variable, name);
             }
+            changed = true;
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
