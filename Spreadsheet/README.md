@@ -30,3 +30,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     4. How do I get the list of keys in a Dictionary? - https://stackoverflow.com/questions/1276763/how-do-i-get-the-list-of-keys-in-a-dictionary
     5. Different ways of adding to Dictionary - https://stackoverflow.com/questions/1838476/different-ways-of-adding-to-dictionary
     6. Implicitly convert collection (HashSet) to IEnumerable<T> - https://stackoverflow.com/questions/17882115/implicitly-convert-collection-hashset-to-ienumerablet
+
+    ---------------- For Assignment 5 ------------------
+
+    7. Converting null literal or possible null value to non-nullable type - https://stackoverflow.com/questions/62899915/converting-null-literal-or-possible-null-value-to-non-nullable-type
