@@ -55,8 +55,8 @@ namespace SS
             }
             using (XmlReader reader = XmlReader.Create(pathToFile))
             {
-                string name;
-                string contents;
+                string name = "";
+                string contents = "";
                 while (reader.Read())
                 {
                     if (reader.IsStartElement())
@@ -76,6 +76,7 @@ namespace SS
                                 contents = reader.Value;
                                 break;
                         }
+                        SetCellContents(name, contents);
                     }
                 }
             }
