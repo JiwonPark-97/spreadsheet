@@ -53,16 +53,33 @@ namespace SS
             {
                 throw new SpreadsheetReadWriteException("The versions do not match.");
             }
-            try
+            using (XmlReader reader = XmlReader.Create(pathToFile))
             {
-                using (XmlReader reader = XmlReader.Create(pathToFile))
+                string name;
+                string contents;
+                while (reader.Read())
                 {
-
+                    if (reader.IsStartElement())
+                    {
+                        switch (reader.Name)
+                        {
+                            case "spreadsheet":
+                                break;
+                            case "cell":
+                                break;
+                            case "name":
+                                reader.Read();
+                                name = reader.Value;
+                                break;
+                            case "contents":
+                                reader.Read();
+                                contents = reader.Value;
+                                break;
+                        }
+                    }
                 }
-            } catch (Exception e)
-            {
-                throw new SpreadsheetReadWriteException(e.Message);
             }
+
 
         }
 
@@ -218,11 +235,6 @@ namespace SS
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
-        }
-
-        private void ReadFile(string filename)
-        {
-
         }
 
         private bool IsValidName(string name)
