@@ -16,6 +16,7 @@
 
 using System;
 using System.Text.RegularExpressions;
+using System.Xml;
 using SpreadsheetUtilities;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -47,10 +48,26 @@ namespace SS
             cells = new Dictionary<string, Cell>();
             dg = new DependencyGraph();
             changed = false;
+
+            if (version != GetSavedVersion(pathToFile))
+            {
+                throw new SpreadsheetReadWriteException("The versions do not match.");
+            }
+            try
+            {
+                using (XmlReader reader = XmlReader.Create(pathToFile))
+                {
+
+                }
+            } catch (Exception e)
+            {
+                throw new SpreadsheetReadWriteException(e.Message);
+            }
+
         }
 
 
-        public override bool Changed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override bool Changed { get => changed; protected set => throw new NotImplementedException(); }
 
         public override object GetCellContents(string name)
         {
@@ -96,12 +113,16 @@ namespace SS
 
         public override string GetSavedVersion(string filename)
         {
+            // TODO: implement
+
             throw new NotImplementedException();
         }
 
         public override void Save(string filename)
         {
-            throw new NotImplementedException();
+            // TODO: implement
+
+            changed = false;
         }
 
         public override IList<string> SetContentsOfCell(string name, string content)
@@ -199,6 +220,11 @@ namespace SS
             return GetCellsToRecalculate(name).ToList();
         }
 
+        private void ReadFile(string filename)
+        {
+
+        }
+
         private bool IsValidName(string name)
         {
             string pattern = string.Format(@"^[a-zA-Z]+[0-9]+$");
@@ -207,9 +233,9 @@ namespace SS
 
         private class Cell
         {
-            string name;
-            object contents;
-            object value;
+            public string name;
+            public object contents;
+            public object value;
 
             public Cell(string name, double number)
             {

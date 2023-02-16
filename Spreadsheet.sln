@@ -10,6 +10,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89E643A6-6F9A-4DDE-A171-67C69C5860D8}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		Whiteboard\dependency_graph_whiteboard.JPG = Whiteboard\dependency_graph_whiteboard.JPG
+		Whiteboard\formula_whiteboard.JPG = Whiteboard\formula_whiteboard.JPG
+		Whiteboard\spreadsheet_whiteboard.JPG = Whiteboard\spreadsheet_whiteboard.JPG
+		Whiteboard\architecture.JPG = Whiteboard\architecture.JPG
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyGraph", "DependencyGraph\DependencyGraph.csproj", "{248A131E-544F-4F04-92F0-0FC8BBD94EC0}"

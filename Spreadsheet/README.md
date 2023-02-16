@@ -34,3 +34,12 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     ---------------- For Assignment 5 ------------------
 
     7. Converting null literal or possible null value to non-nullable type - https://stackoverflow.com/questions/62899915/converting-null-literal-or-possible-null-value-to-non-nullable-type
+    8. base (C# Reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/base
+    9. using statement (C# Reference) - https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/using-statement
+    10. XmlDocument Class - https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmldocument?view=net-6.0
+    11. XmlWriter Class - https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmlwriter?view=net-6.0#create
+    12. Exception.Message Property - https://learn.microsoft.com/en-us/dotnet/api/system.exception.message?view=net-7.0
+    13. 
+    14. 
+
+
