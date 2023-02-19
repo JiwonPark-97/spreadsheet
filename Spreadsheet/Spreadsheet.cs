@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
-/// Date:      17-Feb-2023
+/// Date:      20-Feb-2023
 /// Course:    CS 3500, University of Utah, School of Computing
 /// Copyright: CS 3500 and Jiwon Park - This work may not 
 ///            be copied for use in Academic Coursework.
@@ -178,36 +178,41 @@ namespace SS
             settings.Indent = true;
             settings.IndentChars = "  ";
 
-            // Create an XmlWriter inside this block, and automatically Dispose() it at the end.
-            using (XmlWriter writer = XmlWriter.Create(filename, settings))
+            try
             {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("spreadsheet"); // Starts the spreadsheet block
-
-                // Adds a version attribute to the spreadsheet element
-                writer.WriteAttributeString("version", Version);
-
-                // write cells
-                foreach (KeyValuePair<string, Cell> cell in cells)
+                // Create an XmlWriter inside this block, and automatically Dispose() it at the end.
+                using (XmlWriter writer = XmlWriter.Create(filename, settings))
                 {
-                    writer.WriteStartElement("cell"); // Starts the cell block
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("spreadsheet"); // Starts the spreadsheet block
 
-                    writer.WriteStartElement("name"); // Starts the name block
-                    writer.WriteString(cell.Key);
-                    writer.WriteEndElement(); // Ends the name block
+                    // Adds a version attribute to the spreadsheet element
+                    writer.WriteAttributeString("version", Version);
 
-                    writer.WriteStartElement("content"); // Starts the content block
-                    writer.WriteString(cell.Value.GetContents().ToString());
-                    writer.WriteEndElement(); // Ends the content block
+                    // write cells
+                    foreach (KeyValuePair<string, Cell> cell in cells)
+                    {
+                        writer.WriteStartElement("cell"); // Starts the cell block
 
-                    writer.WriteEndElement(); // Ends the cell block
+                        writer.WriteStartElement("name"); // Starts the name block
+                        writer.WriteString(cell.Key);
+                        writer.WriteEndElement(); // Ends the name block
 
+                        writer.WriteStartElement("content"); // Starts the content block
+                        writer.WriteString(cell.Value.GetContents().ToString());
+                        writer.WriteEndElement(); // Ends the content block
+
+                        writer.WriteEndElement(); // Ends the cell block
+
+                    }
+                    writer.WriteEndElement(); // Ends the spreadsheet block
+                    writer.WriteEndDocument();
                 }
-                writer.WriteEndElement(); // Ends the spreadsheet block
-                writer.WriteEndDocument();
-
             }
-
+            catch (Exception)
+            {
+                throw new SpreadsheetReadWriteException("Something went wrong");
+            }
             changed = false;
         }
 

@@ -5,14 +5,20 @@ Partner:    None
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       10-Feb-2023 3.30 pm (when submission was completed) 
+Date:       20-Feb-2023 11.30 am (when submission was completed) 
 Project:    Spreadsheet
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
 
 # Comments to Evaluators:
 
+    ---------------- For Assignment 4 ------------------
+
     I defined a Cell class with a getter for contents and added a helper method IsValid that checks the validity of a cell name.
+
+    ---------------- For Assignment 5 ------------------
+
+    *** TODO: fill it ***
 
 # Assignment Specific Topics
 
@@ -20,9 +26,11 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Consulted Peers:
 
-    I have not directly consulted with others but referred to the discord server listed below in reference.
+    I have not directly consulted with others but referred to the Discord server listed below in reference.
 
 # References:
+
+    ---------------- For Assignment 4 ------------------
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
     2. Cell class (Piazza post @791) - https://utah.instructure.com/courses/834041/external_tools/90790
@@ -42,5 +50,5 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     13. XML Elements vs. Attributes - https://www.w3schools.com/xml/xml_dtd_el_vs_attr.asp
     14. Nation.cs - https://github.com/uofu-cs3500-spring23/ForStudents/blob/main/Examples/XMLDemo/Nations/Nation.cs
     15. How to iterate over a dictionary? - https://stackoverflow.com/questions/141088/how-to-iterate-over-a-dictionary
-
+    16. 
 
