@@ -24,3 +24,4 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     2. Assignment Two:       Predicted Hours:          20        Actual Hours:   22             Note: Spent extra hours installing coverage tool on Mac.
     3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   21             Note: Spent extra hours covering 100% code.
     4. Assignmnet Four:      Predicted Hours:          20        Actual Hours:   18             Note: -
+    5. Assignmnet Five:      Predicted Hours:          20        Actual Hours:   20             Note: Spent extra hours figuring out xml file reading/writing.

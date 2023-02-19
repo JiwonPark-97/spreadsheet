@@ -39,7 +39,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     10. XmlDocument Class - https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmldocument?view=net-6.0
     11. XmlWriter Class - https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmlwriter?view=net-6.0#create
     12. Exception.Message Property - https://learn.microsoft.com/en-us/dotnet/api/system.exception.message?view=net-7.0
-    13. 
-    14. 
+    13. XML Elements vs. Attributes - https://www.w3schools.com/xml/xml_dtd_el_vs_attr.asp
+    14. Nation.cs - https://github.com/uofu-cs3500-spring23/ForStudents/blob/main/Examples/XMLDemo/Nations/Nation.cs
+    15. How to iterate over a dictionary? - https://stackoverflow.com/questions/141088/how-to-iterate-over-a-dictionary
 
 

@@ -53,39 +53,52 @@ namespace SS
             {
                 throw new SpreadsheetReadWriteException("The versions do not match.");
             }
-            using (XmlReader reader = XmlReader.Create(pathToFile))
+            try
             {
-                string name = "";
-                string contents = "";
-                while (reader.Read())
+                using (XmlReader reader = XmlReader.Create(pathToFile))
                 {
-                    if (reader.IsStartElement())
+                    while (reader.Read())
                     {
-                        switch (reader.Name)
+                        if (reader.IsStartElement())
                         {
-                            case "spreadsheet":
-                                break;
-                            case "cell":
-                                break;
-                            case "name":
-                                reader.Read();
-                                name = reader.Value;
-                                break;
-                            case "contents":
-                                reader.Read();
-                                contents = reader.Value;
-                                break;
+                            string name = "";
+                            string contents = "";
+                            switch (reader.Name)
+                            {
+                                case "spreadsheet":
+                                    break;
+                                case "cell":
+                                    break;
+                                case "name":
+                                    reader.Read();
+                                    name = reader.Value;
+                                    break;
+                                case "contents":
+                                    reader.Read();
+                                    contents = reader.Value;
+                                    break;
+                            }
+                            SetCellContents(name, contents);
                         }
-                        SetCellContents(name, contents);
                     }
                 }
             }
-
-
+            catch (InvalidNameException)
+            {
+                throw new SpreadsheetReadWriteException("Invalid name");
+            }
+            catch (CircularException)
+            {
+                throw new SpreadsheetReadWriteException("Circular dependencies");
+            }
+            catch (Exception)
+            {
+                throw new SpreadsheetReadWriteException("Something went wrong");
+            }
         }
 
 
-        public override bool Changed { get => changed; protected set => throw new NotImplementedException(); }
+        public override bool Changed { get => changed; protected set => changed = value; }
 
         public override object GetCellContents(string name)
         {
@@ -131,14 +144,66 @@ namespace SS
 
         public override string GetSavedVersion(string filename)
         {
-            // TODO: implement
+            try
+            {
+                string? version = "";
+                using (XmlReader reader = XmlReader.Create(filename))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.Name == "spreadsheet")
+                        {
+                            version = reader["version"];
+                        }
+                    }
+                }
 
-            throw new NotImplementedException();
+                // check for invalid version
+                if (version is null || version == "")
+                {
+                    throw new SpreadsheetReadWriteException("The file version is invalid.");
+                }
+
+                return version;
+            }
+            catch (Exception)
+            {
+                throw new SpreadsheetReadWriteException("Something went wrong reading a file");
+            }
         }
 
         public override void Save(string filename)
         {
-            // TODO: implement
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            // Create an XmlWriter inside this block, and automatically Dispose() it at the end.
+            using (XmlWriter writer = XmlWriter.Create(filename, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+
+                // This adds a version attribute to the spreadsheet element
+                writer.WriteAttributeString("version", Version);
+
+                // write cells
+                foreach (KeyValuePair<string, Cell> cell in cells)
+                {
+                    writer.WriteStartElement("cell");
+                    writer.WriteStartElement("name");
+                    (cell.Key).WriteXml(writer);
+                    writer.WriteStartElement("contents");
+
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                }
+
+                writer.WriteEndElement(); // Ends the cell block
+                writer.WriteEndElement(); // Ends the spreadsheet block
+                writer.WriteEndDocument();
+
+            }
 
             changed = false;
         }
@@ -159,7 +224,8 @@ namespace SS
                 return SetCellContents(name, number);
             } else if (content[0] == '=')
             {
-                Formula formula = new Formula(content, Normalize, IsValid);
+                string formulaStr = content.Remove(0, 1);
+                Formula formula = new Formula(formulaStr, Normalize, IsValid);
                 return SetCellContents(name, formula);
             } else
             {
