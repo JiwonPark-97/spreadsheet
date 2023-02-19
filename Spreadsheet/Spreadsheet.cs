@@ -263,7 +263,6 @@ namespace SS
             dg.ReplaceDependees(name, new HashSet<string>());
             changed = true;
 
-
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
         }
@@ -354,7 +353,6 @@ namespace SS
             {
                 return value;
             }
-
         }
 
         private double Lookup(string name)
