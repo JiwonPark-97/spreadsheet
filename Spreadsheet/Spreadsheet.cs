@@ -182,24 +182,27 @@ namespace SS
             using (XmlWriter writer = XmlWriter.Create(filename, settings))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement("spreadsheet");
+                writer.WriteStartElement("spreadsheet"); // Starts the spreadsheet block
 
-                // This adds a version attribute to the spreadsheet element
+                // Adds a version attribute to the spreadsheet element
                 writer.WriteAttributeString("version", Version);
 
                 // write cells
                 foreach (KeyValuePair<string, Cell> cell in cells)
                 {
-                    writer.WriteStartElement("cell");
-                    writer.WriteStartElement("name");
-                    (cell.Key).WriteXml(writer);
-                    writer.WriteStartElement("contents");
+                    writer.WriteStartElement("cell"); // Starts the cell block
 
-                    writer.WriteEndElement();
-                    writer.WriteEndElement();
+                    writer.WriteStartElement("name"); // Starts the name block
+                    writer.WriteString(cell.Key);
+                    writer.WriteEndElement(); // Ends the name block
+
+                    writer.WriteStartElement("content"); // Starts the content block
+                    writer.WriteString(cell.Value.GetContents().ToString());
+                    writer.WriteEndElement(); // Ends the content block
+
+                    writer.WriteEndElement(); // Ends the cell block
+
                 }
-
-                writer.WriteEndElement(); // Ends the cell block
                 writer.WriteEndElement(); // Ends the spreadsheet block
                 writer.WriteEndDocument();
 
