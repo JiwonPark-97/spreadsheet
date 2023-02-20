@@ -256,6 +256,18 @@ public class SpreadsheetTests
         Assert.AreEqual(3.0, sheet2.GetCellValue("a3"));
     }
 
+    /// <summary>
+    /// An incorrect file name should throw SpreadsheetReadWriteException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void SaveTest3()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "3.0");
+
+        sheet.Save("f3s%f_-*3ad.rando");
+    }
+
     // **************** GetSavedVersion Tests **************** //
 
     [TestMethod]
