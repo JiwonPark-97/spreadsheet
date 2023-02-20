@@ -125,22 +125,52 @@ public class SpreadsheetTests
     // **************** Save Tests **************** //
 
     [TestMethod]
-    public void SaveTest()
+    public void SaveTest1()
     {
         Spreadsheet sheet = new Spreadsheet();
+        sheet.Save("save3.txt");
+
+        Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
+    }
+
+    [TestMethod]
+    public void SaveTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "3.0");
         sheet.SetContentsOfCell("a1", "1");
         sheet.SetContentsOfCell("a2", "2");
         sheet.SetContentsOfCell("a3", "3");
 
-        sheet.Save("save3.txt");
+        sheet.Save("save4.txt");
+
+        Spreadsheet sheet2 = new Spreadsheet("save4.txt", s => true, s => s, "3.0");
+        Assert.AreEqual(3, sheet2.GetNamesOfAllNonemptyCells().Count());
+        Assert.AreEqual(1.0, sheet2.GetCellValue("a1"));
+        Assert.AreEqual(2.0, sheet2.GetCellValue("a2"));
+        Assert.AreEqual(3.0, sheet2.GetCellValue("a3"));
     }
 
     // **************** GetSavedVersion Tests **************** //
 
     [TestMethod]
-    public void GetSavedVersionTest()
+    public void GetSavedVersionTest1()
     {
+        Spreadsheet sheet = new Spreadsheet();
 
+        sheet.Save("save5.txt");
+        Assert.AreEqual("default", new Spreadsheet().GetSavedVersion("save5.txt"));
+    }
+
+    [TestMethod]
+    public void GetSavedVersionTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "4.0");
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("a2", "2");
+        sheet.SetContentsOfCell("a3", "3");
+
+        sheet.Save("save6.txt");
+        Assert.AreEqual(sheet.Version, new Spreadsheet().GetSavedVersion("save6.txt"));
     }
 
     // **************** GetCellContents Tests **************** //
