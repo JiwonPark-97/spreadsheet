@@ -141,6 +141,15 @@ namespace SS
             {
                 return contents;
             }
+
+            /// <summary>
+            /// Setter for contents
+            /// </summary>
+            /// <returns> contents </returns>
+            public void SetContents(object contents)
+            {
+                this.contents = contents;
+            }
         }
 
         /// <summary>
@@ -335,19 +344,31 @@ namespace SS
                 throw new InvalidNameException();
             }
 
-            // handle CircularException
-            GetCellsToRecalculate(name);
+            // save original dependencies in case of CircularException
+            HashSet<string> origianlDependees = dg.GetDependees(name).ToHashSet();
 
-            cells[name] = new Cell(name, formula);
+            dg.ReplaceDependees(name, formula.GetVariables());
 
-            HashSet<string> variables = formula.GetVariables().ToHashSet();
-            foreach (string variable in variables)
+            try
             {
-                dg.AddDependency(variable, name);
-            }
+                // handle CircularException
+                GetCellsToRecalculate(name);
 
-            // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
-            return GetCellsToRecalculate(name).ToHashSet();
+                HashSet<string> variables = formula.GetVariables().ToHashSet();
+                foreach (string variable in variables)
+                {
+                    dg.AddDependency(variable, name);
+                }
+                cells[name] = new Cell(name, formula);
+
+                // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
+                return GetCellsToRecalculate(name).ToHashSet();
+            }
+            catch (CircularException e)
+            {
+                dg.ReplaceDependees(name, origianlDependees);
+                throw e;
+            }
         }
 
         /// <summary>
