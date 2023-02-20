@@ -22,10 +22,17 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SS
 {
+
+    /// <inheritDoc\>
     public class Spreadsheet : AbstractSpreadsheet
     {
+        // all nonempty cells
         private Dictionary<string, Cell> cells;
+
+        // 
         private DependencyGraph dg;
+
+        // 
         private bool changed;
 
         /// <summary>
@@ -72,7 +79,7 @@ namespace SS
 
             if (version != GetSavedVersion(pathToFile))
             {
-                throw new SpreadsheetReadWriteException("The file version and the input version do not match.");
+                throw new SpreadsheetReadWriteException("The version of the saved spreadsheet does not match the version parameter provided to the constructor.");
             }
             try
             {
@@ -104,6 +111,7 @@ namespace SS
                     }
                 }
             }
+
             // If any of the names contained in the saved spreadsheet are invalid
             catch (InvalidNameException)
             {
@@ -211,9 +219,10 @@ namespace SS
                     throw new SpreadsheetReadWriteException("Invalid version");
                 }
             }
-            catch (Exception e)
+
+            catch (Exception)
             {
-                throw new SpreadsheetReadWriteException(e.Message);
+                throw new SpreadsheetReadWriteException("Something went wrong");
             }
         }
 
@@ -268,15 +277,20 @@ namespace SS
                 throw new InvalidNameException();
             }
 
+            // content is number
             double number;
             if (double.TryParse(content, out number))
             {
                 return SetCellContents(name, number);
+
+            // content is formula
             } else if (content.Count() > 0 && content[0] == '=')
             {
                 string formulaStr = content.Remove(0, 1);
                 Formula formula = new Formula(formulaStr, Normalize, IsValid);
                 return SetCellContents(name, formula);
+
+            // content is string
             } else
             {
                 return SetCellContents(name, content);
@@ -444,7 +458,7 @@ namespace SS
         }
 
         /// <summary>
-        /// A lookup for a cell name
+        /// A lookup for a cell name (variable). 
         /// </summary>
         /// <param name="name"> cell name </param>
         /// <returns> a value of the named cell </returns>
@@ -453,10 +467,10 @@ namespace SS
         /// </exception>
         private double Lookup(string name)
         {
-            object contents = GetCellContents(name);
-            if (contents is double)
+            object value = GetCellValue(name);
+            if (value is double)
             {
-                return (double)contents;
+                return (double)value;
             } else
             {
                 throw new ArgumentException("The named cell does not contain a double value.");

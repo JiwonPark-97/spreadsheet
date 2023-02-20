@@ -742,7 +742,55 @@ public class SpreadsheetTests
 
         sheet.Save("save.txt");
         Assert.IsFalse(sheet.Changed);
+    }
 
+    // **************** Stress Tests **************** //
+
+    /// <summary>
+    /// Stress test
+    /// </summary>
+    [TestMethod()]
+    public void StressTest1()
+    {
+        Spreadsheet s = new Spreadsheet();
+        s.SetContentsOfCell("A1", "=B1+B2");
+        s.SetContentsOfCell("B1", "=C1-C2");
+        s.SetContentsOfCell("B2", "=C3*C4");
+        s.SetContentsOfCell("C1", "=D1*D2");
+        s.SetContentsOfCell("C2", "=D3*D4");
+        s.SetContentsOfCell("C3", "=D5*D6");
+        s.SetContentsOfCell("C4", "=D7*D8");
+        s.SetContentsOfCell("D1", "=E1");
+        s.SetContentsOfCell("D2", "=E1");
+        s.SetContentsOfCell("D3", "=E1");
+        s.SetContentsOfCell("D4", "=E1");
+        s.SetContentsOfCell("D5", "=E1");
+        s.SetContentsOfCell("D6", "=E1");
+        s.SetContentsOfCell("D7", "=E1");
+        s.SetContentsOfCell("D8", "=E1");
+        IList<String> cells = s.SetContentsOfCell("E1", "0");
+        Assert.IsTrue(new HashSet<string>() { "A1", "B1", "B2", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "E1" }.SetEquals(cells));
+    }
+
+    // Repeated for extra weight
+    [TestMethod()]
+    public void StressTest1a()
+    {
+        StressTest1();
+    }
+
+    // Repeated for extra weight
+    [TestMethod()]
+    public void StressTest1b()
+    {
+        StressTest1();
+    }
+
+    // Repeated for extra weight
+    [TestMethod()]
+    public void StressTest1c()
+    {
+        StressTest1();
     }
 }
 
