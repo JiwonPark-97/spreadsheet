@@ -122,6 +122,112 @@ public class SpreadsheetTests
         Assert.AreEqual(3.0, sheet.GetCellValue("a3"));
     }
 
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if the version of the saved spreadsheet 
+    /// does not match the version parameter provided to the constructor
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest5()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "3.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "2.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if any of the names contained in the saved spreadsheet are invalid
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest6()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "4.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "1a");
+            writer.WriteElementString("contents", "1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if any circular dependencies are encountered
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest7()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "4.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "=a2 + 1");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a2");
+            writer.WriteElementString("contents", "=a1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if any invalid formulas are encountered
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest8()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "4.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "=a2 1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
     // **************** Save Tests **************** //
 
     [TestMethod]
@@ -171,6 +277,42 @@ public class SpreadsheetTests
 
         sheet.Save("save6.txt");
         Assert.AreEqual(sheet.Version, new Spreadsheet().GetSavedVersion("save6.txt"));
+    }
+
+    /// <summary>
+    /// Invalid filename should throw SpreadsheetReadWriteException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void GetSavedVersionTest3()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.GetSavedVersion("");
+    }
+
+    /// <summary>
+    /// Null version should throw SpreadsheetReadWriteException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void GetSavedVersionTest4()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "=a2 1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.GetSavedVersion("save.txt");
     }
 
     // **************** GetCellContents Tests **************** //
@@ -274,6 +416,27 @@ public class SpreadsheetTests
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetContentsOfCell("c1", "=1+2");
         Assert.AreEqual(3.0, sheet.GetCellValue("c1"));
+    }
+
+    /// <summary>
+    /// If the cell is empty, the contents and value are an empty strings
+    /// </summary>
+    [TestMethod]
+    public void GetCellValueTest4()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        Assert.AreEqual("", sheet.GetCellValue("a1"));
+    }
+
+    /// <summary>
+    /// Should throw InvalidNameException if the name is invalid
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(InvalidNameException))]
+    public void GetCellValueTest5()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        Assert.AreEqual("", sheet.GetCellValue("1A"));
     }
 
     // **************** GetNamesOfAllNonemptyCells Tests **************** //
@@ -555,6 +718,20 @@ public class SpreadsheetTests
         Assert.AreEqual("x3", names[1]);
         Assert.AreEqual("x2", names[2]);
         Assert.AreEqual("x4", names[3]);
+    }
+
+    // **************** Changed Tests **************** //
+
+    [TestMethod]
+    public void ChangedTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetContentsOfCell("a1", "1");
+        Assert.IsTrue(sheet.Changed);
+
+        sheet.Save("save.txt");
+        Assert.IsFalse(sheet.Changed);
+
     }
 }
 

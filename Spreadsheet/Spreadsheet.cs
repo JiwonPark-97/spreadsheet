@@ -119,7 +119,7 @@ namespace SS
             // If any invalid formulas are encountered
             catch (FormulaFormatException)
             {
-                throw new FormulaFormatException("Invalid formula format");
+                throw new SpreadsheetReadWriteException("Invalid formula format");
             }
 
             // Anything else goes wrong, including opening/reading/closing file.
@@ -301,8 +301,6 @@ namespace SS
         {
             // error checking handled in SetContentsOfCell
 
-            name = Normalize(name);
-
             cells[name] = new Cell(name, number);
 
             dg.ReplaceDependees(name, new HashSet<string>());
@@ -316,8 +314,6 @@ namespace SS
         protected override IList<string> SetCellContents(string name, string text)
         {
             // error checking handled in SetContentsOfCell
-
-            name = Normalize(name);
 
             // If the contents is an empty string, the cell is empty - remove from cells
             if (text == "")
@@ -339,13 +335,6 @@ namespace SS
         protected override IList<string> SetCellContents(string name, Formula formula)
         {
             // error checking handled in SetContentsOfCell
-
-            name = Normalize(name);
-
-            if (!IsValidName(name) || !IsValid(name))
-            {
-                throw new InvalidNameException();
-            }
 
             // save original dependencies in case of CircularException
             HashSet<string> origianlDependees = dg.GetDependees(name).ToHashSet();
