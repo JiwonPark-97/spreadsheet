@@ -10,6 +10,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89E643A6-6F9A-4DDE-A171-67C69C5860D8}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		Whiteboard\dependency_graph_whiteboard.JPG = Whiteboard\dependency_graph_whiteboard.JPG
+		Whiteboard\formula_whiteboard.JPG = Whiteboard\formula_whiteboard.JPG
+		Whiteboard\spreadsheet_whiteboard.JPG = Whiteboard\spreadsheet_whiteboard.JPG
+		Whiteboard\architecture.JPG = Whiteboard\architecture.JPG
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyGraph", "DependencyGraph\DependencyGraph.csproj", "{248A131E-544F-4F04-92F0-0FC8BBD94EC0}"
@@ -29,6 +33,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{78446817-2253-42EB-AF4C-D32265985BE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentThreeGradingTests", "AssignmentThreeGradingTests\AssignmentThreeGradingTests.csproj", "{F9651FF6-7356-40AC-9114-F70F51C95B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentFourGradingTests", "AssignmentFourGradingTests\AssignmentFourGradingTests.csproj", "{BDB89BF8-D667-4268-A5F2-4C6DB1740444}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +86,10 @@ Global
 		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9651FF6-7356-40AC-9114-F70F51C95B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDB89BF8-D667-4268-A5F2-4C6DB1740444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDB89BF8-D667-4268-A5F2-4C6DB1740444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDB89BF8-D667-4268-A5F2-4C6DB1740444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDB89BF8-D667-4268-A5F2-4C6DB1740444}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

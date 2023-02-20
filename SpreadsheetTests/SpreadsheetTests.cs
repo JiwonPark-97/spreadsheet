@@ -16,6 +16,7 @@
 /// ProtectedMethodTests class inherits from Spreadsheet class to test protected methods. 
 /// </summary>
 
+using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SpreadsheetUtilities;
 using SS;
@@ -28,6 +29,304 @@ namespace SpreadsheetTests;
 [TestClass]
 public class SpreadsheetTests
 {
+
+    // **************** Constructor Tests **************** //
+
+    // zero-argument constructor
+
+    /// <summary>
+    /// simple zero-argument constructor
+    /// </summary>
+    [TestMethod]
+    public void ConstructorTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+    }
+
+    // three-argument constructor
+
+    /// <summary>
+    /// simple three-argument constructor
+    /// </summary>
+    [TestMethod]
+    public void ConstructorTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "default");
+    }
+
+    // four-argument constructor
+
+    /// <summary>
+    /// simple four-argument constructor
+    /// </summary>
+    [TestMethod]
+    public void ConstructorTest3()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "1.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "A1");
+            writer.WriteElementString("contents", "hello");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save.txt", s => true, s => s, "1.0");
+
+        Assert.AreEqual(1, sheet.GetNamesOfAllNonemptyCells().Count());
+        Assert.AreEqual("hello", sheet.GetCellValue("A1"));
+    }
+
+    /// <summary>
+    /// four-argument constructor with number, string, formula contents
+    /// </summary>
+    [TestMethod]
+    public void ConstructorTest4()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "2.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "1");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a2");
+            writer.WriteElementString("contents", "two");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a3");
+            writer.WriteElementString("contents", "=a1+2");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "2.0");
+
+        Assert.AreEqual(3, sheet.GetNamesOfAllNonemptyCells().Count());
+        Assert.AreEqual(1.0, sheet.GetCellValue("a1"));
+        Assert.AreEqual("two", sheet.GetCellValue("a2"));
+        Assert.AreEqual(3.0, sheet.GetCellValue("a3"));
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if the version of the saved spreadsheet 
+    /// does not match the version parameter provided to the constructor
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest5()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "3.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "2.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if any of the names contained in the saved spreadsheet are invalid
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest6()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "4.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "1a");
+            writer.WriteElementString("contents", "1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if any circular dependencies are encountered
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest7()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "4.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "=a2 + 1");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a2");
+            writer.WriteElementString("contents", "=a1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException if any invalid formulas are encountered
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest8()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save2.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+            writer.WriteAttributeString("version", "4.0");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "=a2 1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
+    // **************** Save Tests **************** //
+
+    [TestMethod]
+    public void SaveTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.Save("save3.txt");
+
+        Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
+    }
+
+    [TestMethod]
+    public void SaveTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "3.0");
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("a2", "2");
+        sheet.SetContentsOfCell("a3", "3");
+
+        sheet.Save("save4.txt");
+
+        Spreadsheet sheet2 = new Spreadsheet("save4.txt", s => true, s => s, "3.0");
+        Assert.AreEqual(3, sheet2.GetNamesOfAllNonemptyCells().Count());
+        Assert.AreEqual(1.0, sheet2.GetCellValue("a1"));
+        Assert.AreEqual(2.0, sheet2.GetCellValue("a2"));
+        Assert.AreEqual(3.0, sheet2.GetCellValue("a3"));
+    }
+
+    /// <summary>
+    /// An incorrect file name should throw SpreadsheetReadWriteException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void SaveTest3()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "3.0");
+
+        sheet.Save("f3s%f_-*3ad.rando");
+    }
+
+    // **************** GetSavedVersion Tests **************** //
+
+    [TestMethod]
+    public void GetSavedVersionTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+
+        sheet.Save("save5.txt");
+        Assert.AreEqual("default", new Spreadsheet().GetSavedVersion("save5.txt"));
+    }
+
+    [TestMethod]
+    public void GetSavedVersionTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet(s => true, s => s, "4.0");
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("a2", "2");
+        sheet.SetContentsOfCell("a3", "3");
+
+        sheet.Save("save6.txt");
+        Assert.AreEqual(sheet.Version, new Spreadsheet().GetSavedVersion("save6.txt"));
+    }
+
+    /// <summary>
+    /// Invalid filename should throw SpreadsheetReadWriteException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void GetSavedVersionTest3()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.GetSavedVersion("");
+    }
+
+    /// <summary>
+    /// Null version should throw SpreadsheetReadWriteException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void GetSavedVersionTest4()
+    {
+        using (XmlWriter writer = XmlWriter.Create("save.txt"))
+        {
+            writer.WriteStartDocument();
+            writer.WriteStartElement("spreadsheet");
+
+            writer.WriteStartElement("cell");
+            writer.WriteElementString("name", "a1");
+            writer.WriteElementString("contents", "=a2 1");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.GetSavedVersion("save.txt");
+    }
+
     // **************** GetCellContents Tests **************** //
 
     /// <summary>
@@ -48,7 +347,7 @@ public class SpreadsheetTests
     public void GetCellContentsTest2()
     {
         Spreadsheet sheet = new Spreadsheet();
-        Assert.AreEqual("", sheet.GetCellContents(""));
+        sheet.GetCellContents("");
     }
 
     /// <summary>
@@ -59,7 +358,7 @@ public class SpreadsheetTests
     public void GetCellContentsTest3()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.GetCellContents(null);
+        sheet.GetCellContents("_");
     }
 
     /// <summary>
@@ -69,7 +368,7 @@ public class SpreadsheetTests
     public void GetCellContentsTest4()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a1", 10);
+        sheet.SetContentsOfCell("a1", "10");
         Assert.AreEqual(10.0, sheet.GetCellContents("a1"));
     }
 
@@ -80,7 +379,7 @@ public class SpreadsheetTests
     public void GetCellContentsTest5()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a1", "abc");
+        sheet.SetContentsOfCell("a1", "abc");
         Assert.AreEqual("abc", sheet.GetCellContents("a1"));
     }
 
@@ -91,11 +390,66 @@ public class SpreadsheetTests
     public void GetCellContentsTest6()
     {
         Spreadsheet sheet = new Spreadsheet();
-        Formula f = new Formula("1+2");
-        sheet.SetCellContents("a1", f);
+        sheet.SetContentsOfCell("a1", "=1+2");
         Assert.AreEqual(new Formula("1+2"), sheet.GetCellContents("a1"));
     }
 
+    // **************** GetCellValue Tests **************** //
+
+    /// <summary>
+    /// Number content
+    /// </summary>
+    [TestMethod]
+    public void GetCellValueTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetContentsOfCell("a1", "10");
+        Assert.AreEqual(10.0, sheet.GetCellValue("a1"));
+    }
+
+
+    /// <summary>
+    /// String content
+    /// </summary>
+    [TestMethod]
+    public void GetCellValueTest2()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetContentsOfCell("b1", "abc");
+        Assert.AreEqual("abc", sheet.GetCellValue("b1"));
+    }
+
+    /// <summary>
+    /// Formula content
+    /// </summary>
+    [TestMethod]
+    public void GetCellValueTest3()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetContentsOfCell("c1", "=1+2");
+        Assert.AreEqual(3.0, sheet.GetCellValue("c1"));
+    }
+
+    /// <summary>
+    /// If the cell is empty, the contents and value are an empty strings
+    /// </summary>
+    [TestMethod]
+    public void GetCellValueTest4()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        Assert.AreEqual("", sheet.GetCellValue("a1"));
+    }
+
+    /// <summary>
+    /// Should throw InvalidNameException if the name is invalid
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(InvalidNameException))]
+    public void GetCellValueTest5()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        Assert.AreEqual("", sheet.GetCellValue("1A"));
+    }
 
     // **************** GetNamesOfAllNonemptyCells Tests **************** //
 
@@ -106,7 +460,7 @@ public class SpreadsheetTests
     public void GetNamesOfAllNonemptyCellsTest1()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a1", 1);
+        sheet.SetContentsOfCell("a1", "1");
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
         Assert.IsTrue(names.Contains("a1"));
@@ -120,10 +474,9 @@ public class SpreadsheetTests
     public void GetNamesOfAllNonemptyCellsTest2()
     {
         Spreadsheet sheet = new Spreadsheet();
-        Formula f = new Formula("1+2");
-        sheet.SetCellContents("a1", 1);
-        sheet.SetCellContents("b1", "a");
-        sheet.SetCellContents("c1", f);
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("b1", "a");
+        sheet.SetContentsOfCell("c1", "=1+2");
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
         Assert.IsTrue(names.Contains("a1"));
@@ -138,46 +491,45 @@ public class SpreadsheetTests
     public void GetNamesOfAllNonemptyCellsTest3()
     {
         Spreadsheet sheet = new Spreadsheet();
-        Formula f = new Formula("1+2");
-        sheet.SetCellContents("a1", 1);
-        sheet.SetCellContents("_", "a");
-        sheet.SetCellContents("A", f);
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("b1", "a");
+        sheet.SetContentsOfCell("A1", "=1+2");
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
         Assert.IsTrue(names.Contains("a1"));
-        Assert.IsTrue(names.Contains("_"));
-        Assert.IsTrue(names.Contains("A"));
+        Assert.IsTrue(names.Contains("b1"));
+        Assert.IsTrue(names.Contains("A1"));
     }
 
-    // **************** SetCellContents Tests **************** //
+    // **************** SetContentsOfCell Tests **************** //
 
     // number contents //
 
     /// <summary>
-    /// Simple SetCellContents
+    /// Simple SetContentsOfCell
     /// </summary>
     [TestMethod]
-    public void SetCellContentsTest1()
+    public void SetContentsOfCellTest1()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a", 1);
-        sheet.SetCellContents("b_", 3.5);
-        sheet.SetCellContents("_c", 10);
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("b1", "3.5");
+        sheet.SetContentsOfCell("c1", "10");
 
-        Assert.AreEqual(1.0, sheet.GetCellContents("a"));
-        Assert.AreEqual(3.5, sheet.GetCellContents("b_"));
-        Assert.AreEqual(10.0, sheet.GetCellContents("_c"));
+        Assert.AreEqual(1.0, sheet.GetCellContents("a1"));
+        Assert.AreEqual(3.5, sheet.GetCellContents("b1"));
+        Assert.AreEqual(10.0, sheet.GetCellContents("c1"));
     }
     /// <summary>
-    /// Simple SetCellContents
+    /// Simple SetContentsOfCell
     /// </summary>
     [TestMethod]
-    public void SetCellContentsTest2()
+    public void SetContentsOfCellTest2()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("A1", 10);
-        sheet.SetCellContents("A2", 10e-1);
-        sheet.SetCellContents("A3", 5.1234);
+        sheet.SetContentsOfCell("A1", "10");
+        sheet.SetContentsOfCell("A2", "10e-1");
+        sheet.SetContentsOfCell("A3", "5.1234");
 
         Assert.AreEqual(10.0, sheet.GetCellContents("A1"));
         Assert.AreEqual(10e-1, sheet.GetCellContents("A2"));
@@ -185,14 +537,14 @@ public class SpreadsheetTests
     }
 
     /// <summary>
-    /// Null name should throw InvalidNameException
+    /// Invalid name should throw InvalidNameException
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest4()
+    public void SetContentsOfCellTest3()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents(null, 0);
+        sheet.SetContentsOfCell("", "0");
     }
 
     /// <summary>
@@ -200,25 +552,25 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest5()
+    public void SetContentsOfCellTest4()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("1a", 0);
+        sheet.SetContentsOfCell("1a", "0");
     }
 
 
     // string contents //
 
     /// <summary>
-    /// Simple SetCellContents
+    /// Simple SetContentsOfCell
     /// </summary>
     [TestMethod]
-    public void SetCellContentsTest6()
+    public void SetContentsOfCellTest5()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("A1", "a1");
-        sheet.SetCellContents("A2", "a2");
-        sheet.SetCellContents("A3", "a3");
+        sheet.SetContentsOfCell("A1", "a1");
+        sheet.SetContentsOfCell("A2", "a2");
+        sheet.SetContentsOfCell("A3", "a3");
 
         Assert.AreEqual("a1", sheet.GetCellContents("A1"));
         Assert.AreEqual("a2", sheet.GetCellContents("A2"));
@@ -226,14 +578,14 @@ public class SpreadsheetTests
     }
 
     /// <summary>
-    /// Null name should throw InvalidNameException
+    /// Invalid name should throw InvalidNameException
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest7()
+    public void SetContentsOfCellTest6()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents(null, "a1");
+        sheet.SetContentsOfCell("", "a1");
     }
 
     /// <summary>
@@ -241,33 +593,33 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest8()
+    public void SetContentsOfCellTest7()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("1a", "a1");
+        sheet.SetContentsOfCell("1a", "a1");
     }
 
     /// <summary>
-    /// Null text should throw ArgumentNullException
+    /// Invalid formula should throw FormulaFormatException
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void SetCellContentsTest9()
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void SetContentsOfCellTest8()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a1", (string)null);
+        sheet.SetContentsOfCell("a1", "=(+)/1");
     }
 
     /// <summary>
     /// Empty text means empty cell. Should be removed from cells
     /// </summary>
     [TestMethod]
-    public void SetCellContentsTest10()
+    public void SetContentsOfCellTest9()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("_1", 1);
+        sheet.SetContentsOfCell("a1", "1");
         Assert.AreEqual(1, sheet.GetNamesOfAllNonemptyCells().Count());
-        sheet.SetCellContents("_1", "");
+        sheet.SetContentsOfCell("a1", "");
         Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
     }
 
@@ -275,25 +627,14 @@ public class SpreadsheetTests
     // Formula contents //
 
     /// <summary>
-    /// Null formula parameter should throw ArgumentNullException
+    /// Invalid formulas formula parameter should throw FormulaFormatException
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void SetCellContentsTest11()
+    [ExpectedException(typeof(FormulaFormatException))]
+    public void SetContentsOfCell10()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a1", (Formula)null);
-    }
-
-    /// <summary>
-    /// Null name should throw InvalidNameException
-    /// </summary>
-    [TestMethod]
-    [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest12()
-    {
-        Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents(null, new Formula("1+2"));
+        sheet.SetContentsOfCell("a1", "=1--2");
     }
 
     /// <summary>
@@ -301,10 +642,21 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
-    public void SetCellContentsTest13()
+    public void SetContentsOfCell11()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("1_", new Formula("1+2"));
+        sheet.SetContentsOfCell("123a", "=1+2");
+    }
+
+    /// <summary>
+    /// Invalid name should throw InvalidNameException
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(InvalidNameException))]
+    public void SetContentsOfCell12()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetContentsOfCell("1_", "=1+2");
     }
 
     /// <summary>
@@ -312,12 +664,12 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest14()
+    public void SetContentsOfCell13()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("a1", new Formula("a3+3"));
-        sheet.SetCellContents("a2", new Formula("a1+1"));
-        sheet.SetCellContents("a3", new Formula("a2+2"));
+        sheet.SetContentsOfCell("a1", "=a3+3");
+        sheet.SetContentsOfCell("a2", "=a1+1");
+        sheet.SetContentsOfCell("a3", "=a2+2");
     }
 
     /// <summary>
@@ -325,12 +677,12 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest15()
+    public void SetContentsOfCell14()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("_1", new Formula("_a+3"));
-        sheet.SetCellContents("_a", new Formula("_1+1"));
-        sheet.SetCellContents("_A", new Formula("_1*_a"));
+        sheet.SetContentsOfCell("a1", "=b2+3");
+        sheet.SetContentsOfCell("b2", "=a1+1");
+        sheet.SetContentsOfCell("c3", "=a1*b2");
     }
 
     /// <summary>
@@ -338,10 +690,10 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest16()
+    public void SetContentsOfCell15()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("x1", new Formula("x1-1"));
+        sheet.SetContentsOfCell("x1", "=x1-1");
     }
 
     /// <summary>
@@ -349,29 +701,29 @@ public class SpreadsheetTests
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(CircularException))]
-    public void SetCellContentsTest17()
+    public void SetContentsOfCell16()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("x1", new Formula("1"));
-        sheet.SetCellContents("x2", new Formula("x5+x1"));
-        sheet.SetCellContents("x3", new Formula("x1+3"));
-        sheet.SetCellContents("x4", new Formula("x2+2+x3"));
-        sheet.SetCellContents("x5", new Formula("x1+x2"));
+        sheet.SetContentsOfCell("x1", "=1");
+        sheet.SetContentsOfCell("x2", "=x5+x1");
+        sheet.SetContentsOfCell("x3", "=x1+3");
+        sheet.SetContentsOfCell("x4", "=x2+2+x3");
+        sheet.SetContentsOfCell("x5", "=x1+x2");
     }
 
     /// <summary>
     /// Shoud return a set consisting of name and names that depend on named cell directly or indirectly.
     /// </summary>
     [TestMethod]
-    public void SetCellContentsTest18()
+    public void SetContentsOfCell17()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetCellContents("x1", new Formula("1"));
-        sheet.SetCellContents("x2", new Formula("2* x3"));
-        sheet.SetCellContents("x3", new Formula("x1/ 3"));
-        sheet.SetCellContents("x4", new Formula("x2 -2"));
+        sheet.SetContentsOfCell("x1", "=1");
+        sheet.SetContentsOfCell("x2", "=2* x3");
+        sheet.SetContentsOfCell("x3", "=x1/ 3");
+        sheet.SetContentsOfCell("x4", "=x2 -2");
 
-        List<string> names = sheet.SetCellContents("x1", 3).ToList();
+        List<string> names = sheet.SetContentsOfCell("x1", "3").ToList();
 
         Assert.AreEqual(4, names.Count());
         Assert.AreEqual("x1", names[0]);
@@ -380,6 +732,19 @@ public class SpreadsheetTests
         Assert.AreEqual("x4", names[3]);
     }
 
+    // **************** Changed Tests **************** //
+
+    [TestMethod]
+    public void ChangedTest1()
+    {
+        Spreadsheet sheet = new Spreadsheet();
+        sheet.SetContentsOfCell("a1", "1");
+        Assert.IsTrue(sheet.Changed);
+
+        sheet.Save("save.txt");
+        Assert.IsFalse(sheet.Changed);
+
+    }
 }
 
 /// <summary>
@@ -408,6 +773,6 @@ public class ProtectedMethodTests : Spreadsheet
     [ExpectedException(typeof(InvalidNameException))]
     public void GetCellsToRecalculateTest2()
     {
-        GetCellsToRecalculate((string)null);
+        GetCellsToRecalculate("1a");
     }
 }

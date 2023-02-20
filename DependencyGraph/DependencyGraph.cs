@@ -58,9 +58,9 @@ namespace SpreadsheetUtilities
     /// </summary>
     public class DependencyGraph
     {
-        Dictionary<String, HashSet<String>> dependents;
-        Dictionary<String, HashSet<String>> dependees;
-        int size;
+        private Dictionary<String, HashSet<String>> dependents;
+        private Dictionary<String, HashSet<String>> dependees;
+        private int size;
 
 
         /// <summary>

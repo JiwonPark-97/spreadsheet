@@ -5,7 +5,7 @@ Date:       18-Jan-2023
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       10-Feb-2023 3.30 pm (of when submission is ready to be evaluated)
+Date:       20-Feb-2023 11.30 am (of when submission is ready to be evaluated)
 Solution:   Spreadsheet
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
@@ -17,6 +17,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
         2. representing dependencies
         3. storing expressions to evaluate
         4. representing cells and their contents and dependencies.
+        5. representing a complete spreadsheet model. 
 
 # Time Expenditures:
 
@@ -24,3 +25,5 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     2. Assignment Two:       Predicted Hours:          20        Actual Hours:   22             Note: Spent extra hours installing coverage tool on Mac.
     3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   21             Note: Spent extra hours covering 100% code.
     4. Assignmnet Four:      Predicted Hours:          20        Actual Hours:   18             Note: -
+    5. Assignmnet Five:      Predicted Hours:          20        Actual Hours:   25             Note: Spent extra hours figuring out xml file reading/writing.
+
