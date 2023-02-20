@@ -20,7 +20,6 @@ using System.Xml;
 using SpreadsheetUtilities;
 using static System.Net.Mime.MediaTypeNames;
 
-// Fixing old code
 namespace SS
 {
     public class Spreadsheet : AbstractSpreadsheet
@@ -29,6 +28,9 @@ namespace SS
         private DependencyGraph dg;
         private bool changed;
 
+        /// <summary>
+        /// Creates an empty spreadsheet that imposes no extra validity conditions, normalizes every cell name to itself, and use the name "default" as the version.
+        /// </summary>
         public Spreadsheet() : base(s => true, s => s, "default")
         {
             cells = new Dictionary<string, Cell>();
@@ -36,6 +38,14 @@ namespace SS
             changed = false;
         }
 
+        /// <summary>
+        /// Create an empty spreadsheet. Allows the user to provide
+        /// a validity delegate, a normalization delegate, and a version.
+        /// </summary>
+        /// 
+        /// <param name="isValid"> defines what valid variables look like for the application </param>
+        /// <param name="normalize"> defines a normalization procedure to be applied to all valid variable strings </param>
+        /// <param name="version"> defines the version of the spreadsheet (should it be saved) </param>
         public Spreadsheet(Func<string, bool> isValid, Func<string, string> normalize, string version) : base(isValid, normalize, version)
         {
             cells = new Dictionary<string, Cell>();
@@ -43,6 +53,17 @@ namespace SS
             changed = false;
         }
 
+        /// <summary>
+        /// Reads a saved spreadsheet from the file. Allow the user to provide
+        /// a string representing a path to a file, a validity delegate, a normalization delegate, and a version.
+        /// </summary>
+        /// <param name="pathToFile"> a path to the file to read from </param>
+        /// <param name="isValid"> defines what valid variables look like for the application </param>
+        /// <param name="normalize"> defines a normalization procedure to be applied to all valid variable strings </param>
+        /// <param name="version"> defines the version of the spreadsheet (should it be saved) </param>
+        /// <exception cref="SpreadsheetReadWriteException">
+        /// Thrown if anything goes wrong when reading the file.
+        /// </exception>
         public Spreadsheet(string pathToFile, Func<string, bool> isValid, Func<string, string> normalize, string version) : base(isValid, normalize, version)
         {
             cells = new Dictionary<string, Cell>();
@@ -83,23 +104,35 @@ namespace SS
                     }
                 }
             }
+            // If any of the names contained in the saved spreadsheet are invalid
             catch (InvalidNameException)
             {
-                throw new SpreadsheetReadWriteException("Invalid name");
+                throw new SpreadsheetReadWriteException("Invalid name in the file.");
             }
+
+            // If any circular dependencies are encountered
             catch (CircularException)
             {
-                throw new SpreadsheetReadWriteException("Circular dependencies");
+                throw new SpreadsheetReadWriteException("Circular dependencies in the file");
             }
-            catch (Exception)
+
+            // If any invalid formulas are encountered
+            catch (FormulaFormatException)
             {
-                throw new SpreadsheetReadWriteException("Something went wrong");
+                throw new FormulaFormatException("Invalid formula format");
+            }
+
+            // Anything else goes wrong, including opening/reading/closing file.
+            catch (Exception e)
+            {
+                throw new SpreadsheetReadWriteException(e.Message);
             }
         }
 
-
+        /// <inheritDoc\>
         public override bool Changed { get => changed; protected set => changed = value; }
 
+        /// <inheritDoc\>
         public override object GetCellContents(string name)
         {
             if (!IsValidName(name) || !IsValid(name))
@@ -118,6 +151,7 @@ namespace SS
             return cell.GetContents();
         }
 
+        /// <inheritDoc\>
         public override object GetCellValue(string name)
         {
             if (!IsValidName(name) || !IsValid(name))
@@ -136,12 +170,14 @@ namespace SS
             return cell.GetValue();
         }
 
+        /// <inheritDoc\>
         public override IEnumerable<string> GetNamesOfAllNonemptyCells()
         {
             List<string> keys = new List<string>(cells.Keys);
             return keys;
         }
 
+        /// <inheritDoc\>
         public override string GetSavedVersion(string filename)
         {
             try
@@ -172,6 +208,7 @@ namespace SS
             }
         }
 
+        /// <inheritDoc\>
         public override void Save(string filename)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -216,6 +253,7 @@ namespace SS
             changed = false;
         }
 
+        /// <inheritDoc\>
         public override IList<string> SetContentsOfCell(string name, string content)
         {
             if (!IsValidName(name) || !IsValid(name))
@@ -241,6 +279,7 @@ namespace SS
             }
         }
 
+        /// <inheritDoc\>
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
             if (!IsValidName(name) || !IsValid(name))
@@ -253,6 +292,7 @@ namespace SS
             return dg.GetDependents(name);
         }
 
+        /// <inheritDoc\>
         protected override IList<string> SetCellContents(string name, double number)
         {
             // error checking handled in SetContentsOfCell
@@ -267,6 +307,7 @@ namespace SS
             return GetCellsToRecalculate(name).ToList();
         }
 
+        /// <inheritDoc\>
         protected override IList<string> SetCellContents(string name, string text)
         {
             // error checking handled in SetContentsOfCell
@@ -289,6 +330,7 @@ namespace SS
             return GetCellsToRecalculate(name).ToList();
         }
 
+        /// <inheritDoc\>
         protected override IList<string> SetCellContents(string name, Formula formula)
         {
             // error checking handled in SetContentsOfCell
@@ -327,18 +369,37 @@ namespace SS
             }
         }
 
+        /// <summary>
+        /// A helper method for checking validity of a cell (variable) name.
+        /// Variables for a Spreadsheet are only valid if they are one or more letters followed by one or more digits (numbers).
+        /// </summary>
+        /// <param name="name"> a cell name </param>
+        /// <returns> true if valid, false otherwise </returns>
         private bool IsValidName(string name)
         {
             string pattern = string.Format(@"^[a-zA-Z]+[0-9]+$");
             return (Regex.IsMatch(name, pattern));
         }
 
+        /// <summary>
+        /// Represents a cell. 
+        /// </summary>
         private class Cell
         {
+            // cell name
             public string name;
+
+            // cell contents
             public object contents;
+
+            // cell value
             public object value;
 
+            /// <summary>
+            /// constructor for number contents
+            /// </summary>
+            /// <param name="name"> cell name </param>
+            /// <param name="number"> cell content </param>
             public Cell(string name, double number)
             {
                 this.name = name;
@@ -346,6 +407,11 @@ namespace SS
                 value = number;
             }
 
+            /// <summary>
+            /// constructor for string contents
+            /// </summary>
+            /// <param name="name"> cell name </param>
+            /// <param name="text"> cell content </param>
             public Cell(string name, string text)
             {
                 this.name = name;
@@ -353,6 +419,12 @@ namespace SS
                 value = text;
             }
 
+            /// <summary>
+            /// constructor for formula contents
+            /// </summary>
+            /// <param name="name"> cell name </param>
+            /// <param name="formula"> cell content </param>
+            /// <param name="lookup"> lookup for formula </param>
             public Cell(string name, Formula formula, Func<string, double> lookup)
             {
                 this.name = name;
@@ -360,17 +432,31 @@ namespace SS
                 value = formula.Evaluate(lookup);
             }
 
+            /// <summary>
+            /// Getter for contents
+            /// </summary>
             public object GetContents()
             {
                 return contents;
             }
 
+            /// <summary>
+            /// Getter for value
+            /// </summary>
             public object GetValue()
             {
                 return value;
             }
         }
 
+        /// <summary>
+        /// A lookup for a cell name
+        /// </summary>
+        /// <param name="name"> cell name </param>
+        /// <returns> a value of the named cell </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the named cell does not contain double value
+        /// </exception>
         private double Lookup(string name)
         {
             object contents = GetCellContents(name);
@@ -379,9 +465,8 @@ namespace SS
                 return (double)contents;
             } else
             {
-                throw new ArgumentException();
+                throw new ArgumentException("The named cell does not contain a double value.");
             }
-            
         }
 
     }
