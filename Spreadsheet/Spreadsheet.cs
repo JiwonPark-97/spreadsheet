@@ -72,7 +72,7 @@ namespace SS
 
             if (version != GetSavedVersion(pathToFile))
             {
-                throw new SpreadsheetReadWriteException("The versions do not match.");
+                throw new SpreadsheetReadWriteException("The file version and the input version do not match.");
             }
             try
             {
@@ -135,12 +135,12 @@ namespace SS
         /// <inheritDoc\>
         public override object GetCellContents(string name)
         {
+            name = Normalize(name);
+
             if (!IsValidName(name) || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
-
-            name = Normalize(name);
 
             Cell? cell;
             if (!cells.TryGetValue(name, out cell))
@@ -154,12 +154,12 @@ namespace SS
         /// <inheritDoc\>
         public override object GetCellValue(string name)
         {
+            Normalize(name);
+
             if (!IsValidName(name) || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
-
-            Normalize(name);
 
             Cell? cell;
             if (!cells.TryGetValue(name, out cell))
@@ -256,13 +256,12 @@ namespace SS
         /// <inheritDoc\>
         public override IList<string> SetContentsOfCell(string name, string content)
         {
+            name = Normalize(name);
+
             if (!IsValidName(name) || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
-
-            // when a valid cell name 'token' comes in as a parameter, should replace it with Normalize(token)
-            Normalize(name);
 
             double number;
             if (double.TryParse(content, out number))
@@ -282,12 +281,12 @@ namespace SS
         /// <inheritDoc\>
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
+            name = Normalize(name);
+
             if (!IsValidName(name) || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
-
-            Normalize(name);
 
             return dg.GetDependents(name);
         }
@@ -296,7 +295,8 @@ namespace SS
         protected override IList<string> SetCellContents(string name, double number)
         {
             // error checking handled in SetContentsOfCell
-            Normalize(name);
+
+            name = Normalize(name);
 
             cells[name] = new Cell(name, number);
 
@@ -312,7 +312,7 @@ namespace SS
         {
             // error checking handled in SetContentsOfCell
 
-            Normalize(name);
+            name = Normalize(name);
 
             // If the contents is an empty string, the cell is empty - remove from cells
             if (text == "")
@@ -335,7 +335,7 @@ namespace SS
         {
             // error checking handled in SetContentsOfCell
 
-            Normalize(name);
+            name = Normalize(name);
 
             if (!IsValidName(name) || !IsValid(name))
             {
