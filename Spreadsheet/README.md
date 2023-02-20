@@ -50,5 +50,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     13. XML Elements vs. Attributes - https://www.w3schools.com/xml/xml_dtd_el_vs_attr.asp
     14. Nation.cs - https://github.com/uofu-cs3500-spring23/ForStudents/blob/main/Examples/XMLDemo/Nations/Nation.cs
     15. How to iterate over a dictionary? - https://stackoverflow.com/questions/141088/how-to-iterate-over-a-dictionary
-    16. 
+    16. How to get value from a specific child element in XML using XmlReader? - https://stackoverflow.com/questions/18891207/how-to-get-value-from-a-specific-child-element-in-xml-using-xmlreader
+    17.
+    18.
 

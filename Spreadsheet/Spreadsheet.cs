@@ -76,14 +76,14 @@ namespace SS
             }
             try
             {
+                string name = "";
+                string contents = "";
                 using (XmlReader reader = XmlReader.Create(pathToFile))
                 {
                     while (reader.Read())
                     {
                         if (reader.IsStartElement())
                         {
-                            string name = "";
-                            string contents = "";
                             switch (reader.Name)
                             {
                                 case "spreadsheet":
@@ -97,9 +97,9 @@ namespace SS
                                 case "contents":
                                     reader.Read();
                                     contents = reader.Value;
+                                    SetContentsOfCell(name, contents);
                                     break;
                             }
-                            SetCellContents(name, contents);
                         }
                     }
                 }
@@ -180,6 +180,11 @@ namespace SS
         /// <inheritDoc\>
         public override string GetSavedVersion(string filename)
         {
+            if (filename is null || filename == "")
+            {
+                throw new SpreadsheetReadWriteException("Invalid filename");
+            }
+
             try
             {
                 string? version = "";
@@ -187,24 +192,28 @@ namespace SS
                 {
                     while (reader.Read())
                     {
-                        if (reader.Name == "spreadsheet")
+                        if (reader.IsStartElement())
                         {
-                            version = reader["version"];
+                            switch (reader.Name)
+                            {
+                                case "spreadsheet":
+                                    version = reader["version"];
+                                    break;
+                            }
                         }
                     }
                 }
-
-                // check for invalid version
-                if (version is null || version == "")
+                if (version is not null)
                 {
-                    throw new SpreadsheetReadWriteException("The file version is invalid.");
+                    return version;
+                } else
+                {
+                    throw new SpreadsheetReadWriteException("Invalid version");
                 }
-
-                return version;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new SpreadsheetReadWriteException("Something went wrong reading a file");
+                throw new SpreadsheetReadWriteException(e.Message);
             }
         }
 
@@ -231,13 +240,9 @@ namespace SS
                     {
                         writer.WriteStartElement("cell"); // Starts the cell block
 
-                        writer.WriteStartElement("name"); // Starts the name block
-                        writer.WriteString(cell.Key);
-                        writer.WriteEndElement(); // Ends the name block
+                        writer.WriteElementString("name", cell.Key);
 
-                        writer.WriteStartElement("content"); // Starts the content block
-                        writer.WriteString(cell.Value.GetContents().ToString());
-                        writer.WriteEndElement(); // Ends the content block
+                        writer.WriteElementString("contents", cell.Value.GetContents().ToString());
 
                         writer.WriteEndElement(); // Ends the cell block
 
