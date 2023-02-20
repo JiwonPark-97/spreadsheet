@@ -199,7 +199,6 @@ public class SpreadsheetTests
             writer.WriteEndElement();
             writer.WriteEndDocument();
         }
-
         Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
     }
 
@@ -226,6 +225,16 @@ public class SpreadsheetTests
         }
 
         Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
+    }
+
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException with incorrect filename
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest9()
+    {
+        Spreadsheet sheet = new Spreadsheet("f3s%f_-*3ad.rando", s => true, s => s, "4.0");
     }
 
     // **************** Save Tests **************** //
