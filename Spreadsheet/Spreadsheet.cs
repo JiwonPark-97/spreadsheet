@@ -230,7 +230,7 @@ namespace SS
             if (double.TryParse(content, out number))
             {
                 return SetCellContents(name, number);
-            } else if (content[0] == '=')
+            } else if (content.Count() > 0 && content[0] == '=')
             {
                 string formulaStr = content.Remove(0, 1);
                 Formula formula = new Formula(formulaStr, Normalize, IsValid);
@@ -243,7 +243,7 @@ namespace SS
 
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
-            if (IsValidName(name) || !IsValid(name))
+            if (!IsValidName(name) || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
@@ -295,20 +295,36 @@ namespace SS
 
             Normalize(name);
 
-            // handle CircularException
-            GetCellsToRecalculate(name);
-
-            cells[name] = new Cell(name, formula, Lookup);
-
-            HashSet<string> variables = formula.GetVariables().ToHashSet();
-            foreach (string variable in variables)
+            if (!IsValidName(name) || !IsValid(name))
             {
-                dg.AddDependency(variable, name);
+                throw new InvalidNameException();
             }
-            changed = true;
 
-            // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
-            return GetCellsToRecalculate(name).ToList();
+            // save original dependencies in case of CircularException
+            HashSet<string> origianlDependees = dg.GetDependees(name).ToHashSet();
+
+            dg.ReplaceDependees(name, formula.GetVariables());
+
+            try
+            {
+                // handle CircularException
+                GetCellsToRecalculate(name);
+
+                HashSet<string> variables = formula.GetVariables().ToHashSet();
+                foreach (string variable in variables)
+                {
+                    dg.AddDependency(variable, name);
+                }
+                cells[name] = new Cell(name, formula, Lookup);
+
+                // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
+                return GetCellsToRecalculate(name).ToList();
+            }
+            catch (CircularException e)
+            {
+                dg.ReplaceDependees(name, origianlDependees);
+                throw e;
+            }
         }
 
         private bool IsValidName(string name)

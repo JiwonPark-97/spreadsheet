@@ -48,7 +48,7 @@ public class SpreadsheetTests
     public void GetCellContentsTest2()
     {
         Spreadsheet sheet = new Spreadsheet();
-        Assert.AreEqual("", sheet.GetCellContents(""));
+        sheet.GetCellContents("");
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class SpreadsheetTests
     public void GetCellContentsTest3()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.GetCellContents(null);
+        sheet.GetCellContents("_");
     }
 
     /// <summary>
@@ -137,13 +137,13 @@ public class SpreadsheetTests
     {
         Spreadsheet sheet = new Spreadsheet();
         sheet.SetContentsOfCell("a1", "1");
-        sheet.SetContentsOfCell("_", "a");
-        sheet.SetContentsOfCell("A", "=1+2");
+        sheet.SetContentsOfCell("b1", "a");
+        sheet.SetContentsOfCell("A1", "=1+2");
 
         List<string> names = sheet.GetNamesOfAllNonemptyCells().ToList();
         Assert.IsTrue(names.Contains("a1"));
-        Assert.IsTrue(names.Contains("_"));
-        Assert.IsTrue(names.Contains("A"));
+        Assert.IsTrue(names.Contains("b1"));
+        Assert.IsTrue(names.Contains("A1"));
     }
 
     // **************** SetCellContents Tests **************** //
@@ -157,13 +157,13 @@ public class SpreadsheetTests
     public void SetCellContentsTest1()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell("a", "1");
-        sheet.SetContentsOfCell("b_", "3.5");
-        sheet.SetContentsOfCell("_c", "10");
+        sheet.SetContentsOfCell("a1", "1");
+        sheet.SetContentsOfCell("b1", "3.5");
+        sheet.SetContentsOfCell("c1", "10");
 
-        Assert.AreEqual(1.0, sheet.GetCellContents("a"));
-        Assert.AreEqual(3.5, sheet.GetCellContents("b_"));
-        Assert.AreEqual(10.0, sheet.GetCellContents("_c"));
+        Assert.AreEqual(1.0, sheet.GetCellContents("a1"));
+        Assert.AreEqual(3.5, sheet.GetCellContents("b1"));
+        Assert.AreEqual(10.0, sheet.GetCellContents("c1"));
     }
     /// <summary>
     /// Simple SetCellContents
@@ -182,14 +182,14 @@ public class SpreadsheetTests
     }
 
     /// <summary>
-    /// Null name should throw InvalidNameException
+    /// Invalid name should throw InvalidNameException
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
     public void SetCellContentsTest4()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell(null, "0");
+        sheet.SetContentsOfCell("", "0");
     }
 
     /// <summary>
@@ -223,14 +223,14 @@ public class SpreadsheetTests
     }
 
     /// <summary>
-    /// Null name should throw InvalidNameException
+    /// Invalid name should throw InvalidNameException
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
     public void SetCellContentsTest7()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell(null, "a1");
+        sheet.SetContentsOfCell("", "a1");
     }
 
     /// <summary>
@@ -245,14 +245,14 @@ public class SpreadsheetTests
     }
 
     /// <summary>
-    /// Null text should throw ArgumentNullException
+    /// Invalid formula should throw FormulaFormatException
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [ExpectedException(typeof(FormulaFormatException))]
     public void SetCellContentsTest9()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell("a1", (string)null);
+        sheet.SetContentsOfCell("a1", "=(+)/1");
     }
 
     /// <summary>
@@ -262,9 +262,9 @@ public class SpreadsheetTests
     public void SetCellContentsTest10()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell("_1", "1");
+        sheet.SetContentsOfCell("a1", "1");
         Assert.AreEqual(1, sheet.GetNamesOfAllNonemptyCells().Count());
-        sheet.SetContentsOfCell("_1", "");
+        sheet.SetContentsOfCell("a1", "");
         Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
     }
 
@@ -283,14 +283,14 @@ public class SpreadsheetTests
     //}
 
     /// <summary>
-    /// Null name should throw InvalidNameException
+    /// Invalid name should throw InvalidNameException
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidNameException))]
     public void SetCellContentsTest12()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell(null, "=1+2");
+        sheet.SetContentsOfCell("123a", "=1+2");
     }
 
     /// <summary>
@@ -325,9 +325,9 @@ public class SpreadsheetTests
     public void SetCellContentsTest15()
     {
         Spreadsheet sheet = new Spreadsheet();
-        sheet.SetContentsOfCell("_1", "=_a+3");
-        sheet.SetContentsOfCell("_a", "=_1+1");
-        sheet.SetContentsOfCell("_A", "=_1*_a");
+        sheet.SetContentsOfCell("a1", "=b2+3");
+        sheet.SetContentsOfCell("b2", "=a1+1");
+        sheet.SetContentsOfCell("c3", "=a1*b2");
     }
 
     /// <summary>
@@ -405,6 +405,6 @@ public class ProtectedMethodTests : Spreadsheet
     [ExpectedException(typeof(InvalidNameException))]
     public void GetCellsToRecalculateTest2()
     {
-        GetCellsToRecalculate((string)null);
+        GetCellsToRecalculate("1a");
     }
 }
