@@ -29,10 +29,7 @@ namespace SS
         // all nonempty cells
         private Dictionary<string, Cell> cells;
 
-        // 
         private DependencyGraph dg;
-
-        // 
         private bool changed;
 
         /// <summary>

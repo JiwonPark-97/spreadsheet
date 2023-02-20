@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Author:    Jiwon Park
 /// Partner:   None
-/// Date:      10-Feb-2023
+/// Date:      20-Feb-2023
 /// Course:    CS 3500, University of Utah, School of Computing
 /// Copyright: CS 3500 and Jiwon Park - This work may not 
 ///            be copied for use in Academic Coursework.
@@ -229,6 +229,9 @@ public class SpreadsheetTests
 
     // **************** Save Tests **************** //
 
+    /// <summary>
+    /// saving empty spreadsheet
+    /// </summary>
     [TestMethod]
     public void SaveTest1()
     {
@@ -238,6 +241,9 @@ public class SpreadsheetTests
         Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
     }
 
+    /// <summary>
+    /// simple save test
+    /// </summary>
     [TestMethod]
     public void SaveTest2()
     {
@@ -255,20 +261,11 @@ public class SpreadsheetTests
         Assert.AreEqual(3.0, sheet2.GetCellValue("a3"));
     }
 
-    ///// <summary>
-    ///// An incorrect file name should throw SpreadsheetReadWriteException
-    ///// </summary>
-    //[TestMethod]
-    //[ExpectedException(typeof(SpreadsheetReadWriteException))]
-    //public void SaveTest3()
-    //{
-    //    Spreadsheet sheet = new Spreadsheet(s => true, s => s, "3.0");
-
-    //    sheet.Save("f3s%f_-*3ad.rando");
-    //}
-
     // **************** GetSavedVersion Tests **************** //
 
+    /// <summary>
+    /// simple GetSavedVersion with default version spreadsheet
+    /// </summary>
     [TestMethod]
     public void GetSavedVersionTest1()
     {
@@ -278,6 +275,9 @@ public class SpreadsheetTests
         Assert.AreEqual("default", new Spreadsheet().GetSavedVersion("save5.txt"));
     }
 
+    /// <summary>
+    /// simple GetSavedVersion with a specific version spreadsheet
+    /// </summary>
     [TestMethod]
     public void GetSavedVersionTest2()
     {
@@ -405,7 +405,6 @@ public class SpreadsheetTests
         sheet.SetContentsOfCell("a1", "10");
         Assert.AreEqual(10.0, sheet.GetCellValue("a1"));
     }
-
 
     /// <summary>
     /// String content
@@ -557,7 +556,6 @@ public class SpreadsheetTests
         sheet.SetContentsOfCell("1a", "0");
     }
 
-
     // string contents //
 
     /// <summary>
@@ -621,7 +619,6 @@ public class SpreadsheetTests
         sheet.SetContentsOfCell("a1", "");
         Assert.AreEqual(0, sheet.GetNamesOfAllNonemptyCells().Count());
     }
-
 
     // Formula contents //
 
@@ -733,6 +730,9 @@ public class SpreadsheetTests
 
     // **************** Changed Tests **************** //
 
+    /// <summary>
+    /// simple changed test.
+    /// </summary>
     [TestMethod]
     public void ChangedTest1()
     {

@@ -18,7 +18,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
     ---------------- For Assignment 5 ------------------
 
-    *** TODO: fill it ***
+    When reading/writing xml file, I caught general exceptions after catching specific types of exceptions
+    in case of "there are no doubt other things that can go wrong." 
 
 # Assignment Specific Topics
 

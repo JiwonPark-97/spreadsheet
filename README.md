@@ -17,7 +17,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
         2. representing dependencies
         3. storing expressions to evaluate
         4. representing cells and their contents and dependencies.
-        5. representing a complete spreadsheet model. 
+        5. representing a complete spreadsheet model (all of the above). 
 
 # Time Expenditures:
 
