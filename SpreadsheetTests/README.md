@@ -19,8 +19,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
     ---------------- For Assignment 5 ------------------
 
-    *** TODO: fill it ***
-
+    For testing four-argument constructor, I used the example code in the instruction (on section 7) to create a file in the current directory.
 
 # Assignment Specific Topics
 
@@ -40,6 +39,6 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
     ---------------- For Assignment 5 ------------------
 
-    4.
+    4. Assignment Five - A Complete Spreadsheet Model - https://utah.instructure.com/courses/834041/assignments/11982612?module_item_id=19990010
     5.
 
