@@ -15,6 +15,7 @@
 /// </summary>
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
 using SpreadsheetUtilities;
@@ -227,12 +228,32 @@ namespace SS
         /// <inheritDoc\>
         public override void Save(string filename)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = "  ";
+
+            if (filename.Contains(@"\"))
+            {
+                int index = filename.Count();
+                for (int i = filename.Count() - 1; i >= 0; i--)
+                {
+                    if (filename[i] == '\\')
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                string filepath = filename.Remove(index + 1);
+
+                if (!Directory.Exists(filepath))
+                {
+                    throw new SpreadsheetReadWriteException("Path does not exist");
+                }
+            }
 
             try
             {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = true;
+                settings.IndentChars = "  ";
+
                 // Create an XmlWriter inside this block, and automatically Dispose() it at the end.
                 using (XmlWriter writer = XmlWriter.Create(filename, settings))
                 {
@@ -267,9 +288,9 @@ namespace SS
                     writer.WriteEndDocument();
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
-                throw new SpreadsheetReadWriteException("Something went wrong");
+                throw new SpreadsheetReadWriteException("Something went wrong saving a file");
             }
             changed = false;
         }
