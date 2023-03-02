@@ -20,10 +20,10 @@
             <HorizontalStackLayout>
                 <Label
                     x:Name="selectedCell"
-                    Text="Selected Cell"
+                    Text="Stuff could go here"
                     WidthRequest="100"/>
                 <Entry
-                    x:Name="selcedCellEntry"
+                    x:Name="selectedCellEntry"
                     Text=""
                     WidthRequest="200"/>
             </HorizontalStackLayout>
@@ -31,7 +31,7 @@
 
         <!-- the column headers: A, B, C, ... -->
         <HorizontalStackLayout x:Name="TopLabels"
-                               BackgroundColor="LightBlue"/>
+                               BackgroundColor="LightGrey"/>
 
         <!-- the Grid of Spreadsheet GUI Cells -->
         <ScrollView
@@ -43,11 +43,11 @@
             <HorizontalStackLayout>
                 <VerticalStackLayout
                     x:Name="LeftLabels"
-                    BackgroundColor="LightBlue">
+                    BackgroundColor="LightGrey">
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     x:Name="Grid"
-                    BackgroundColor="SaddleBrown">
+                    BackgroundColor="GhostWhite">
                 </VerticalStackLayout>
             </HorizontalStackLayout>
         </ScrollView>

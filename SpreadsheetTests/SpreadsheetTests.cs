@@ -227,6 +227,16 @@ public class SpreadsheetTests
         Spreadsheet sheet = new Spreadsheet("save2.txt", s => true, s => s, "4.0");
     }
 
+    /// <summary>
+    /// Should throw SpreadsheetReadWriteException for incorrect xml file format
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(SpreadsheetReadWriteException))]
+    public void ConstructorTest9()
+    {
+        Spreadsheet sheet = new Spreadsheet("/some/nonsense/path.txt", s => true, s => s, "1.0");
+    }
+
     // **************** Save Tests **************** //
 
     /// <summary>
