@@ -1,16 +1,46 @@
-﻿namespace GUI;
+﻿using SS;
+
+namespace GUI;
 
 public partial class MainPage : ContentPage
 {
+
+	private Spreadsheet spreadsheet;
+	private Dictionary<string, Entry> _cells;
+
 	private readonly char[] ROWHEADERS = "ABCDEFGHIJ".ToArray();
 	private readonly int ROWS = 50;
 
 	public MainPage()
 	{
+		spreadsheet = new Spreadsheet();
+
+		_cells = new Dictionary<string, Entry>();
+
 		InitializeComponent();
 
 		InitializeGrid();
 	}
+
+	public void FileMenuNew(object sender, EventArgs e) {
+
+	}
+
+    public void FileMenuOpenAsync(object sender, EventArgs e)
+    {
+
+    }
+
+    public void CellChangedValue(object sender, EventArgs e)
+    {
+
+    }
+
+    public void CellFocused(object sender, EventArgs e)
+    {
+
+    }
+
 
     private void InitializeGrid()
     {
@@ -79,7 +109,7 @@ public partial class MainPage : ContentPage
 
 				_cells.Add(entry.StyleId, entry);
 
-				entry.Completed += CellCahngedValue;
+				entry.Completed += CellChangedValue;
 				entry.Focused += CellFocused;
 
 				horiz.Add(entry);

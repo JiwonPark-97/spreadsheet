@@ -20,7 +20,7 @@
             <HorizontalStackLayout>
                 <Label
                     x:Name="selectedCell"
-                    Text="Stuff could go here"
+                    Text="Selected Cell"
                     WidthRequest="100"/>
                 <Entry
                     x:Name="selcedCellEntry"
@@ -47,11 +47,10 @@
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     x:Name="Grid"
-                    BackgroundColor="LightGoldenrodYellow">
+                    BackgroundColor="SaddleBrown">
                 </VerticalStackLayout>
             </HorizontalStackLayout>
         </ScrollView>
     </VerticalStackLayout>
 
 </ContentPage>
-
