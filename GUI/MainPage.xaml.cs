@@ -31,13 +31,95 @@ public partial class MainPage : ContentPage
         return (Regex.IsMatch(s, pattern));
     }
 
-    private void FileMenuNew(object sender, EventArgs e) {
-
+    private async void FileMenuNew(object sender, EventArgs e) 
+	{
+		if (spreadsheet.Changed)
+		{
+            bool answer = await DisplayAlert("File overwritten alert", "Would you like to open a new file without saving your changes?", "Yes", "No");
+			if (answer)
+			{
+                _ = Navigation.PushAsync(new MainPage());
+            }
+            else
+			{
+				// do nothing
+			}
+		}
+        else
+		{
+            _ = Navigation.PushAsync(new MainPage());
+        }
 	}
 
-    private void FileMenuOpenAsync(object sender, EventArgs e)
-    {
+	private async void FileMenuSave(object sender, EventArgs e)
+	{
+        string result = await DisplayPromptAsync("Save as", "File name:");
+		if (result is not null)
+		{
+			try
+			{
+                // TODO: fill filepath
+                spreadsheet.Save("some/filepath/" + result + ".sprd");
+            }
+			catch (Exception)
+			{
+                await DisplayAlert("Alert", "Invalid filename", "OK");
+            }
+        } else
+		{
+			// cancle clicked - do nothing
+        }
+	}
 
+    private async void FileMenuOpenAsync(object sender, EventArgs e)
+    {
+        if (spreadsheet.Changed)
+        {
+            bool answer = await DisplayAlert("File overwritten alert", "Would you like to open a file without saving your changes?", "Yes", "No");
+            if (answer)
+            {
+                string result = await DisplayPromptAsync("Open", "File name:");
+				if (result is not null)
+				{
+					try
+					{
+                        _ = Navigation.PushAsync(new MainPage());
+						spreadsheet = new Spreadsheet(result, IsValid, s => s.ToUpper(), "six");
+
+                    } catch (Exception)
+					{
+                        await DisplayAlert("Alert", "Invalid filename", "OK");
+                    }
+
+                } else
+				{
+                    // cancle clicked - do nothing
+                }
+            }
+            else
+            {
+               // No clicked - do nothing
+            }
+        }
+        else
+        {
+            string result = await DisplayPromptAsync("Open", "File name:");
+            if (result is not null)
+            {
+				try
+				{
+                    _ = Navigation.PushAsync(new MainPage());
+                    spreadsheet = new Spreadsheet(result, IsValid, s => s.ToUpper(), "six");
+                } catch (Exception)
+				{
+                    await DisplayAlert("Alert", "Invalid filename", "OK");
+                }
+            }
+            else
+            {
+                // cancle clicked - do nothing
+            }
+        }
     }
 
     private void CellChangedValue(object sender, EventArgs e)

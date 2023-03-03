@@ -5,7 +5,7 @@ Date:       18-Jan-2023
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       3-Mar-2023 11.30 am (of when submission is ready to be evaluated)
+Date:       3-Mar-2023 11.30 pm (of when submission is ready to be evaluated)
 Solution:   Spreadsheet
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
@@ -27,4 +27,4 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   21             Note: Spent extra hours covering 100% code.
     4. Assignmnet Four:      Predicted Hours:          20        Actual Hours:   18             Note: -
     5. Assignmnet Five:      Predicted Hours:          20        Actual Hours:   28             Note: Spent extra hours figuring out xml file reading/writing.
-    6. Assignmnet Six:       Predicted Hours:          20        Actual Hours:   8              Note: 
+    6. Assignmnet Six:       Predicted Hours:          20        Actual Hours:   10             Note: 
