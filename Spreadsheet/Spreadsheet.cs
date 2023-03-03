@@ -430,7 +430,7 @@ namespace SS
         private bool IsValidName(string name)
         {
             string pattern = string.Format(@"^[a-zA-Z]+[0-9]+$");
-            return (Regex.IsMatch(name, pattern));
+            return Regex.IsMatch(name, pattern);
         }
 
         /// <summary>

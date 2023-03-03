@@ -1,5 +1,6 @@
 ﻿using SpreadsheetUtilities;
 using SS;
+using System.Text.RegularExpressions;
 
 namespace GUI;
 
@@ -14,7 +15,7 @@ public partial class MainPage : ContentPage
 
 	public MainPage()
 	{
-		spreadsheet = new Spreadsheet();
+		spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
 
 		_cells = new Dictionary<string, Entry>();
 
@@ -22,6 +23,12 @@ public partial class MainPage : ContentPage
 
 		InitializeGrid();
 
+    }
+
+	private bool IsValid(string s)
+	{
+        string pattern = string.Format(@"^[A-Z][0-9][0-9]?$");
+        return (Regex.IsMatch(s, pattern));
     }
 
     private void FileMenuNew(object sender, EventArgs e) {
