@@ -122,7 +122,12 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void CellChangedValue(object sender, EventArgs e)
+	private async void Help(object sender, EventArgs e)
+	{
+        await DisplayAlert("How to use", "blah", "OK");
+    }
+
+    private async void CellChangedValue(object sender, EventArgs e)
     {
         Entry entry = (Entry)sender;
 		try
@@ -132,8 +137,8 @@ public partial class MainPage : ContentPage
         }
         catch (Exception)
 		{
-			// error message pop up
-		}
+            await DisplayAlert("Alert", "Invalid contents", "OK");
+        }
     }
 
 	private void FocusNextEntry(object sender, EventArgs e)
@@ -166,7 +171,7 @@ public partial class MainPage : ContentPage
         }    
 	}
 
-    private void WidgetEntryChanged(object sender, EventArgs e)
+    private async void WidgetEntryChanged (object sender, EventArgs e)
 	{
         Entry entry = (Entry)sender;
         try
@@ -177,7 +182,7 @@ public partial class MainPage : ContentPage
         }
         catch (Exception)
         {
-            // error message pop up
+            await DisplayAlert("Alert", "Invalid contents", "OK");
         }
     }
 
@@ -217,7 +222,7 @@ public partial class MainPage : ContentPage
 					Content = new Label
 					{
 						Text = $"{label}",
-						BackgroundColor = Color.FromRgb(168, 168 , 168),
+						BackgroundColor = Color.FromRgb(186, 153, 146),
 						HorizontalTextAlignment = TextAlignment.Center
 					}
 				}
@@ -240,7 +245,7 @@ public partial class MainPage : ContentPage
 					{
 						Text= $"{row + 1}",
 						VerticalTextAlignment = TextAlignment.Center,
-                        BackgroundColor = Color.FromRgb(168, 168, 168)
+                        BackgroundColor = Color.FromRgb(186, 153, 146)
                     }
                 });
 			foreach(var label in ROWHEADERS)

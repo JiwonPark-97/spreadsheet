@@ -10,7 +10,7 @@
             <MenuFlyoutItem Text="Open" Clicked="FileMenuOpenAsync" />
         </MenuBarItem>
         <MenuBarItem Text="Help">
-
+            <MenuFlyoutItem Text="Help" Clicked="Help" />
         </MenuBarItem>
     </ContentPage.MenuBarItems> 
 
@@ -19,7 +19,7 @@
 
         <!-- A Place to put the currently selected cell "namd" and "value" -->
         <Border
-            StrokeThickness="2"
+            StrokeThickness="1"
             HeightRequest="40">
             <HorizontalStackLayout>
                 <Label
@@ -40,7 +40,7 @@
 
         <!-- the column headers: A, B, C, ... -->
         <HorizontalStackLayout x:Name="TopLabels"
-                               BackgroundColor="LightGrey"/>
+                               BackgroundColor="RosyBrown"/>
 
         <!-- the Grid of Spreadsheet GUI Cells -->
         <ScrollView
@@ -52,7 +52,7 @@
             <HorizontalStackLayout>
                 <VerticalStackLayout
                     x:Name="LeftLabels"
-                    BackgroundColor="LightGrey">
+                    BackgroundColor="GhostWhite">
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     x:Name="Grid"
