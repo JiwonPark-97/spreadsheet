@@ -5,7 +5,7 @@ namespace GUI;
 public partial class MainPage : ContentPage
 {
 
-	private Spreadsheet spreadsheet;
+	private AbstractSpreadsheet spreadsheet;
 	private Dictionary<string, Entry> _cells;
 
 	private readonly char[] ROWHEADERS = "ABCDEFGHIJ".ToArray();
@@ -20,30 +20,47 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 
 		InitializeGrid();
+
+    }
+
+    private void FileMenuNew(object sender, EventArgs e) {
+
 	}
 
-	public void FileMenuNew(object sender, EventArgs e) {
-
-	}
-
-    public void FileMenuOpenAsync(object sender, EventArgs e)
+    private void FileMenuOpenAsync(object sender, EventArgs e)
     {
 
     }
 
-    public void CellChangedValue(object sender, EventArgs e)
+    private void CellChangedValue(object sender, EventArgs e)
     {
+        Unfocus();
         Entry entry = (Entry)sender;
 		spreadsheet.SetContentsOfCell(entry.StyleId, entry.Text);
-
     }
 
-    public void CellFocused(object sender, EventArgs e)
+	private void FocusNextEntry(object sender, EventArgs e)
+	{
+        string originalCell = ((Entry)sender).StyleId;
+		string originalRow = originalCell.Remove(0, 1);
+		int nextRow = int.Parse(originalRow) + 1;
+		string nextCell = originalCell[0] + nextRow.ToString();
+		_cells[nextCell].Focus();
+    }
+
+
+    private void CellFocused(object sender, EventArgs e)
     {
 		Entry entry = (Entry)sender;
-		selectedCell.Text = entry.StyleId;
-		selectedCellEntry.Text = spreadsheet.GetCellValue(entry.StyleId).ToString();
+		selectedCellName.Text = entry.StyleId;
+		selectedCellValue.Text = spreadsheet.GetCellValue(entry.StyleId).ToString();
+		selectedCellEntry.Text = spreadsheet.GetCellContents(entry.StyleId).ToString();
     }
+
+	//private void CellFocus(object sender, EventArgs e)
+ //   {
+ //       Focus();
+ //   }
 
 
     private void InitializeGrid()
@@ -114,6 +131,7 @@ public partial class MainPage : ContentPage
 				_cells.Add(entry.StyleId, entry);
 
 				entry.Completed += CellChangedValue;
+				entry.Completed += FocusNextEntry;
 				entry.Focused += CellFocused;
 
 				horiz.Add(entry);
@@ -122,10 +140,17 @@ public partial class MainPage : ContentPage
 			foreach (KeyValuePair<string, Entry> entry in _cells)
 			{
 				spreadsheet.SetContentsOfCell(entry.Key, entry.Value.Text);
+				if (entry.Key == "A1")
+				{
+					entry.Value.Focus();
+				}
 			}
 
 			Grid.Children.Add(horiz);
+
 		}
+
+
     }
 }
 

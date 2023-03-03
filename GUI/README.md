@@ -24,5 +24,5 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 # References:
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
-    2.
+    2. How can we get the numeric value of a character in C# - https://www.educative.io/answers/how-can-we-get-the-numeric-value-of-a-character-in-c-sharp
     3. 

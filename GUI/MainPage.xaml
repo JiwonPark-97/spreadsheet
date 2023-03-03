@@ -19,12 +19,16 @@
             HeightRequest="40">
             <HorizontalStackLayout>
                 <Label
-                    x:Name="selectedCell"
-                    Text="Stuff could go here"
+                    x:Name="selectedCellName"
+                    Text="cell name"
+                    WidthRequest="100"/>
+                <Label
+                    x:Name="selectedCellValue"
+                    Text="cell value"
                     WidthRequest="100"/>
                 <Entry
                     x:Name="selectedCellEntry"
-                    Text=""
+                    Text="cell contents"
                     WidthRequest="200"/>
             </HorizontalStackLayout>
         </Border>
