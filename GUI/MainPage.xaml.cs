@@ -10,7 +10,8 @@ public partial class MainPage : ContentPage
 	private AbstractSpreadsheet spreadsheet;
 	private Dictionary<string, Entry> _cells;
 
-	private readonly char[] ROWHEADERS = "ABCDEFGHIJ".ToArray();
+    private readonly char[] ROWHEADERS = "ABCDEFGHIJK".ToArray();
+    //private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
 	private readonly int ROWS = 50;
 
 	public MainPage()
@@ -35,7 +36,7 @@ public partial class MainPage : ContentPage
 	{
 		if (spreadsheet.Changed)
 		{
-            bool answer = await DisplayAlert("File overwritten alert", "Would you like to open a new file without saving your changes?", "Yes", "No");
+            bool answer = await DisplayAlert("File overwrite alert", "Would you like to open a new file without saving your changes?", "Yes", "No");
 			if (answer)
 			{
                 _ = Navigation.PushAsync(new MainPage());
@@ -75,7 +76,7 @@ public partial class MainPage : ContentPage
     {
         if (spreadsheet.Changed)
         {
-            bool answer = await DisplayAlert("File overwritten alert", "Would you like to open a file without saving your changes?", "Yes", "No");
+            bool answer = await DisplayAlert("File overwrite alert", "Would you like to open a file without saving your changes?", "Yes", "No");
             if (answer)
             {
                 string result = await DisplayPromptAsync("Open", "File name:");
