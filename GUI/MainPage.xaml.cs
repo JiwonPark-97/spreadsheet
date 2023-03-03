@@ -1,4 +1,5 @@
-﻿using SS;
+﻿using SpreadsheetUtilities;
+using SS;
 
 namespace GUI;
 
@@ -34,13 +35,21 @@ public partial class MainPage : ContentPage
 
     private void CellChangedValue(object sender, EventArgs e)
     {
-        Unfocus();
         Entry entry = (Entry)sender;
-		spreadsheet.SetContentsOfCell(entry.StyleId, entry.Text);
+		try
+		{
+            spreadsheet.SetContentsOfCell(entry.StyleId, entry.Text);
+            entry.Text = spreadsheet.GetCellValue(entry.StyleId).ToString();
+        }
+        catch (Exception)
+		{
+			// error message pop up
+		}
     }
 
 	private void FocusNextEntry(object sender, EventArgs e)
 	{
+		Unfocus();
         string originalCell = ((Entry)sender).StyleId;
 		string originalRow = originalCell.Remove(0, 1);
 		int nextRow = int.Parse(originalRow) + 1;
@@ -54,13 +63,19 @@ public partial class MainPage : ContentPage
 		Entry entry = (Entry)sender;
 		selectedCellName.Text = entry.StyleId;
 		selectedCellValue.Text = spreadsheet.GetCellValue(entry.StyleId).ToString();
-		selectedCellEntry.Text = spreadsheet.GetCellContents(entry.StyleId).ToString();
-    }
 
-	//private void CellFocus(object sender, EventArgs e)
- //   {
- //       Focus();
- //   }
+        object contents = spreadsheet.GetCellContents(entry.StyleId);
+        if (contents is Formula)
+        {
+            entry.Text = "=" + contents.ToString();
+			selectedCellEntry.Text = "=" + contents.ToString();
+        }
+        else
+        {
+            entry.Text = contents.ToString();
+			selectedCellEntry.Text = contents.ToString();
+        }    
+	}
 
 
     private void InitializeGrid()
@@ -133,18 +148,19 @@ public partial class MainPage : ContentPage
 				entry.Completed += CellChangedValue;
 				entry.Completed += FocusNextEntry;
 				entry.Focused += CellFocused;
+                entry.Unfocused += CellChangedValue;
 
-				horiz.Add(entry);
+                horiz.Add(entry);
 			}
 
-			foreach (KeyValuePair<string, Entry> entry in _cells)
-			{
-				spreadsheet.SetContentsOfCell(entry.Key, entry.Value.Text);
-				if (entry.Key == "A1")
-				{
-					entry.Value.Focus();
-				}
-			}
+			//foreach (KeyValuePair<string, Entry> entry in _cells)
+			//{
+			//	spreadsheet.SetContentsOfCell(entry.Key, entry.Value.Text);
+			//	if (entry.Key == "A1")
+			//	{
+			//		entry.Value.Focus();
+			//	}
+			//}
 
 			Grid.Children.Add(horiz);
 
