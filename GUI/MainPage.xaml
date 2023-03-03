@@ -29,6 +29,7 @@
                 <Entry
                     x:Name="selectedCellEntry"
                     Text="cell contents"
+                    Completed="WidgetEntryChanged"
                     WidthRequest="200"/>
             </HorizontalStackLayout>
         </Border>
@@ -51,7 +52,8 @@
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     x:Name="Grid"
-                    BackgroundColor="GhostWhite">
+                    BackgroundColor="GhostWhite"
+                    Loaded="FocusOnDefaultCell">
                 </VerticalStackLayout>
             </HorizontalStackLayout>
         </ScrollView>

@@ -77,6 +77,26 @@ public partial class MainPage : ContentPage
         }    
 	}
 
+    private void WidgetEntryChanged(object sender, EventArgs e)
+	{
+        Entry entry = (Entry)sender;
+        try
+        {
+			string cellId = selectedCellName.Text;
+            spreadsheet.SetContentsOfCell(cellId, entry.Text);
+			_cells[cellId].Text = entry.Text;
+        }
+        catch (Exception)
+        {
+            // error message pop up
+        }
+    }
+
+	private void FocusOnDefaultCell(object sender, EventArgs e)
+	{
+		_cells["A1"].Focus();
+	}
+
 
     private void InitializeGrid()
     {
@@ -138,7 +158,7 @@ public partial class MainPage : ContentPage
 			{
 				var entry = new Entry
 				{
-					Text = $"{label}{row + 1}",
+					Text = "",
 					WidthRequest = 75,
 					StyleId = $"{label}{row + 1}"
 				};

@@ -19,10 +19,17 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Consulted Peers:
 
-    I have not directly consulted with others but referred to the Discord server listed below in reference.
+    I have not directly consulted with others but referred to Piazza posts and the Discord server listed below in reference.
 
 # References:
 
     1. CS 3500 Spring: Software Practice - https://discord.gg/psqhddzf
     2. How can we get the numeric value of a character in C# - https://www.educative.io/answers/how-can-we-get-the-numeric-value-of-a-character-in-c-sharp
-    3. 
+    3. Display pop-ups - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/pop-ups?view=net-maui-7.0
+    4. Focus Cell A1 on Spreadsheet Application Open - https://utah.instructure.com/courses/834041/external_tools/90790
+    5. 
+    6. 
+    7. 
+
+
+
