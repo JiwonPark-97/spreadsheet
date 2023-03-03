@@ -50,11 +50,11 @@ public partial class MainPage : ContentPage
 	private void FocusNextEntry(object sender, EventArgs e)
 	{
 		Unfocus();
-        string originalCell = ((Entry)sender).StyleId;
-		string originalRow = originalCell.Remove(0, 1);
+        string originalCellId = ((Entry)sender).StyleId;
+		string originalRow = originalCellId.Remove(0, 1);
 		int nextRow = int.Parse(originalRow) + 1;
-		string nextCell = originalCell[0] + nextRow.ToString();
-		_cells[nextCell].Focus();
+		string nextCellId = originalCellId[0] + nextRow.ToString();
+		_cells[nextCellId].Focus();
     }
 
 
@@ -145,22 +145,12 @@ public partial class MainPage : ContentPage
 
 				_cells.Add(entry.StyleId, entry);
 
-				entry.Completed += CellChangedValue;
 				entry.Completed += FocusNextEntry;
 				entry.Focused += CellFocused;
                 entry.Unfocused += CellChangedValue;
 
                 horiz.Add(entry);
 			}
-
-			//foreach (KeyValuePair<string, Entry> entry in _cells)
-			//{
-			//	spreadsheet.SetContentsOfCell(entry.Key, entry.Value.Text);
-			//	if (entry.Key == "A1")
-			//	{
-			//		entry.Value.Focus();
-			//	}
-			//}
 
 			Grid.Children.Add(horiz);
 
