@@ -32,47 +32,88 @@ public partial class MainPage : ContentPage
         return (Regex.IsMatch(s, pattern));
     }
 
-    private async void FileMenuNew(object sender, EventArgs e) 
+	/// <summary>
+	/// Create a New empty spreadsheet in the GUI window.
+	/// If the current spreadsheet has been changed without saving, warning dialog displays asking to save the data.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void FileMenuNew(object sender, EventArgs e)
 	{
+		// if changed
+		// ask 1) wanna save?
+		//	   2) new
+		//	   3) cancle
+		// else (no safety alart needed)
+		// new MainPage
+
 		if (spreadsheet.Changed)
 		{
-            bool answer = await DisplayAlert("File overwrite alert", "Would you like to open a new file without saving your changes?", "Yes", "No");
-			if (answer)
+            string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "New");
+			if (action == "Save")
 			{
-                _ = Navigation.PushAsync(new MainPage());
-            }
-            else
-			{
+				FileMenuSave(sender, e);
+			} 
+			else if (action == "New"){
+				FileMenuNew(sender, e);
+			} 
+			else if (action == "Cancle")
+			{ 
 				// do nothing
 			}
-		}
-        else
-		{
-            _ = Navigation.PushAsync(new MainPage());
         }
 	}
 
-	private async void FileMenuSave(object sender, EventArgs e)
+    /// <summary>
+    /// Save the current spreadsheet to a file.
+	/// User can save to the current (default) path or a custom path.
+    /// </summary>
+    private async void FileMenuSave(object sender, EventArgs e)
 	{
-        string result = await DisplayPromptAsync("Save as", "File name:");
-		if (result is not null)
+        string currPath = "C:\\Users\\Jiwon Park\\source\\repos\\CS3500\\spreadsheet-JiwonPark-97\\GUI\\bin\\Debug\\";
+        
+		// get if the user wants to save to curr path or not
+		bool toCurrPath = await DisplayAlert("Save to", "Would you like to save to current path?: " + currPath, "Yes", "New path");
+		
+		// save to curr path
+		if (toCurrPath)
 		{
+			// get the file name
+            string filename = await DisplayPromptAsync("Save as", "File name:");
 			try
 			{
-                // TODO: fill filepath
-                spreadsheet.Save("some/filepath/" + result + ".sprd");
-            }
-			catch (Exception)
+				spreadsheet.Save(currPath + filename + ".sprd");
+			}
+			catch(Exception)
 			{
                 await DisplayAlert("Alert", "Invalid filename", "OK");
             }
+
+		// save to a new path
         } else
 		{
-			// cancle clicked - do nothing
+            // ask for a new path
+            string newPath = await DisplayPromptAsync("Save to", "File path:");
+			if (newPath is not null)
+			{
+                string filename = await DisplayPromptAsync("Save as", "File name:");
+				try
+				{
+                    spreadsheet.Save(newPath + filename + ".sprd");
+                }
+				catch (Exception) 
+				{
+                    await DisplayAlert("Alert", "Invalid filename", "OK");
+                }
+            }
         }
 	}
-
-    private async void FileMenuOpenAsync(object sender, EventArgs e)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+    private async void FileMenuOpen(object sender, EventArgs e)
     {
         if (spreadsheet.Changed)
         {

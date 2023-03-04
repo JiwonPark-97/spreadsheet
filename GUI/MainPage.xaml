@@ -7,7 +7,7 @@
         <MenuBarItem Text="File">
             <MenuFlyoutItem Text="New" Clicked="FileMenuNew" />
             <MenuFlyoutItem Text="Save" Clicked="FileMenuSave" />
-            <MenuFlyoutItem Text="Open" Clicked="FileMenuOpenAsync" />
+            <MenuFlyoutItem Text="Open" Clicked="FileMenuOpen" />
         </MenuBarItem>
         <MenuBarItem Text="Help">
             <MenuFlyoutItem Text="Help" Clicked="Help" />
