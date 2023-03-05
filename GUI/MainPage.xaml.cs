@@ -35,6 +35,9 @@ public partial class MainPage : ContentPage
         return (Regex.IsMatch(s, pattern));
     }
 
+	/// <summary>
+	/// Clears the current spreadsheet
+	/// </summary>
 	private void Clear()
 	{
 		foreach (Entry entry in _cells.Values)
@@ -43,13 +46,13 @@ public partial class MainPage : ContentPage
 		}
 	}
 
-	/// <summary>
-	/// Create a New empty spreadsheet in the GUI window.
-	/// If the current spreadsheet has been changed without saving, warning dialog displays asking to save the data.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void FileMenuNew(object sender, EventArgs e)
+    /// <summary>
+    /// Creates a New empty spreadsheet in the window.
+    /// If current changes not saved, ask for saving.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void FileMenuNew(object sender, EventArgs e)
 	{
 		if (spreadsheet.Changed)
 		{
@@ -73,7 +76,7 @@ public partial class MainPage : ContentPage
     }
 
     /// <summary>
-    /// Save the current spreadsheet to a file.
+    /// Saves the current spreadsheet to a file.
 	/// User can save to the current (default) directory or to a custom directory.
     /// </summary>
     private async void FileMenuSave(object sender, EventArgs e)
@@ -122,23 +125,16 @@ public partial class MainPage : ContentPage
             }
         }
 	}
+
 	/// <summary>
-	/// 
+	/// Opens a spreadsheet file from filepath given.
+	/// If current changes not saved, ask for saving.
 	/// </summary>
 	/// <param name="sender"> </param>
 	/// <param name="e"></param>
     private async void FileMenuOpen(object sender, EventArgs e)
     {
-        // check if changed
-			// if changed
-				// ask for saving
-					// save
-					// open
-						// curr directory?
-						// type full file path
-					// cancel
-			// else
-				// save
+
         if (spreadsheet.Changed)
         {
 			// safety warning
@@ -279,11 +275,17 @@ public partial class MainPage : ContentPage
 
     }
 
-	private async void Help(object sender, EventArgs e)
+    /// <summary>
+    /// Displays a help popup that describes how to use the spreadsheet
+    /// </summary>
+    private async void Help(object sender, EventArgs e)
 	{
         await DisplayAlert("How to use", "blah", "OK");
     }
 
+	/// <summary>
+	/// Updates a cell and its dependent cells for changed contents
+	/// </summary>
     private async void CellChangedValue(object sender, EventArgs e)
     {
         Entry entry = (Entry)sender;
@@ -297,7 +299,8 @@ public partial class MainPage : ContentPage
 				_cells[cellToRecalculate].Text = spreadsheet.GetCellValue(cellToRecalculate).ToString();
 			}
 
-			if (spreadsheet.GetCellValue(entry.StyleId) is FormulaError) 
+			// display value
+            if (spreadsheet.GetCellValue(entry.StyleId) is FormulaError) 
 			{
 				entry.Text = "FormulaError";
             } else
@@ -311,6 +314,9 @@ public partial class MainPage : ContentPage
         }
     }
 
+	/// <summary>
+	/// Focus on the next cell (right below the previously selected cell)
+	/// </summary>
 	private void FocusNextEntry(object sender, EventArgs e)
 	{
 		Unfocus();
@@ -321,7 +327,9 @@ public partial class MainPage : ContentPage
 		_cells[nextCellId].Focus();
     }
 
-
+	/// <summary>
+	/// Updates the widgets and displays contents in the selected cell
+	/// </summary>
     private void CellFocused(object sender, EventArgs e)
     {
 		Entry entry = (Entry)sender;
@@ -350,14 +358,30 @@ public partial class MainPage : ContentPage
         }    
 	}
 
+	/// <summary>
+	/// Updates a cell and its dependent cells for contents changed from the widget
+	/// </summary>
     private async void WidgetEntryChanged (object sender, EventArgs e)
 	{
         Entry entry = (Entry)sender;
         try
         {
-			string cellId = selectedCellName.Text;
-            spreadsheet.SetContentsOfCell(cellId, entry.Text);
-			_cells[cellId].Text = entry.Text;
+            // update the cell and its dependent cells
+            string cellId = selectedCellName.Text;
+            List<string> cellsToRecalculate = spreadsheet.SetContentsOfCell(cellId, entry.Text).ToList();
+
+            foreach (string cellToRecalculate in cellsToRecalculate)
+            {
+                _cells[cellToRecalculate].Text = spreadsheet.GetCellValue(cellToRecalculate).ToString();
+            }
+            _cells[cellId].Focus();
+
+            // make FormulaError look simpler
+            if (spreadsheet.GetCellValue(cellId) is FormulaError)
+            {
+                entry.Text = "FormulaError";
+				_cells[cellId].Text = "FormulaError";
+            }
         }
         catch (Exception)
         {
@@ -365,23 +389,17 @@ public partial class MainPage : ContentPage
         }
     }
 
+	/// <summary>
+	/// Focus on the first cell (A1) by default
+	/// </summary>
 	private void FocusOnDefaultCell(object sender, EventArgs e)
 	{
 		_cells["A1"].Focus();
 	}
 
-	private void NewSpreadsheetModel(string filepath)
-	{
-		if (filepath== null)
-		{
-			spreadsheet = new Spreadsheet(IsValid, s => s.ToString(), "six");
-		} else
-		{
-			spreadsheet = new Spreadsheet(filepath, IsValid, s => s.ToString(), "six");
-		}
-	}
-
-
+	/// <summary>
+	/// Initializes the spreadsheet grid
+	/// </summary>
     private void InitializeGrid()
     {
 		// Upper left corner

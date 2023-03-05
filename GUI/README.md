@@ -47,8 +47,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     4. Focus Cell A1 on Spreadsheet Application Open - https://utah.instructure.com/courses/834041/external_tools/90790
     5. regular expressions 101 - https://regex101.com/
     6. Adding a newline into a string in C# - https://stackoverflow.com/questions/224236/adding-a-newline-into-a-string-in-c-sharp
-    7. 
-    8. 
+    7. Fonts in .NET MAUI - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/fonts?view=net-maui-7.0
+    8. Align and position .NET MAUI controls - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/align-position?view=net-maui-7.0
     9. 
 
 

@@ -20,19 +20,39 @@
         <!-- A Place to put the currently selected cell "namd" and "value" -->
         <Border
             StrokeThickness="1"
-            HeightRequest="40">
+            HeightRequest="50">
             <HorizontalStackLayout>
                 <Label
                     x:Name="selectedCellName"
                     Text="cell name"
-                    WidthRequest="100"/>
+                    FontAttributes="Bold"
+                    FontSize="25"
+                    Margin="6"
+                    WidthRequest="50"/>
+                <Label
+                    x:Name="value"
+                    Text="cell value: "
+                    FontSize="18"
+                    Margin="10"
+                    WidthRequest="90"/>
                 <Label
                     x:Name="selectedCellValue"
                     Text="cell value"
-                    WidthRequest="100"/>
+                    FontSize="18"
+                    Margin="10"
+                    WidthRequest="80"/>
+                <Label
+                    x:Name="contents"
+                    Text="cell contents: "
+                    FontSize="18"
+                    Margin="10"
+                    WidthRequest="120"/>
                 <Entry
                     x:Name="selectedCellEntry"
                     Text="cell contents"
+                    FontSize="18"
+                    Margin="6"
+                    Unfocused="WidgetEntryChanged"
                     Completed="WidgetEntryChanged"
                     WidthRequest="200"/>
             </HorizontalStackLayout>
