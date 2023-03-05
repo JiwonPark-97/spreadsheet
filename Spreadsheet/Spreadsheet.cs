@@ -104,7 +104,7 @@ namespace SS
                                     contents = reader.Value;
                                     SetContentsOfCell(name, contents);
                                     break;
-                                // throw
+                                    // throw
                             }
                         }
                     }
@@ -213,7 +213,8 @@ namespace SS
                 if (version is not null)
                 {
                     return version;
-                } else
+                }
+                else
                 {
                     throw new SpreadsheetReadWriteException("Invalid version");
                 }
@@ -288,7 +289,7 @@ namespace SS
                     writer.WriteEndDocument();
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new SpreadsheetReadWriteException("Something went wrong saving a file");
             }
@@ -316,8 +317,9 @@ namespace SS
                 }
                 return cellsToRecalculate;
 
-            // content is formula
-            } else if (content.Count() > 0 && content[0] == '=')
+                // content is formula
+            }
+            else if (content.Count() > 0 && content[0] == '=')
             {
                 string formulaStr = content.Remove(0, 1);
                 Formula formula = new Formula(formulaStr, Normalize, IsValid);
@@ -328,8 +330,9 @@ namespace SS
                 }
                 return cellsToRecalculate;
 
-            // content is string
-            } else
+                // content is string
+            }
+            else
             {
                 IList<string> cellsToRecalculate = SetCellContents(name, content);
                 for (int i = 1; i < cellsToRecalculate.Count(); i++)
@@ -358,10 +361,28 @@ namespace SS
         {
             // error checking handled in SetContentsOfCell
 
+            // save original contents
+            Cell? originalCell;
+            cells.TryGetValue(name, out originalCell);
+            Object? originalContents;
+            if (originalCell == null)
+            {
+                originalContents = "";
+            }
+            else
+            {
+                originalContents = originalCell.GetContents();
+            }
+
             cells[name] = new Cell(name, number);
 
             dg.ReplaceDependees(name, new HashSet<string>());
-            changed = true;
+
+            // check if changed
+            if (!number.Equals(originalContents))
+            {
+                changed = true;
+            }
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
@@ -371,6 +392,19 @@ namespace SS
         protected override IList<string> SetCellContents(string name, string text)
         {
             // error checking handled in SetContentsOfCell
+
+            // save original contents
+            Cell? originalCell;
+            cells.TryGetValue(name, out originalCell);
+            Object? originalContents;
+            if (originalCell == null)
+            {
+                originalContents = "";
+            }
+            else
+            {
+                originalContents = originalCell.GetContents();
+            }
 
             // If the contents is an empty string, the cell is empty - remove from cells
             if (text == "")
@@ -382,7 +416,12 @@ namespace SS
                 cells[name] = new Cell(name, text);
             }
             dg.ReplaceDependees(name, new HashSet<string>());
-            changed = true;
+
+            // check if changed
+            if (!text.Equals(originalContents))
+            {
+                changed = true;
+            }
 
             // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
             return GetCellsToRecalculate(name).ToList();
@@ -392,6 +431,19 @@ namespace SS
         protected override IList<string> SetCellContents(string name, Formula formula)
         {
             // error checking handled in SetContentsOfCell
+
+            // save original contents
+            Cell? originalCell;
+            cells.TryGetValue(name, out originalCell);
+            Object? originalContents;
+            if (originalCell == null)
+            {
+                originalContents = "";
+            }
+            else
+            {
+                originalContents = originalCell.GetContents();
+            }
 
             // save original dependencies in case of CircularException
             HashSet<string> origianlDependees = dg.GetDependees(name).ToHashSet();
@@ -409,6 +461,12 @@ namespace SS
                     dg.AddDependency(variable, name);
                 }
                 cells[name] = new Cell(name, formula, Lookup);
+
+                // check if changed
+                if (!formula.Equals(originalContents))
+                {
+                    changed = true;
+                }
 
                 // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
                 return GetCellsToRecalculate(name).ToList();
@@ -520,7 +578,8 @@ namespace SS
             if (value is double)
             {
                 return (double)value;
-            } else
+            }
+            else
             {
                 throw new ArgumentException("The named cell does not contain a double value.");
             }
@@ -529,4 +588,3 @@ namespace SS
     }
 
 }
-
