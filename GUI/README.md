@@ -49,7 +49,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     6. Adding a newline into a string in C# - https://stackoverflow.com/questions/224236/adding-a-newline-into-a-string-in-c-sharp
     7. Fonts in .NET MAUI - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/fonts?view=net-maui-7.0
     8. Align and position .NET MAUI controls - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/align-position?view=net-maui-7.0
-    9. 
-
-
+    9. Changing your MAUI application’s title bar colour  - https://putridparrot.com/blog/changing-your-maui-applications-title-bar-colour/
+    10. 
+    11. 
 

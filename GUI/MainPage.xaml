@@ -60,7 +60,7 @@
 
         <!-- the column headers: A, B, C, ... -->
         <HorizontalStackLayout x:Name="TopLabels"
-                               BackgroundColor="RosyBrown"/>
+                               BackgroundColor ="SteelBlue"/>
 
         <!-- the Grid of Spreadsheet GUI Cells -->
         <ScrollView

@@ -430,8 +430,8 @@ public partial class MainPage : ContentPage
 					Content = new Label
 					{
 						Text = $"{label}",
-						BackgroundColor = Color.FromRgb(186, 153, 146),
-						HorizontalTextAlignment = TextAlignment.Center
+                        BackgroundColor = Color.FromRgba("#7395AE"),
+                        HorizontalTextAlignment = TextAlignment.Center
 					}
 				}
 				); 
@@ -446,16 +446,16 @@ public partial class MainPage : ContentPage
 				new Border
 				{
 					Stroke = Color.FromRgb(0, 0, 0),
-                    StrokeThickness = 1,
-                    HeightRequest = 30,
-                    WidthRequest = 25,
+					StrokeThickness = 1,
+					HeightRequest = 30,
+					WidthRequest = 25,
 					Content = new Label
 					{
-						Text= $"{row + 1}",
+						Text = $"{row + 1}",
 						VerticalTextAlignment = TextAlignment.Center,
-                        BackgroundColor = Color.FromRgb(186, 153, 146)
-                    }
-                });
+						BackgroundColor = Color.FromRgba("#7395AE")
+					}
+				}) ;
 			foreach(var label in ROWHEADERS)
 			{
 				var entry = new Entry
