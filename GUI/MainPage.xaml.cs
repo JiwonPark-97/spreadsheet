@@ -114,14 +114,18 @@ public partial class MainPage : ContentPage
 			if (newDirectory is not null)
 			{
                 string filename = await DisplayPromptAsync("Save as", "File name:");
-				try
+				if (filename is not null)
 				{
-                    spreadsheet.Save(newDirectory + filename + ".sprd");
+                    try
+                    {
+                        spreadsheet.Save(newDirectory + filename + ".sprd");
+                    }
+                    catch (Exception)
+                    {
+                        await DisplayAlert("Alert", "Invalid file path", "OK");
+                    }
                 }
-				catch (Exception) 
-				{
-                    await DisplayAlert("Alert", "Invalid file path", "OK");
-                }
+
             }
         }
 	}

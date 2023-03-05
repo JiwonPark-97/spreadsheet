@@ -68,7 +68,7 @@
                     Orientation="Both"
                     HorizontalOptions="FillAndExpand"
                     HorizontalScrollBarVisibility="Always"
-                    HeightRequest="500">
+                    HeightRequest="1000">
             <HorizontalStackLayout>
                 <VerticalStackLayout
                     x:Name="LeftLabels"
