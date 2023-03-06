@@ -65,7 +65,30 @@ public partial class MainPage : ContentPage
 			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save", "");
 			if (action == "Save")
 			{
-                FileMenuSave(sender, e);
+                string directory = await DisplayPromptAsync("Save to", "File directory:");
+                if (directory is not null)
+                {
+                    string filename = await DisplayPromptAsync("Save as", "File name:");
+                    if (filename is not null)
+                    {
+                        try
+                        {
+                            spreadsheet.Save(directory + "\\" + filename + ".sprd");
+                        }
+                        catch
+                        {
+                            await DisplayAlert("Alert", "Invalid directory", "OK");
+                        }
+                    }
+                    else
+                    {
+                        // do nothing - cancel clicked (when asked for a file name)
+                    }
+                }
+                else
+                {
+                    // do nothing - cancel clicked (when asked for a directory)
+                }
                 Clear();
                 spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
                 _cells["A1"].Focus();

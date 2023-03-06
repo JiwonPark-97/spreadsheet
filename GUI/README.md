@@ -29,6 +29,11 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
     
+    In FileMenuNew method, I tried calling FileMenuSave method with the input sender and EventArgs. 
+    However, the next line was executed before FileMenuSave method finishes. 
+    So, I decided to copy and paste FileMenuSave method to FileMenuNew method.
+
+
     design decisions, external code resources, build guidelines, implementation notes, problems, etc.
 
 # Assignment Specific Topics
