@@ -41,7 +41,7 @@
                     Text="cell value"
                     FontSize="18"
                     Margin="10"
-                    WidthRequest="80"/>
+                    WidthRequest="150"/>
                 <Label
                     x:Name="contents"
                     Text="cell contents: "

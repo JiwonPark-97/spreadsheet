@@ -65,7 +65,7 @@ public partial class MainPage : ContentPage
 			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save", "");
 			if (action == "Save")
 			{
-				FileMenuSave(sender, e);
+                FileMenuSave(sender, e);
                 Clear();
                 spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
                 _cells["A1"].Focus();
@@ -103,7 +103,6 @@ public partial class MainPage : ContentPage
                 try
                 {
                     spreadsheet.Save(directory + "\\" + filename + ".sprd");
-
                 }
                 catch
                 {
@@ -119,6 +118,11 @@ public partial class MainPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Opens a spreadsheet file from given directory
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void Open(object sender, EventArgs e)
     {
         string fileDirectory = await DisplayPromptAsync("Open", "File path:");
@@ -156,12 +160,12 @@ public partial class MainPage : ContentPage
 		}
     }
 
-	/// <summary>
-	/// Opens a spreadsheet file from filepath given.
-	/// If current changes not saved, ask for saving.
-	/// </summary>
-	/// <param name="sender"> </param>
-	/// <param name="e"></param>
+    /// <summary>
+    /// Opens a spreadsheet file from given directory
+    /// If current changes not saved, ask for saving.
+    /// </summary>
+    /// <param name="sender"> </param>
+    /// <param name="e"></param>
     private async void FileMenuOpen(object sender, EventArgs e)
     {
 		if (spreadsheet.Changed)
