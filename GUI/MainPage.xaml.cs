@@ -10,7 +10,7 @@ public partial class MainPage : ContentPage
 	private AbstractSpreadsheet spreadsheet;
 	private Dictionary<string, Entry> _cells;
 
-    private readonly char[] ROWHEADERS = "ABCDEFGHIJK".ToArray();
+    private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
     //private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
 	private readonly int ROWS = 50;
 
@@ -62,7 +62,7 @@ public partial class MainPage : ContentPage
 	{
 		if (spreadsheet.Changed)
 		{
-			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save", "");
+			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save");
 			if (action == "Save")
 			{
                 string directory = await DisplayPromptAsync("Save to", "File directory:");
@@ -74,6 +74,9 @@ public partial class MainPage : ContentPage
                         try
                         {
                             spreadsheet.Save(directory + "\\" + filename + ".sprd");
+                            Clear();
+                            spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
+                            _cells["A1"].Focus();
                         }
                         catch
                         {
@@ -89,9 +92,6 @@ public partial class MainPage : ContentPage
                 {
                     // do nothing - cancel clicked (when asked for a directory)
                 }
-                Clear();
-                spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
-                _cells["A1"].Focus();
             }
 			else if (action == "Don't save")
 			{
@@ -148,7 +148,7 @@ public partial class MainPage : ContentPage
     /// <param name="e"></param>
     private async void Open(object sender, EventArgs e)
     {
-        string fileDirectory = await DisplayPromptAsync("Open", "File path:");
+        string fileDirectory = await DisplayPromptAsync("Open", "File directory:");
 		if (fileDirectory is not null)
 		{
             string filename = await DisplayPromptAsync("Open", "File name:");
@@ -169,7 +169,7 @@ public partial class MainPage : ContentPage
                 }
                 catch (Exception)
                 {
-                    await DisplayAlert("Alert", "File path invalid or file doesn't exist", "OK");
+                    await DisplayAlert("Alert", "Invalid file path", "OK");
 
                 }
             } else
@@ -193,17 +193,40 @@ public partial class MainPage : ContentPage
     {
 		if (spreadsheet.Changed)
 		{
-			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save", "");
+			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save");
 			if (action == "Save")
 			{
-				FileMenuSave(sender, e);
-				Open(sender, e);
+                string directory = await DisplayPromptAsync("Save to", "File directory:");
+                if (directory is not null)
+                {
+                    string filename = await DisplayPromptAsync("Save as", "File name:");
+                    if (filename is not null)
+                    {
+                        try
+                        {
+                            spreadsheet.Save(directory + "\\" + filename + ".sprd");
+                            Open(sender, e);
+                        }
+                        catch
+                        {
+                            await DisplayAlert("Alert", "Invalid file path", "OK");
+                        }
+                    }
+                    else
+                    {
+                        // do nothing - cancel clicked (when asked for a file name)
+                    }
+                }
+                else
+                {
+                    // do nothing - cancel clicked (when asked for a directory)
+                }
 			} else if(action == "Don't save")
 			{
 				Open(sender, e);
 			} else
 			{
-				// do nothing - cancel clicked
+				// do nothing - cancel clicked (when asked to save)
 			}
 		} else
 		{
@@ -211,21 +234,67 @@ public partial class MainPage : ContentPage
 		}
     }
 
+    private void DarkTheme(object sender, EventArgs e)
+    {
+        foreach(Entry entry in _cells.Values)
+        {
+            entry.BackgroundColor = Color.FromArgb("#FF2F4F4F");
+            entry.Focus();
+        }
+    }
+
     /// <summary>
     /// Displays a help popup that describes how to use the spreadsheet
     /// </summary>
     private async void Help(object sender, EventArgs e)
 	{
+        string help = "" 
+            + Environment.NewLine 
+            + "";
         await DisplayAlert("How to use", "blah", "OK");
     }
 
-	/// <summary>
-	/// Updates a cell and its dependent cells for changed contents
-	/// </summary>
+    private async void ErrorDescription(object sender, EventArgs e)
+    {
+        string errorDescription = 
+            "Circular Dependencies:"
+            + Environment.NewLine
+            + "     Circular dependencies are encountered."
+            + Environment.NewLine
+            + "     e.g. A1 = B2, B2 = C3, C3 = A1"
+            + Environment.NewLine + Environment.NewLine
+            + "Invalid Directory:" 
+            + Environment.NewLine
+            + "     The given directory or the file doesn't exist."
+            + Environment.NewLine
+            +"      Make sure not to include \\ at the end of directory."
+            + Environment.NewLine
+            + "     Example directory: C:\\Users\\UserName\\source\\repos\\CS3500\\spreadsheet\\GUI\\bin\\Debug"
+            + Environment.NewLine + Environment.NewLine
+            + "Invalid Formula:"
+            + Environment.NewLine
+            + "     The input formula is incorrect or contains invalid variables."
+            + Environment.NewLine
+            + "     Check if your formula refers to any cell that's not on the current sheet"
+            + Environment.NewLine + Environment.NewLine
+            + "Formula error:"
+            + Environment.NewLine
+            + "     The input formula refers to a non-numeric value cell or contains division by 0."
+            + Environment.NewLine
+            + "";
+
+        await DisplayAlert("Possible errors", errorDescription, "OK");
+    }
+
+    /// <summary>
+    /// Updates a cell and its dependent cells for changed contents
+    /// </summary>
     private async void CellChangedValue(object sender, EventArgs e)
     {
         Entry entry = (Entry)sender;
-		try
+        entry.BackgroundColor = Color.FromRgba("#FFFFEFD5");
+
+        try
 		{
 			// update cells that depend on this cell
             List<string> cellsToRecalculate = spreadsheet.SetContentsOfCell(entry.StyleId, entry.Text).ToList();
@@ -252,12 +321,12 @@ public partial class MainPage : ContentPage
         }
         catch (FormulaFormatException)
         {
-            await DisplayAlert("Alert", "Invalid variable in formula: 1", "OK");
+            await DisplayAlert("Alert", "Invalid formula", "OK");
             entry.Focus();
         }
         catch (InvalidNameException)
         {
-            await DisplayAlert("Alert", "Invalid variable in formula: 2", "OK");
+            await DisplayAlert("Alert", "Invalid formula", "OK");
             entry.Focus();
         }
 
@@ -288,6 +357,7 @@ public partial class MainPage : ContentPage
     private void CellFocused(object sender, EventArgs e)
     {
 		Entry entry = (Entry)sender;
+        entry.BackgroundColor = Color.FromRgba("#8FBC8F");
 		selectedCellName.Text = entry.StyleId;
 
 		object value = spreadsheet.GetCellValue(entry.StyleId);
@@ -346,11 +416,11 @@ public partial class MainPage : ContentPage
             }
             catch (FormulaFormatException)
             {
-                await DisplayAlert("Alert", "Invalid variable in formula: 3", "OK");
+                await DisplayAlert("Alert", "Invalid formula", "OK");
             }
             catch (InvalidNameException)
             {
-                await DisplayAlert("Alert", "Invalid variable in formula: 4", "OK");
+                await DisplayAlert("Alert", "Invalid formula", "OK");
             }
 
             // for safety. if anything else goes wrong, display the system error message.

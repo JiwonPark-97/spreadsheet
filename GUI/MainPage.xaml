@@ -9,8 +9,13 @@
             <MenuFlyoutItem Text="Save" Clicked="FileMenuSave" />
             <MenuFlyoutItem Text="Open" Clicked="FileMenuOpen" />
         </MenuBarItem>
+        <MenuBarItem Text="Theme">
+            <MenuFlyoutItem Text="Dark Theme" Clicked="DarkTheme" />
+            <MenuFlyoutItem Text="Light Theme" Clicked="ErrorDescription" />
+        </MenuBarItem>
         <MenuBarItem Text="Help">
             <MenuFlyoutItem Text="Help" Clicked="Help" />
+            <MenuFlyoutItem Text="What's this error?" Clicked="ErrorDescription" />
         </MenuBarItem>
     </ContentPage.MenuBarItems> 
 
