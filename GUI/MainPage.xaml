@@ -54,7 +54,7 @@
                     FontSize="18"
                     Margin="6"
                     Unfocused="WidgetEntryChanged"
-                    Completed="FocusOnEntry"
+                    Completed="FocusOnCellEntry"
                     WidthRequest="200"/>
             </HorizontalStackLayout>
         </Border>

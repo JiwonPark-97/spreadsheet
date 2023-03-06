@@ -220,9 +220,9 @@ namespace SS
                 }
             }
 
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new SpreadsheetReadWriteException("Something went wrong");
+                throw new SpreadsheetReadWriteException(e.Message);
             }
         }
 

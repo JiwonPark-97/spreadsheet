@@ -69,15 +69,21 @@ public partial class MainPage : ContentPage
 			}
 			else if (action == "Create new")
 			{
-				Navigation.PushAsync(new MainPage());
-			}
-			else if (action == "Cancle")
+                Clear();
+                spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
+                _cells["A1"].Focus();
+                //await Navigation.PushAsync(new MainPage()).ConfigureAwait(false);
+            }
+            else if (action == "Cancle")
 			{
 				// do nothing
 			}
 		} else
 		{
-            Navigation.PushAsync(new MainPage());
+            Clear();
+            spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
+            _cells["A1"].Focus();
+            //await Navigation.PushAsync(new MainPage()).ConfigureAwait(false);
         }
     }
 
@@ -144,6 +150,7 @@ public partial class MainPage : ContentPage
 	/// <param name="e"></param>
     private async void FileMenuOpen(object sender, EventArgs e)
     {
+        string currDirectory = "C:\\Users\\Jiwon Park\\source\\repos\\CS3500\\spreadsheet-JiwonPark-97\\GUI\\bin\\Debug\\";
 
         if (spreadsheet.Changed)
         {
@@ -158,11 +165,9 @@ public partial class MainPage : ContentPage
 			// ignore current changes and open a file
             else if (action == "Open")
             {
-                string currDirectory = "C:\\Users\\Jiwon Park\\source\\repos\\CS3500\\spreadsheet-JiwonPark-97\\GUI\\bin\\Debug\\";
-
 				// ask if user wants to open in the current directory
                 bool fromCurrDirectory = await DisplayAlert("Open in", "Would you like to open a file in the current path?: "
-																+ System.Environment.NewLine + currDirectory, "Yes", "New path");
+																+ Environment.NewLine + currDirectory, "Yes", "New path");
                 if (fromCurrDirectory)
 				{
 					try
@@ -174,15 +179,14 @@ public partial class MainPage : ContentPage
 
 						// clear current spreadsheet GUI
 						Clear();
+                        _cells["A1"].Focus();
 
-						// update a spreadsheet model and entries on GUI
+                        // update a spreadsheet model and entries on GUI
                         spreadsheet = newSpreadsheet;
 						foreach(string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
 						{
 							_cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
 						}
-						// default focus
-						_cells["A1"].Focus();
 
 					} catch (Exception)
 					{
@@ -198,7 +202,8 @@ public partial class MainPage : ContentPage
                         Spreadsheet newSpreadsheet = new Spreadsheet(filepath, IsValid, s => s.ToUpper(), "six");
 
                         // clear current spreadsheet GUI
-                        Navigation.PushAsync(new MainPage());
+                        Clear();
+                        _cells["A1"].Focus();
 
                         // update a spreadsheet model and entries on GUI
                         spreadsheet = newSpreadsheet;
@@ -206,8 +211,6 @@ public partial class MainPage : ContentPage
                         {
                             _cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
                         }
-
-                        _cells["A1"].Focus();
                     }
 					catch (Exception)
 					{
@@ -216,18 +219,16 @@ public partial class MainPage : ContentPage
 
                 }
             }
-            else if (action == "Cancle")
+            else if (action == "Cancel")
             {
                 // do nothing
             }
         }
         else
         {
-            string currDirectory = "C:\\Users\\Jiwon Park\\source\\repos\\CS3500\\spreadsheet-JiwonPark-97\\GUI\\bin\\Debug\\";
-
             // ask if user wants to open in the current directory
             bool fromCurrDirectory = await DisplayAlert("Open in", "Would you like to open a file in the current path?: "
-                                                            + System.Environment.NewLine + currDirectory, "Yes", "New path");
+                                                            + Environment.NewLine + currDirectory, "Yes", "New path");
             if (fromCurrDirectory)
             {
                 try
@@ -235,10 +236,11 @@ public partial class MainPage : ContentPage
                     string filename = await DisplayPromptAsync("Open", "File name:");
 
                     // read .sprd file
-                    Spreadsheet newSpreadsheet = new Spreadsheet(currDirectory + filename, IsValid, s => s.ToUpper(), "six");
+                    Spreadsheet newSpreadsheet = new Spreadsheet(currDirectory + filename + ".sprd", IsValid, s => s.ToUpper(), "six");
 
                     // clear current spreadsheet GUI
-                    Navigation.PushAsync(new MainPage());
+                    Clear();
+                    _cells["A1"].Focus();
 
                     // update a spreadsheet model and entries on GUI
                     spreadsheet = newSpreadsheet;
@@ -246,8 +248,7 @@ public partial class MainPage : ContentPage
                     {
                         _cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
                     }
-                    // default focus
-                    _cells["A1"].Focus();
+
 
                 }
                 catch (Exception)
@@ -274,7 +275,7 @@ public partial class MainPage : ContentPage
                         _cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
                     }
 
-                    _cells["A1"].Focus();
+                    //_cells["A1"].Focus();
                 }
                 catch (Exception)
                 {
@@ -326,12 +327,12 @@ public partial class MainPage : ContentPage
         }
         catch (FormulaFormatException)
         {
-            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
+            await DisplayAlert("Alert", "Invalid variable in formula: 1", "OK");
             entry.Focus();
         }
         catch (InvalidNameException)
         {
-            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
+            await DisplayAlert("Alert", "Invalid variable in formula: 2", "OK");
             entry.Focus();
         }
 
@@ -392,51 +393,52 @@ public partial class MainPage : ContentPage
 	/// </summary>
     private async void WidgetEntryChanged (object sender, EventArgs e)
 	{
-        Entry entry = (Entry)sender;
-        // update the cell and its dependent cells
-        string cellId = selectedCellName.Text;
-        try
+        // prevent error message - somehow opening empty spreadsheet causes widget entry to get focused.
+        if (selectedCellName.Text != "cell name")
         {
-            List<string> cellsToRecalculate = spreadsheet.SetContentsOfCell(cellId, entry.Text).ToList();
-
-            foreach (string cellToRecalculate in cellsToRecalculate)
+            Entry entry = (Entry)sender;
+            // update the cell and its dependent cells
+            string cellId = selectedCellName.Text;
+            try
             {
-                _cells[cellToRecalculate].Text = spreadsheet.GetCellValue(cellToRecalculate).ToString();
-            }
-            //_cells[cellId].Focus();
+                List<string> cellsToRecalculate = spreadsheet.SetContentsOfCell(cellId, entry.Text).ToList();
 
-            // make FormulaError look simpler
-            if (spreadsheet.GetCellValue(cellId) is FormulaError)
+                foreach (string cellToRecalculate in cellsToRecalculate)
+                {
+                    _cells[cellToRecalculate].Text = spreadsheet.GetCellValue(cellToRecalculate).ToString();
+                }
+
+                // make FormulaError look simpler
+                if (spreadsheet.GetCellValue(cellId) is FormulaError)
+                {
+                    entry.Text = "FormulaError";
+                    _cells[cellId].Text = "FormulaError";
+                }
+            }
+            catch (CircularException)
             {
-                entry.Text = "FormulaError";
-				_cells[cellId].Text = "FormulaError";
+                await DisplayAlert("Alert", "Circular dependency is detected", "OK");
+            }
+            catch (FormulaFormatException)
+            {
+                await DisplayAlert("Alert", "Invalid variable in formula: 3", "OK");
+            }
+            catch (InvalidNameException)
+            {
+                await DisplayAlert("Alert", "Invalid variable in formula: 4", "OK");
+            }
+
+            // for safety. if anything else goes wrong, display the system error message.
+            catch (Exception exception)
+            {
+                await DisplayAlert("Alert", exception.Message, "OK");
+                //_cells[cellId].Focus();
             }
         }
-        catch (CircularException)
-        {
-            //_cells[cellId].Focus();
-            await DisplayAlert("Alert", "Circular dependency is detected", "OK");
-        }
-        catch (FormulaFormatException)
-        {
-            //_cells[cellId].Focus();
-            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
-        }
-        catch (InvalidNameException)
-        {
-            //_cells[cellId].Focus();
-            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
-        }
 
-        // for safety. if anything else goes wrong, display the system error message.
-        catch (Exception exception)
-        {
-            await DisplayAlert("Alert", exception.Message, "OK");
-            //_cells[cellId].Focus();
-        }
     }
 
-    private void FocusOnEntry(object sender, EventArgs e)
+    private void FocusOnCellEntry(object sender, EventArgs e)
     {
         string cellId = selectedCellName.Text;
         _cells[cellId].Focus();
@@ -447,8 +449,12 @@ public partial class MainPage : ContentPage
     /// </summary>
     private void FocusOnDefaultCell(object sender, EventArgs e)
 	{
-		_cells["A1"].Focus();
-	}
+         if (selectedCellName.Text != "A1")
+        {
+            _cells["A1"].Focus();
+
+        }
+    }
 
 	/// <summary>
 	/// Initializes the spreadsheet grid
@@ -513,7 +519,7 @@ public partial class MainPage : ContentPage
 			{
 				var entry = new Entry
 				{
-					Text = "",
+					//Text = "",
 					WidthRequest = 75,
 					StyleId = $"{label}{row + 1}",
 					BackgroundColor = Color.FromRgba("#FFFFEFD5")
