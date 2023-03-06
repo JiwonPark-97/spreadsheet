@@ -62,28 +62,29 @@ public partial class MainPage : ContentPage
 	{
 		if (spreadsheet.Changed)
 		{
-			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Create new", "");
+			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save", "");
 			if (action == "Save")
 			{
 				FileMenuSave(sender, e);
-			}
-			else if (action == "Create new")
+                Clear();
+                spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
+                _cells["A1"].Focus();
+            }
+			else if (action == "Don't save")
 			{
                 Clear();
                 spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
                 _cells["A1"].Focus();
-                //await Navigation.PushAsync(new MainPage()).ConfigureAwait(false);
             }
-            else if (action == "Cancle")
+            else
 			{
-				// do nothing
+				// do nothing - cancel clicked
 			}
 		} else
 		{
             Clear();
             spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
             _cells["A1"].Focus();
-            //await Navigation.PushAsync(new MainPage()).ConfigureAwait(false);
         }
     }
 
@@ -93,152 +94,42 @@ public partial class MainPage : ContentPage
     /// </summary>
     private async void FileMenuSave(object sender, EventArgs e)
 	{
-        string currDirectory = "C:\\Users\\Jiwon Park\\source\\repos\\CS3500\\spreadsheet-JiwonPark-97\\GUI\\bin\\Debug\\";
-        
-		// get if the user wants to save to curr path or not
-		bool toCurrDirectory = await DisplayAlert("Save to", "Would you like to save to the current path?: " 
-			+ System.Environment.NewLine  + currDirectory, "Yes", "New path");
-		
-		// save to curr directory
-		if (toCurrDirectory)
-		{
-			// get the file name
+		string directory = await DisplayPromptAsync("Save to", "File directory:");
+        if (directory is not null)
+        {
             string filename = await DisplayPromptAsync("Save as", "File name:");
+            if (filename is not null)
+            {
+                try
+                {
+                    spreadsheet.Save(directory + "\\" + filename + ".sprd");
 
-			// if cancel clicked, filename is null
+                }
+                catch
+                {
+                    await DisplayAlert("Alert", "Invalid directory", "OK");
+                }
+            } else
+            {
+                // do nothing - cancel clicked (when asked for a file name)
+            }
+        } else
+        {
+            // do nothing - cancel clicked (when asked for a directory)
+        }
+    }
+
+    private async void Open(object sender, EventArgs e)
+    {
+        string fileDirectory = await DisplayPromptAsync("Open", "File path:");
+		if (fileDirectory is not null)
+		{
+            string filename = await DisplayPromptAsync("Open", "File name:");
 			if (filename is not null)
 			{
                 try
                 {
-                    spreadsheet.Save(currDirectory + filename + ".sprd");
-                }
-                catch (Exception)
-                {
-                    await DisplayAlert("Alert", "Invalid filename", "OK");
-                }
-            }
-
-		// save to a new path
-        } else
-		{
-            // ask for a new directory
-            string newDirectory = await DisplayPromptAsync("Save to", "File directory:");
-			if (newDirectory is not null)
-			{
-                string filename = await DisplayPromptAsync("Save as", "File name:");
-				if (filename is not null)
-				{
-                    try
-                    {
-                        spreadsheet.Save(newDirectory + filename + ".sprd");
-                    }
-                    catch (Exception)
-                    {
-                        await DisplayAlert("Alert", "Invalid file path", "OK");
-                    }
-                }
-
-            }
-        }
-	}
-
-	/// <summary>
-	/// Opens a spreadsheet file from filepath given.
-	/// If current changes not saved, ask for saving.
-	/// </summary>
-	/// <param name="sender"> </param>
-	/// <param name="e"></param>
-    private async void FileMenuOpen(object sender, EventArgs e)
-    {
-        string currDirectory = "C:\\Users\\Jiwon Park\\source\\repos\\CS3500\\spreadsheet-JiwonPark-97\\GUI\\bin\\Debug\\";
-
-        if (spreadsheet.Changed)
-        {
-			// safety warning
-            string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Open", "");
-
-            if (action == "Save")
-            {
-                FileMenuSave(sender, e);
-            }
-
-			// ignore current changes and open a file
-            else if (action == "Open")
-            {
-				// ask if user wants to open in the current directory
-                bool fromCurrDirectory = await DisplayAlert("Open in", "Would you like to open a file in the current path?: "
-																+ Environment.NewLine + currDirectory, "Yes", "New path");
-                if (fromCurrDirectory)
-				{
-					try
-					{
-                        string filename = await DisplayPromptAsync("Open", "File name:");
-
-						// read .sprd file
-                        Spreadsheet newSpreadsheet = new Spreadsheet(currDirectory + filename + ".sprd", IsValid, s => s.ToUpper(), "six");
-
-						// clear current spreadsheet GUI
-						Clear();
-                        _cells["A1"].Focus();
-
-                        // update a spreadsheet model and entries on GUI
-                        spreadsheet = newSpreadsheet;
-						foreach(string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
-						{
-							_cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
-						}
-
-					} catch (Exception)
-					{
-                        await DisplayAlert("Alert", "File does not exist", "OK");
-                    }
-                } else
-				{
-					try
-					{
-                        string filepath = await DisplayPromptAsync("Open", "File path:");
-
-                        // read .sprd file
-                        Spreadsheet newSpreadsheet = new Spreadsheet(filepath, IsValid, s => s.ToUpper(), "six");
-
-                        // clear current spreadsheet GUI
-                        Clear();
-                        _cells["A1"].Focus();
-
-                        // update a spreadsheet model and entries on GUI
-                        spreadsheet = newSpreadsheet;
-                        foreach (string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
-                        {
-                            _cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
-                        }
-                    }
-					catch (Exception)
-					{
-                        await DisplayAlert("Alert", "File path invalid", "OK");
-                    }
-
-                }
-            }
-            else if (action == "Cancel")
-            {
-                // do nothing
-            }
-        }
-        else
-        {
-            // ask if user wants to open in the current directory
-            bool fromCurrDirectory = await DisplayAlert("Open in", "Would you like to open a file in the current path?: "
-                                                            + Environment.NewLine + currDirectory, "Yes", "New path");
-            if (fromCurrDirectory)
-            {
-                try
-                {
-                    string filename = await DisplayPromptAsync("Open", "File name:");
-
-                    // read .sprd file
-                    Spreadsheet newSpreadsheet = new Spreadsheet(currDirectory + filename + ".sprd", IsValid, s => s.ToUpper(), "six");
-
-                    // clear current spreadsheet GUI
+                    Spreadsheet newSpreadsheet = new Spreadsheet(fileDirectory + "\\" + filename + ".sprd", IsValid, s => s.ToUpper(), "six"); spreadsheet.Save(fileDirectory + filename + ".sprd");
                     Clear();
                     _cells["A1"].Focus();
 
@@ -248,42 +139,49 @@ public partial class MainPage : ContentPage
                     {
                         _cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
                     }
-
-
                 }
                 catch (Exception)
                 {
-                    await DisplayAlert("Alert", "File does not exist", "OK");
+                    await DisplayAlert("Alert", "File path invalid or file doesn't exist", "OK");
+
                 }
-            }
-            else
-            {
-                try
-                {
-                    string filepath = await DisplayPromptAsync("Open", "File path:");
+            } else
+			{
+				// do nothing - cancel clicked (when asked for a file name)
+			}
 
-                    // read .sprd file
-                    Spreadsheet newSpreadsheet = new Spreadsheet(filepath, IsValid, s => s.ToUpper(), "six");
+        } else
+		{
+			// do nothing - cancel clicked (when asked for a file path)
+		}
+    }
 
-                    // clear current spreadsheet GUI
-                    Navigation.PushAsync(new MainPage());
-
-                    // update a spreadsheet model and entries on GUI
-                    spreadsheet = newSpreadsheet;
-                    foreach (string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
-                    {
-                        _cells[cellName].Text = spreadsheet.GetCellValue(cellName).ToString();
-                    }
-
-                    //_cells["A1"].Focus();
-                }
-                catch (Exception)
-                {
-                    await DisplayAlert("Alert", "File path invalid", "OK");
-                }
-            }
-        }
-
+	/// <summary>
+	/// Opens a spreadsheet file from filepath given.
+	/// If current changes not saved, ask for saving.
+	/// </summary>
+	/// <param name="sender"> </param>
+	/// <param name="e"></param>
+    private async void FileMenuOpen(object sender, EventArgs e)
+    {
+		if (spreadsheet.Changed)
+		{
+			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save", "");
+			if (action == "Save")
+			{
+				FileMenuSave(sender, e);
+				Open(sender, e);
+			} else if(action == "Don't save")
+			{
+				Open(sender, e);
+			} else
+			{
+				// do nothing - cancel clicked
+			}
+		} else
+		{
+			Open(sender, e);
+		}
     }
 
     /// <summary>
