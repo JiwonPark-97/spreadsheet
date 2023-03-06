@@ -471,7 +471,10 @@ namespace SS
                 // return a set consisting of name plus the names of all other cells whose value depends, directly or indirectly, on the named cell.
                 return GetCellsToRecalculate(name).ToList();
             }
-
+            catch (ArgumentException)
+            {
+                throw new FormulaFormatException("Formula contains invalid variable");
+            }
             catch (CircularException e)
             {
                 dg.ReplaceDependees(name, origianlDependees);

@@ -29,7 +29,13 @@ public partial class MainPage : ContentPage
 
     }
 
-	private bool IsValid(string s)
+    /// <summary>
+    /// Validator for the spreadsheet. Any cell that is not in the grid should be treated as invalid.
+	/// i.e. only valid for A1-Z99
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    private bool IsValid(string s)
 	{
         string pattern = string.Format(@"^[A-Z][0-9][0-9]?$");
         return (Regex.IsMatch(s, pattern));
@@ -307,14 +313,33 @@ public partial class MainPage : ContentPage
             if (spreadsheet.GetCellValue(entry.StyleId) is FormulaError) 
 			{
 				entry.Text = "FormulaError";
-            } else
+            }
+            else
 			{
                 entry.Text = spreadsheet.GetCellValue(entry.StyleId).ToString();
             }
         }
-        catch (Exception)
-		{
-            await DisplayAlert("Alert", "Invalid contents", "OK");
+        catch (CircularException)
+        {
+            await DisplayAlert("Alert", "Circular dependency is detected", "OK");
+            entry.Focus();
+        }
+        catch (FormulaFormatException)
+        {
+            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
+            entry.Focus();
+        }
+        catch (InvalidNameException)
+        {
+            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
+            entry.Focus();
+        }
+
+        // for safety. if anything else goes wrong, display the system error message.
+        catch (Exception exception)
+        {
+            await DisplayAlert("Alert", exception.Message, "OK");
+            entry.Focus();
         }
     }
 
@@ -368,17 +393,17 @@ public partial class MainPage : ContentPage
     private async void WidgetEntryChanged (object sender, EventArgs e)
 	{
         Entry entry = (Entry)sender;
+        // update the cell and its dependent cells
+        string cellId = selectedCellName.Text;
         try
         {
-            // update the cell and its dependent cells
-            string cellId = selectedCellName.Text;
             List<string> cellsToRecalculate = spreadsheet.SetContentsOfCell(cellId, entry.Text).ToList();
 
             foreach (string cellToRecalculate in cellsToRecalculate)
             {
                 _cells[cellToRecalculate].Text = spreadsheet.GetCellValue(cellToRecalculate).ToString();
             }
-            _cells[cellId].Focus();
+            //_cells[cellId].Focus();
 
             // make FormulaError look simpler
             if (spreadsheet.GetCellValue(cellId) is FormulaError)
@@ -387,16 +412,40 @@ public partial class MainPage : ContentPage
 				_cells[cellId].Text = "FormulaError";
             }
         }
-        catch (Exception)
+        catch (CircularException)
         {
-            await DisplayAlert("Alert", "Invalid contents", "OK");
+            //_cells[cellId].Focus();
+            await DisplayAlert("Alert", "Circular dependency is detected", "OK");
+        }
+        catch (FormulaFormatException)
+        {
+            //_cells[cellId].Focus();
+            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
+        }
+        catch (InvalidNameException)
+        {
+            //_cells[cellId].Focus();
+            await DisplayAlert("Alert", "Invalid variable in formula", "OK");
+        }
+
+        // for safety. if anything else goes wrong, display the system error message.
+        catch (Exception exception)
+        {
+            await DisplayAlert("Alert", exception.Message, "OK");
+            //_cells[cellId].Focus();
         }
     }
 
-	/// <summary>
-	/// Focus on the first cell (A1) by default
-	/// </summary>
-	private void FocusOnDefaultCell(object sender, EventArgs e)
+    private void FocusOnEntry(object sender, EventArgs e)
+    {
+        string cellId = selectedCellName.Text;
+        _cells[cellId].Focus();
+    }
+
+    /// <summary>
+    /// Focus on the first cell (A1) by default
+    /// </summary>
+    private void FocusOnDefaultCell(object sender, EventArgs e)
 	{
 		_cells["A1"].Focus();
 	}
@@ -411,11 +460,11 @@ public partial class MainPage : ContentPage
 			new Border
 			{
 				Stroke = Color.FromRgb(0, 0, 0),
-				StrokeThickness = 1,
+				StrokeThickness = 0,
 				Content = new Label
 				{
-					Text = $" - ",
-					WidthRequest = 25
+					Text = $"   - ",
+					WidthRequest = 34
 				}
 			}
 			);
@@ -426,7 +475,7 @@ public partial class MainPage : ContentPage
 			TopLabels.Add(
 				new Border
 				{
-					Stroke = Color.FromRgb(0, 0, 0),
+					Stroke = Color.FromRgb(255, 255, 255),
 					StrokeThickness = 1,
 					HeightRequest = 20,
 					WidthRequest = 75,
@@ -434,7 +483,7 @@ public partial class MainPage : ContentPage
 					Content = new Label
 					{
 						Text = $"{label}",
-                        BackgroundColor = Color.FromRgba("#7395AE"),
+                        BackgroundColor = Color.FromRgba("#8FBC8F"),
                         HorizontalTextAlignment = TextAlignment.Center
 					}
 				}
@@ -450,14 +499,14 @@ public partial class MainPage : ContentPage
 				new Border
 				{
 					Stroke = Color.FromRgb(0, 0, 0),
-					StrokeThickness = 1,
+					StrokeThickness = 0,
 					HeightRequest = 30,
-					WidthRequest = 25,
+					WidthRequest = 35,
 					Content = new Label
 					{
-						Text = $"{row + 1}",
+						Text = $"  {row + 1}",
 						VerticalTextAlignment = TextAlignment.Center,
-						BackgroundColor = Color.FromRgba("#7395AE")
+						BackgroundColor = Color.FromRgba("#8FBC8F")
 					}
 				}) ;
 			foreach(var label in ROWHEADERS)
@@ -466,7 +515,8 @@ public partial class MainPage : ContentPage
 				{
 					Text = "",
 					WidthRequest = 75,
-					StyleId = $"{label}{row + 1}"
+					StyleId = $"{label}{row + 1}",
+					BackgroundColor = Color.FromRgba("#FFFFEFD5")
 				};
 
 				_cells.Add(entry.StyleId, entry);

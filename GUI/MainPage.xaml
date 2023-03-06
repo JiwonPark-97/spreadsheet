@@ -20,6 +20,7 @@
         <!-- A Place to put the currently selected cell "namd" and "value" -->
         <Border
             StrokeThickness="1"
+            BackgroundColor="PapayaWhip"
             HeightRequest="50">
             <HorizontalStackLayout>
                 <Label
@@ -53,14 +54,14 @@
                     FontSize="18"
                     Margin="6"
                     Unfocused="WidgetEntryChanged"
-                    Completed="WidgetEntryChanged"
+                    Completed="FocusOnEntry"
                     WidthRequest="200"/>
             </HorizontalStackLayout>
         </Border>
 
         <!-- the column headers: A, B, C, ... -->
         <HorizontalStackLayout x:Name="TopLabels"
-                               BackgroundColor ="SteelBlue"/>
+                               BackgroundColor ="DarkSeaGreen"/>
 
         <!-- the Grid of Spreadsheet GUI Cells -->
         <ScrollView
