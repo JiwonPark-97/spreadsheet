@@ -5,7 +5,7 @@ Partner:    None
 Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
-Date:       3-Mar-2023 11.30 pm (when submission was completed) 
+Date:       6-Mar-2023 11.30 pm (when submission was completed) 
 Project:    Spreadsheet
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
@@ -20,34 +20,31 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Additional Features and Design Decisions:
     
-    
+    I added a "sum" feature which adds up values on the entire row or column.
+    User can enter either a lable of row (i.e. an int in range of 1-99) or a lable of column (i.e. A-Z)
+    and click "calculate" button to get the result.
+
 
 # Time Tracking (Personal Software Practice):
 
     I estimated that this assignment would take about 20 hours like the previous assignments. 
-    However, understanding how GUI works (e.g. how .xaml file and .cs file are linked) took longer than I thought.
-    Also, as there were much more egde cases than I expected, such as opening a new file causes the widget entry getting focused, handling exceptions and errors took longer than I expected.
-    Additional features also took a long time as I faced many issues with what I wanted to implement, and eventually I changed the additional feature a couple times. 
-    This assignmnet ended up taking about 35 hours.
+    However, understanding how MAUI works and handling edge cases took longer than I thought, and I ended up spending about 30 hours for this assignment.
 
 # Best (Team) Practices:
 
     Write a paragraph about how assigning tasks help you keep focused (pun intended) on "task".  
+
+    Assigning tasks on Github project helped me keep track of the requirements for this assignment.
+    
+
     Write a second paragraph on best software practices that you employed to make your code better.
+
+    I tried to avoid repeated code, make the code self explanatory 
 
 # Comments to Evaluators:
     
     When asking to save the data, I tried to call FileMenuSave method to avoid repeating code, but the next line was always excecuted before
     FileMenuSave finishes. Therefore, I decided to copy and paste FileMenuSave to FileMenuNew and FileMenuOpen.
-
-
-
-
-    design decisions, external code resources, build guidelines, implementation notes, problems, etc.
-
-# Assignment Specific Topics
-
-    This section was not required.
 
 # Consulted Peers:
 

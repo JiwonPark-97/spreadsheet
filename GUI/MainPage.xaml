@@ -9,6 +9,7 @@
             <MenuFlyoutItem Text="Save" Clicked="FileMenuSave" />
             <MenuFlyoutItem Text="Open" Clicked="FileMenuOpen" />
         </MenuBarItem>
+
         <MenuBarItem Text="Help">
             <MenuFlyoutItem Text="Help" Clicked="Help" />
             <MenuFlyoutItem Text="What's this error?" Clicked="ErrorDescription" />

@@ -1,16 +1,38 @@
-﻿using SpreadsheetUtilities;
+﻿/// <summary>
+/// Author:    Jiwon Park
+/// Partner:   None
+/// Date:      6-Mar-2023
+/// Course:    CS 3500, University of Utah, School of Computing
+/// Copyright: CS 3500 and Jiwon Park - This work may not 
+///            be copied for use in Academic Coursework.
+///
+/// I, Jiwon Park, certify that I wrote this code from scratch and
+/// did not copy it in part or whole from another source.  All 
+/// references used in the completion of the assignments are cited 
+/// in my README file.
+///
+/// This File contains a partial class for MainPage.xaml. The MainPage class provides private methods that speficies the spreadsheet GUI's behavior.
+/// </summary>
+
+using SpreadsheetUtilities;
 using SS;
 using System;
 using System.Text.RegularExpressions;
 
 namespace GUI;
 
+/// <summary>
+/// A main page connected to MainPage.xamlm file's ContentPage
+/// </summary>
 public partial class MainPage : ContentPage
 {
-
+    // spreadsheet model
 	private AbstractSpreadsheet spreadsheet;
+
+    // keep track of cells on spreadsheet
 	private Dictionary<string, Entry> _cells;
 
+    // decide spreadsheet's size (rowheaders * rows)
     private readonly char[] ROWHEADERS = "ABCDEFGHIJK".ToArray();
     //private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
 	private readonly int ROWS = 50;
@@ -31,11 +53,10 @@ public partial class MainPage : ContentPage
     }
 
     /// <summary>
-    /// Validator for the spreadsheet. Any cell that is not in the grid should be treated as invalid.
-	/// i.e. only valid for A1-Z99
+    /// Validator for the spreadsheet. Any cell that is not in the grid should be treated as invalid. (i.e. only valid for A1-Z99)
     /// </summary>
-    /// <param name="s"></param>
-    /// <returns></returns>
+    /// <param name="s"> a string to be checked if valid </param>
+    /// <returns> true if valid, false otherwise </returns>
     private bool IsValid(string s)
 	{
         string pattern = string.Format(@"^[A-Z][0-9][0-9]?$");
@@ -43,7 +64,7 @@ public partial class MainPage : ContentPage
     }
 
 	/// <summary>
-	/// Clears the current spreadsheet
+	/// Clears cells on the current spreadsheet
 	/// </summary>
 	private void Clear()
 	{
@@ -63,12 +84,18 @@ public partial class MainPage : ContentPage
 	{
 		if (spreadsheet.Changed)
 		{
+            // ask to save
 			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save");
+
 			if (action == "Save")
 			{
+                
+                // ask for directory
                 string directory = await DisplayPromptAsync("Save to", "File directory:");
                 if (directory is not null)
                 {
+
+                    // ask for filename
                     string filename = await DisplayPromptAsync("Save as", "File name:");
                     if (filename is not null)
                     {
@@ -79,7 +106,7 @@ public partial class MainPage : ContentPage
                             spreadsheet = new Spreadsheet(IsValid, s => s.ToUpper(), "six");
                             _cells["A1"].Focus();
                         }
-                        catch
+                        catch(Exception)
                         {
                             await DisplayAlert("Alert", "Invalid directory", "OK");
                         }
@@ -94,6 +121,8 @@ public partial class MainPage : ContentPage
                     // do nothing - cancel clicked (when asked for a directory)
                 }
             }
+
+            // ignore the current changes and open empty spreadsheet
 			else if (action == "Don't save")
 			{
                 Clear();
@@ -104,6 +133,8 @@ public partial class MainPage : ContentPage
 			{
 				// do nothing - cancel clicked
 			}
+
+        // spreadsheet has not been changed
 		} else
 		{
             Clear();
@@ -114,13 +145,17 @@ public partial class MainPage : ContentPage
 
     /// <summary>
     /// Saves the current spreadsheet to a file.
-	/// User can save to the current (default) directory or to a custom directory.
+	/// Ask user for a directory to save to, and a file name to save as.
     /// </summary>
     private async void FileMenuSave(object sender, EventArgs e)
 	{
+
+        // ask for directory
 		string directory = await DisplayPromptAsync("Save to", "File directory:");
         if (directory is not null)
         {
+
+            // ask for filename
             string filename = await DisplayPromptAsync("Save as", "File name:");
             if (filename is not null)
             {
@@ -143,15 +178,18 @@ public partial class MainPage : ContentPage
     }
 
     /// <summary>
-    /// Opens a spreadsheet file from given directory
+    /// Opens a spreadsheet file from given directory.
+    /// Ask user for a directory to open in and a filename to open. 
+    /// Called from FileMenuOpen.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private async void Open(object sender, EventArgs e)
     {
+        // ask for directory
         string fileDirectory = await DisplayPromptAsync("Open", "File directory:");
 		if (fileDirectory is not null)
 		{
+
+            // ask for file name
             string filename = await DisplayPromptAsync("Open", "File name:");
 			if (filename is not null)
 			{
@@ -194,12 +232,17 @@ public partial class MainPage : ContentPage
     {
 		if (spreadsheet.Changed)
 		{
+            // ask to save
 			string action = await DisplayActionSheet("Want to save your changes?", "Cancel", null, "Save", "Don't save");
 			if (action == "Save")
 			{
+
+                // ask for directory
                 string directory = await DisplayPromptAsync("Save to", "File directory:");
                 if (directory is not null)
                 {
+
+                    // ask for file name
                     string filename = await DisplayPromptAsync("Save as", "File name:");
                     if (filename is not null)
                     {
@@ -222,30 +265,25 @@ public partial class MainPage : ContentPage
                 {
                     // do nothing - cancel clicked (when asked for a directory)
                 }
-			} else if(action == "Don't save")
+			} 
+            else if(action == "Don't save")
 			{
 				Open(sender, e);
-			} else
+			} 
+            else
 			{
 				// do nothing - cancel clicked (when asked to save)
 			}
+
+        // spreadsheet has not been changed
 		} else
 		{
 			Open(sender, e);
 		}
     }
 
-    private void DarkTheme(object sender, EventArgs e)
-    {
-        foreach(Entry entry in _cells.Values)
-        {
-            entry.BackgroundColor = Color.FromArgb("#FF2F4F4F");
-            entry.Focus();
-        }
-    }
-
     /// <summary>
-    /// Displays a help popup that describes how to use the spreadsheet
+    /// Displays a help popup that contains a description of how to use the spreadsheet.
     /// </summary>
     private async void Help(object sender, EventArgs e)
 	{
@@ -255,6 +293,9 @@ public partial class MainPage : ContentPage
         await DisplayAlert("How to use", "blah", "OK");
     }
 
+    /// <summary>
+    /// Displays a popup for "what's this error?" menu. Explains possible errors.
+    /// </summary>
     private async void ErrorDescription(object sender, EventArgs e)
     {
         string errorDescription = 
@@ -288,17 +329,22 @@ public partial class MainPage : ContentPage
     }
 
     /// <summary>
-    /// Updates a cell and its dependent cells for changed contents
+    /// Updates a cell and its dependent cells for changed contents. 
+    /// Called when a cell gets unfocused.
     /// </summary>
     private async void CellChangedValue(object sender, EventArgs e)
     {
         Entry entry = (Entry)sender;
+
+        // change cell color back to default color (unfocused)
         entry.BackgroundColor = Color.FromRgba("#FFFFEFD5");
 
         try
 		{
 			// update cells that depend on this cell
             List<string> cellsToRecalculate = spreadsheet.SetContentsOfCell(entry.StyleId, entry.Text).ToList();
+
+            // first item in cellsToRecalculate is changed cell itself - update only its dependents
 			cellsToRecalculate.Remove(entry.StyleId);
 			foreach (string cellToRecalculate in cellsToRecalculate)
 			{
@@ -340,27 +386,35 @@ public partial class MainPage : ContentPage
     }
 
 	/// <summary>
-	/// Focus on the next cell (right below the previously selected cell)
+	/// Focus on the next cell (right below the previously selected cell).
+    /// Called when cell is complete (enter hit).
 	/// </summary>
 	private void FocusNextEntry(object sender, EventArgs e)
 	{
 		Unfocus();
+
+        // calculate the next cell
         string originalCellId = ((Entry)sender).StyleId;
 		string originalRow = originalCellId.Remove(0, 1);
 		int nextRow = int.Parse(originalRow) + 1;
 		string nextCellId = originalCellId[0] + nextRow.ToString();
+
 		_cells[nextCellId].Focus();
     }
 
 	/// <summary>
-	/// Updates the widgets and displays contents in the selected cell
+	/// Updates the widgets and displays contents in the selected cell.
+    /// Called when cell is focused. 
 	/// </summary>
     private void CellFocused(object sender, EventArgs e)
     {
 		Entry entry = (Entry)sender;
         entry.BackgroundColor = Color.FromRgba("#8FBC8F");
+
+        // update cell name widget
 		selectedCellName.Text = entry.StyleId;
 
+        // update cell value widget
 		object value = spreadsheet.GetCellValue(entry.StyleId);
 		if (value is FormulaError)
 		{
@@ -371,7 +425,9 @@ public partial class MainPage : ContentPage
             selectedCellValue.Text = spreadsheet.GetCellValue(entry.StyleId).ToString();
         }
 
+        // update cell contents widget and the selected cell
         object contents = spreadsheet.GetCellContents(entry.StyleId);
+
         if (contents is Formula)
         {
             entry.Text = "=" + contents.ToString();
@@ -385,14 +441,17 @@ public partial class MainPage : ContentPage
 	}
 
 	/// <summary>
-	/// Updates a cell and its dependent cells for contents changed from the widget
+	/// Updates a cell and its dependent cells for contents changed from the widget.
+    /// Called when widget entry gets unfocused.
 	/// </summary>
     private async void WidgetEntryChanged (object sender, EventArgs e)
 	{
         // prevent error message - somehow opening empty spreadsheet causes widget entry to get focused.
         if (selectedCellName.Text != "cell name")
         {
+
             Entry entry = (Entry)sender;
+
             // update the cell and its dependent cells
             string cellId = selectedCellName.Text;
             try
@@ -428,14 +487,14 @@ public partial class MainPage : ContentPage
             catch (Exception exception)
             {
                 await DisplayAlert("Alert", exception.Message, "OK");
-                //_cells[cellId].Focus();
             }
         }
 
     }
 
     /// <summary>
-    /// Move focus from widget entry to its corresponding cell
+    /// Move focus from widget entry to its corresponding cell.
+    /// Called when widget entry gets completed.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -458,14 +517,18 @@ public partial class MainPage : ContentPage
     }
 
     /// <summary>
-    /// Adds up entire row or column and displays the result
+    /// Adds up an entire row or column and displays the result.
+    /// Called when "calculate" button clicked.
     /// </summary>
     private async void Sum(object sender, EventArgs e)
     {
+        // first make input into uppercase
         string labelName = rowOrColLable.Text.ToUpper();
         rowOrColLable.Text = labelName;
+
         double sum = 0;
 
+        // check validity of the input label
         string ColFormat = string.Format("^[A-Z]$");
         string RowFormat = string.Format("^[0-9][0-9]?$");
         bool validCol = Regex.IsMatch(labelName, ColFormat);
@@ -476,8 +539,11 @@ public partial class MainPage : ContentPage
             await DisplayAlert("Alert", "Label doesn't exist", "OK");
             rowOrColLable.Text = "";
         }
+
+        // input label is valid
         else
         {
+            // sum entire row
             int labelNum;
             if (int.TryParse(labelName, out labelNum))
             {
@@ -495,6 +561,8 @@ public partial class MainPage : ContentPage
 
                 }
             }
+
+            // sum entire column
             else
             {
                 string pattern = string.Format(labelName + "[0-9][0-9]?$");
@@ -594,10 +662,7 @@ public partial class MainPage : ContentPage
 			}
 
 			Grid.Children.Add(horiz);
-
 		}
-
-
     }
 }
 
