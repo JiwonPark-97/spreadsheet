@@ -289,18 +289,20 @@ public partial class MainPage : ContentPage
     /// </summary>
     private async void Help(object sender, EventArgs e)
 	{
-        string help = "" 
-            + Environment.NewLine 
-            + ""
-            + Environment.NewLine
-            + ""
-            + Environment.NewLine
-            + "" 
-            + Environment.NewLine
-            + "" 
-            + Environment.NewLine
-            + "" 
-            + Environment.NewLine
+        string help =
+            Environment.NewLine
+            + "This spreadsheet may be used to record and analyze data."
+            + Environment.NewLine + Environment.NewLine
+            + "Under the file menu, you will find options which allow you to create a new file, save your current file to a local directory, or open a previously saved file from a local directory. Spreadsheet files are saved using a .sprd extension, though this extension should not be manually added to a file name when saving. Whilst working within a given spreadsheet, should you attempt to open another file or create a new spreadsheet, you will first be prompted to save your current sheet."
+            + Environment.NewLine + Environment.NewLine
+            + "Under the Help menu, in addition to this brief introduction, you will find a summary of various error messages that you may encounter while using this spreadsheet. You may also find more information about valid directory formats within the \"Whats this error?\" menu."
+            + Environment.NewLine + Environment.NewLine
+            + "The spreadsheet consists of a series of rows and columns, whose corresponding cells may be used to record data. Valid data may be recorded in alphanumeric values, and is limited to double, string, and formula types of entries. Atop the spreadsheet, you will also find a summation function which allows you to calculate the cumulative sum of a given row or column, by entering the column or row's identifier and clicking the calculate button. "
+            + Environment.NewLine + Environment.NewLine
+            + "Atop the spreadsheet you will find a widget displaying the currently selected cell's name, value, and contents. Cell contents may be edited using this widget, or alternatively may be edited by selecting the cell within the spreadsheet and typing in new contents directly. "
+            + Environment.NewLine + Environment.NewLine
+            + "To terminate this spreadsheet program, simply close the GUI window. However, remember that doing so may cause you to lose any unsaved data within the spreadsheet."
+            + Environment.NewLine + Environment.NewLine
             + "" 
             + Environment.NewLine
             + "";

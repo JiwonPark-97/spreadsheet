@@ -6,13 +6,13 @@ Course:     CS 3500, University of Utah, School of Computing
 GitHub ID:  JiwonPark-97
 Repo:       https://github.com/uofu-cs3500-spring23/spreadsheet-JiwonPark-97.git
 Date:       6-Mar-2023 11.30 pm (when submission was completed) 
-Project:    Spreadsheet
+Project:    GUI
 Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Academic Coursework.
 ```
 
 # Partnership:
 
-    I worked solo.
+    I worked solo for this assignment.
 
 # Branching:
 
@@ -21,21 +21,29 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 # Additional Features and Design Decisions:
     
     I added a "sum" feature which adds up values on the entire row or column.
-    User can enter either a label of row (i.e. 1-99) or a label of column (i.e. A-Z)
-    and click "calculate" button to get the result.
+    User can enter either a label of row (i.e. 1-99) or a label of column (i.e. A-Z) and click "calculate" button to get the result.
 
-    Under help menu, there is "what's this error?" feature which displays a pop up that explains possible errors.
+    Under help menu, there is "what's this error?" feature which displays a pop up that contains summary of possible errors.
+
+    A selected cell gets different background color so that the user can recognize it easily.
 
 # Time Tracking (Personal Software Practice):
 
-    I estimated that this assignment would take about 20 hours like the previous assignments. 
-    However, understanding how MAUI works and handling edge cases took longer than I thought, and I ended up spending about 30 hours for this assignment.
+    estimated hours: 20
+    actual hours: 30
+    hours learning tools and techniques: 5
+    hours implementing required features: 10
+    hours spent debugging: 15
+
+    Overall, my time estimates are getting closer to the actual time spent and I think this means that
+    I'm getting better or used to working on programming assignments.
+    However, as this was the first time for me to building a GUI, it took me much longer than I thought. 
 
 # Best (Team) Practices:
 
-    Write a paragraph about how assigning tasks help you keep focused (pun intended) on "task".  
-
-    Assigning tasks on Github project helped me keep focused on tasks for this assignment.
+    Assigning tasks on Github project helped me keep track of multiple tasks for the assignment. 
+    The tasks on each column helped me organized and quickly go back to what I was doing (an hour or a day) before.
+    Especially, the code review section reminded me of reviewing specific parts of code, which helped me to find multiple errors.
     
     I tried to avoid repeated code (DRY) by adding helper methods and make the code self explanatory by using descriptive names.
     When the code cannot be self explanatory, I added comments to make the code easier to understand. Also, I made multiple commits
@@ -43,11 +51,12 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
     
-    When asking to save the data, I tried to call FileMenuSave method to avoid repeated code, but the next line was always executed before
-    FileMenuSave finishes. Therefore, I decided to simply copy and paste FileMenuSave's code to FileMenuNew and FileMenuOpen.
+    For safety feature, when open/new clicked with unsaved changes, I tried to call FileMenuSave method to avoid repeated code.
+    However, the line where I called the FileMenuSave method always finished after the next line gets executed - resulted in loss of data/
+    So, I decided to simply copy and paste the code from FileMenuSave to of FileMenuNew and FileMenuOpen methods.
 
-    The horizontal scroll bar does not scroll row headers (only cells). Since it is not safe to nest ScrollViews - informed in lecture - I did not 
-    fix this issue.
+    The horizontal scroll bar does not scroll row headers (scroll only cells). Since it is not safe to nest ScrollViews 
+    - informed in lecture - I did not fix this issue.
 
 # Consulted Peers:
 

@@ -22,9 +22,9 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Time Expenditures:
 
-    1. Assignment One:       Predicted Hours:          20        Actual Hours:   32             Note: Spent extra hours figiting git.
+    1. Assignment One:       Predicted Hours:          20        Actual Hours:   32             Note: Spent extra hours fighting git.
     2. Assignment Two:       Predicted Hours:          20        Actual Hours:   22             Note: Spent extra hours installing coverage tool on Mac.
-    3. Assignmnet Three:     Predicted Hours:          20        Actual Hours:   21             Note: Spent extra hours covering 100% code.
-    4. Assignmnet Four:      Predicted Hours:          20        Actual Hours:   18             Note: -
-    5. Assignmnet Five:      Predicted Hours:          20        Actual Hours:   28             Note: Spent extra hours figuring out xml file reading/writing.
-    6. Assignmnet Six:       Predicted Hours:          20        Actual Hours:   30             Note: 
+    3. Assignment Three:     Predicted Hours:          20        Actual Hours:   21             Note: Spent extra hours covering 100% code.
+    4. Assignment Four:      Predicted Hours:          20        Actual Hours:   18             Note: -
+    5. Assignment Five:      Predicted Hours:          20        Actual Hours:   28             Note: Spent extra hours figuring out xml file reading/writing.
+    6. Assignment Six:       Predicted Hours:          20        Actual Hours:   30             Note: Spent extra hours handling exceptions.

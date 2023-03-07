@@ -92,7 +92,7 @@
                     </HorizontalStackLayout>
                 </Border>
 
-                <!-- Contains sum feature; sum label, lable entry, result label, and calculate button -->
+                <!-- Contains sum feature; sum label, label entry, result label, and calculate button -->
                 <Border>
                     <HorizontalStackLayout>
                         <Label
