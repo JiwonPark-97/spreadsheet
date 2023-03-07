@@ -1,31 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Author:    Jiwon Park
+     Partner:   None
+     Date:      6-Mar-2023
+     Course:    CS 3500, University of Utah, School of Computing
+     Copyright: CS 3500 and Jiwon Park - This work may not 
+     be copied for use in Academic Coursework.
+     
+     I, Jiwon Park, certify that I wrote this code from scratch and
+     did not copy it in part or whole from another source.  All 
+     references used in the completion of the assignments are cited 
+     in my README file.
+     
+     This file contains items that create visual contents of a spreadsheet window,
+     and works together with the code-behind MainPage.xaml.cs file.
+     Attributes of items hold string names of the methods in the MainPage.xaml.cs file that take appropriate actions. 
+     -->
+    
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GUI.MainPage">
 
+    <!-- Contains menu bar items -->
     <ContentPage.MenuBarItems>
+
+        <!-- File menu -->
         <MenuBarItem Text="File">
             <MenuFlyoutItem Text="New" Clicked="FileMenuNew" />
             <MenuFlyoutItem Text="Save" Clicked="FileMenuSave" />
             <MenuFlyoutItem Text="Open" Clicked="FileMenuOpen" />
         </MenuBarItem>
 
+        <!-- Help menu -->
         <MenuBarItem Text="Help">
             <MenuFlyoutItem Text="Help" Clicked="Help" />
             <MenuFlyoutItem Text="What's this error?" Clicked="ErrorDescription" />
         </MenuBarItem>
-    </ContentPage.MenuBarItems> 
+    </ContentPage.MenuBarItems>
 
 
+    <!-- Contains everything below the menu bar
+         (i.e widgets, sum feature, cell labels and cell grid) -->
     <VerticalStackLayout x:Name="Entire">
 
+        <!-- Contains widgets for selected cell data and the sum feature -->
         <Border
             StrokeThickness="1"
             BackgroundColor="PapayaWhip"
             HeightRequest="100">
             <VerticalStackLayout>
-                
-                <!-- A Place to put the currently selected cell "namd" and "value" -->
+
+                <!-- Contains widgets for selected cell; cell name, value, and contents -->
                 <Border>
                     <HorizontalStackLayout>
                         <Label
@@ -65,7 +90,7 @@
                     </HorizontalStackLayout>
                 </Border>
 
-                <!-- A Place to put the sum feature -->
+                <!-- Contains sum feature; sum label, lable entry, result label, and calculate button -->
                 <Border>
                     <HorizontalStackLayout>
                         <Label
@@ -83,7 +108,7 @@
                         WidthRequest="175"
                         />
                         <Label
-                        x:Name="sumValue"
+                        x:Name="sumResult"
                         Text=") = 0"
                         FontSize="20"
                         Margin="7"
@@ -121,7 +146,7 @@
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     x:Name="Grid"
-                    BackgroundColor="DarkSeaGreen"
+                    BackgroundColor="PapayaWhip"
                     Loaded="FocusOnDefaultCell">
                 </VerticalStackLayout>
             </HorizontalStackLayout>

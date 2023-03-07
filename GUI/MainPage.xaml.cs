@@ -11,7 +11,7 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// This File contains a partial class for MainPage.xaml. The MainPage class provides private methods that speficies the spreadsheet GUI's behavior.
+/// This File contains a partial class for MainPage.xaml. The MainPage class provides methods that speficies the spreadsheet GUI's behavior.
 /// </summary>
 
 using SpreadsheetUtilities;
@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 namespace GUI;
 
 /// <summary>
-/// A main page connected to MainPage.xamlm file's ContentPage
+/// A main page connected to MainPage.xamlm file's ContentPage. 
 /// </summary>
 public partial class MainPage : ContentPage
 {
@@ -38,7 +38,7 @@ public partial class MainPage : ContentPage
 	private readonly int ROWS = 50;
 
 	/// <summary>
-	/// Open a window of spreadsheet GUI
+	/// Open a window of spreadsheet GUI and initialize features.
 	/// </summary>
 	public MainPage()
 	{
@@ -64,7 +64,7 @@ public partial class MainPage : ContentPage
     }
 
 	/// <summary>
-	/// Clears cells on the current spreadsheet
+	/// Clears cells on the current spreadsheet and reset sum section
 	/// </summary>
 	private void Clear()
 	{
@@ -72,7 +72,10 @@ public partial class MainPage : ContentPage
 		{
 			entry.Text = "";
 		}
-	}
+
+        rowOrColLable.Text= "enter row/col label";
+        sumResult.Text = ") = 0";
+    }
 
     /// <summary>
     /// Creates a New empty spreadsheet in the window.
@@ -580,89 +583,89 @@ public partial class MainPage : ContentPage
             }
         }
 
-        sumValue.Text = ") = " + sum.ToString();
+        sumResult.Text = ") = " + sum.ToString();
     }
 
-	/// <summary>
-	/// Initializes the spreadsheet grid
-	/// </summary>
+    /// <summary>
+    /// Initializes the spreadsheet grid
+    /// </summary>
     private void InitializeGrid()
     {
-		// Upper left corner
-		TopLabels.Add(
-			new Border
-			{
-				Stroke = Color.FromRgb(0, 0, 0),
-				StrokeThickness = 0,
-				Content = new Label
-				{
-					Text = $"   - ",
-					WidthRequest = 34
-				}
-			}
-			);
+        // Upper left corner
+        TopLabels.Add(
+            new Border
+            {
+                Stroke = Color.FromRgb(0, 0, 0),
+                StrokeThickness = 0,
+                Content = new Label
+                {
+                    Text = $"   - ",
+                    WidthRequest = 34
+                }
+            }
+            );
 
-		// Top Row Label, for upper left corner
-		foreach(var label in ROWHEADERS)
-		{
-			TopLabels.Add(
-				new Border
-				{
-					Stroke = Color.FromRgb(255, 255, 255),
-					StrokeThickness = 1,
-					HeightRequest = 20,
-					WidthRequest = 75,
-					HorizontalOptions = LayoutOptions.Center,
-					Content = new Label
-					{
-						Text = $"{label}",
+        // Top Row Label, for upper left corner
+        foreach (var label in ROWHEADERS)
+        {
+            TopLabels.Add(
+                new Border
+                {
+                    Stroke = Color.FromRgb(255, 255, 255),
+                    StrokeThickness = 1,
+                    HeightRequest = 20,
+                    WidthRequest = 75,
+                    HorizontalOptions = LayoutOptions.Center,
+                    Content = new Label
+                    {
+                        Text = $"{label}",
                         BackgroundColor = Color.FromRgba("#8FBC8F"),
                         HorizontalTextAlignment = TextAlignment.Center
-					}
-				}
-				); 
-		}
+                    }
+                }
+                );
+        }
 
-		// All Spreadsheet Grid Cells
-		for(int row = 0; row< ROWS; row++)
-		{
-			var horiz = new HorizontalStackLayout();
-			// Left Column Lables
-			horiz.Add(
-				new Border
-				{
-					Stroke = Color.FromRgba("#FFFFEFD5"),
-					StrokeThickness = 1,
-					HeightRequest = 30,
-					WidthRequest = 35,
-					Content = new Label
-					{
-						Text = $"  {row + 1}",
-						VerticalTextAlignment = TextAlignment.Center,
-						BackgroundColor = Color.FromRgba("#8FBC8F")
-					}
-				}) ;
-			foreach(var label in ROWHEADERS)
-			{
-				var entry = new Entry
-				{
-					//Text = "",
-					WidthRequest = 75,
-					StyleId = $"{label}{row + 1}",
-					BackgroundColor = Color.FromRgba("#FFFFEFD5")
-				};
+        // All Spreadsheet Grid Cells
+        for (int row = 0; row < ROWS; row++)
+        {
+            var horiz = new HorizontalStackLayout();
+            // Left Column Lables
+            horiz.Add(
+                new Border
+                {
+                    Stroke = Color.FromRgba("#FFFFEFD5"),
+                    StrokeThickness = 1,
+                    HeightRequest = 30,
+                    WidthRequest = 35,
+                    Content = new Label
+                    {
+                        Text = $"  {row + 1}",
+                        VerticalTextAlignment = TextAlignment.Center,
+                        BackgroundColor = Color.FromRgba("#8FBC8F")
+                    }
+                });
+            foreach (var label in ROWHEADERS)
+            {
+                var entry = new Entry
+                {
+                    //Text = "",
+                    WidthRequest = 75,
+                    StyleId = $"{label}{row + 1}",
+                    BackgroundColor = Color.FromRgba("#FFFFEFD5")
+                };
 
-				_cells.Add(entry.StyleId, entry);
+                _cells.Add(entry.StyleId, entry);
 
-				entry.Completed += FocusNextEntry;
-				entry.Focused += CellFocused;
+                entry.Completed += FocusNextEntry;
+                entry.Focused += CellFocused;
                 entry.Unfocused += CellChangedValue;
 
                 horiz.Add(entry);
-			}
+            }
 
-			Grid.Children.Add(horiz);
-		}
+            Grid.Children.Add(horiz);
+        }
     }
 }
 
