@@ -64,6 +64,6 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     7. Fonts in .NET MAUI - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/fonts?view=net-maui-7.0
     8. Align and position .NET MAUI controls - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/align-position?view=net-maui-7.0
     9. Changing your MAUI application’s title bar colour  - https://putridparrot.com/blog/changing-your-maui-applications-title-bar-colour/
-    10. 
+    10. Regex 101 - https://regex101.com/
     11. 
 

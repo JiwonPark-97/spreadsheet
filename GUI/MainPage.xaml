@@ -73,24 +73,31 @@
                     <HorizontalStackLayout>
                         <Label
                         x:Name="sum"
-                        Text = "Sum ("
+                        Text = " Sum ("
                         FontSize="20"
                         FontAttributes="Bold"
                         Margin="7"
                         />
                         <Entry
-                        x:Name="rowCol"
+                        x:Name="rowOrColLable"
                         Text = "enter row/col label"
                         FontSize="18"
                         Margin="4"
                         WidthRequest="180"
-                        Completed="Sum"
                         />
                         <Label
                         x:Name="sumValue"
                         Text=") = 0"
                         FontSize="20"
                         Margin="7"
+                        WidthRequest="140"
+                        />
+                        <Button
+                         x:Name="calculateButton"
+                         Text="Calculate"
+                         FontSize="15"
+                         HeightRequest="40"
+                         Clicked="Sum"
                         />
                     </HorizontalStackLayout>
                 </Border>

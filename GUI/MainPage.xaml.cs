@@ -462,9 +462,8 @@ public partial class MainPage : ContentPage
     /// </summary>
     private async void Sum(object sender, EventArgs e)
     {
-        Entry entry = (Entry)sender;
-        string labelName = entry.Text.ToUpper();
-        entry.Text = labelName;
+        string labelName = rowOrColLable.Text.ToUpper();
+        rowOrColLable.Text = labelName;
         double sum = 0;
 
         string ColFormat = string.Format("^[A-Z]$");
@@ -475,6 +474,7 @@ public partial class MainPage : ContentPage
         if (!validCol && !validRow)
         {
             await DisplayAlert("Alert", "Label doesn't exist", "OK");
+            rowOrColLable.Text = "";
         }
         else
         {
@@ -482,7 +482,7 @@ public partial class MainPage : ContentPage
 
             if (int.TryParse(labelName, out labelNum))
             {
-                string pattern = string.Format("[A-Z]" + labelNum);
+                string pattern = string.Format("^[A-Z]" + labelNum);
                 foreach (string cellName in _cells.Keys)
                 {
                     if (Regex.IsMatch(cellName, pattern))
@@ -498,7 +498,7 @@ public partial class MainPage : ContentPage
             }
             else
             {
-                string pattern = string.Format(labelName + "[0-9][0-9]?");
+                string pattern = string.Format(labelName + "[0-9][0-9]?$");
                 foreach (string cellName in _cells.Keys)
                 {
                     if (Regex.IsMatch(cellName, pattern))
