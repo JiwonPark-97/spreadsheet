@@ -1,5 +1,6 @@
 ﻿using SpreadsheetUtilities;
 using SS;
+using System;
 using System.Text.RegularExpressions;
 
 namespace GUI;
@@ -10,9 +11,9 @@ public partial class MainPage : ContentPage
 	private AbstractSpreadsheet spreadsheet;
 	private Dictionary<string, Entry> _cells;
 
-    private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
+    private readonly char[] ROWHEADERS = "ABCDEFGHIJK".ToArray();
     //private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
-	private readonly int ROWS = 50;
+	private readonly int ROWS = 20;
 
 	/// <summary>
 	/// Open a window of spreadsheet GUI
@@ -433,6 +434,11 @@ public partial class MainPage : ContentPage
 
     }
 
+    /// <summary>
+    /// Move focus from widget entry to its corresponding cell
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void FocusOnCellEntry(object sender, EventArgs e)
     {
         string cellId = selectedCellName.Text;
@@ -449,6 +455,65 @@ public partial class MainPage : ContentPage
             _cells["A1"].Focus();
 
         }
+    }
+
+    /// <summary>
+    /// Adds up entire row or column and displays the result
+    /// </summary>
+    private async void Sum(object sender, EventArgs e)
+    {
+        Entry entry = (Entry)sender;
+        string labelName = entry.Text.ToUpper();
+        entry.Text = labelName;
+        double sum = 0;
+
+        string ColFormat = string.Format("^[A-Z]$");
+        string RowFormat = string.Format("^[0-9][0-9]?$");
+        bool validCol = Regex.IsMatch(labelName, ColFormat);
+        bool validRow = Regex.IsMatch(labelName, RowFormat);
+
+        if (!validCol && !validRow)
+        {
+            await DisplayAlert("Alert", "Label doesn't exist", "OK");
+        }
+        else
+        {
+            int labelNum;
+
+            if (int.TryParse(labelName, out labelNum))
+            {
+                string pattern = string.Format("[A-Z]" + labelNum);
+                foreach (string cellName in _cells.Keys)
+                {
+                    if (Regex.IsMatch(cellName, pattern))
+                    {
+                        object cellValue = spreadsheet.GetCellValue(cellName);
+                        if (cellValue is double)
+                        {
+                            sum += (double)cellValue;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                string pattern = string.Format(labelName + "[0-9][0-9]?");
+                foreach (string cellName in _cells.Keys)
+                {
+                    if (Regex.IsMatch(cellName, pattern))
+                    {
+                        object cellValue = spreadsheet.GetCellValue(cellName);
+                        if (cellValue is double)
+                        {
+                            sum += (double)cellValue;
+                        }
+                    }
+                }
+            }
+        }
+
+        sumValue.Text = ") = " + sum.ToString();
     }
 
 	/// <summary>
@@ -499,8 +564,8 @@ public partial class MainPage : ContentPage
 			horiz.Add(
 				new Border
 				{
-					Stroke = Color.FromRgb(0, 0, 0),
-					StrokeThickness = 0,
+					Stroke = Color.FromRgba("#FFFFEFD5"),
+					StrokeThickness = 1,
 					HeightRequest = 30,
 					WidthRequest = 35,
 					Content = new Label

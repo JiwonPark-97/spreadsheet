@@ -12,15 +12,23 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Partnership:
 
+    I worked solo.
 
 # Branching:
 
+    All of my work is done under main branch.
 
 # Additional Features and Design Decisions:
-
+    
+    
 
 # Time Tracking (Personal Software Practice):
 
+    I estimated that this assignment would take about 20 hours like the previous assignments. 
+    However, understanding how GUI works (e.g. how .xaml file and .cs file are linked) took longer than I thought.
+    Also, as there were much more egde cases than I expected, such as opening a new file causes the widget entry getting focused, handling exceptions and errors took longer than I expected.
+    Additional features also took a long time as I faced many issues with what I wanted to implement, and eventually I changed the additional feature a couple times. 
+    This assignmnet ended up taking about 35 hours.
 
 # Best (Team) Practices:
 
@@ -29,7 +37,7 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
 # Comments to Evaluators:
     
-    When asking to save the data, I tried to call FileMenuSave method, but the next line is always excecuted before
+    When asking to save the data, I tried to call FileMenuSave method to avoid repeating code, but the next line was always excecuted before
     FileMenuSave finishes. Therefore, I decided to copy and paste FileMenuSave to FileMenuNew and FileMenuOpen.
 
 

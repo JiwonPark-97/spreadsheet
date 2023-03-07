@@ -22,38 +22,42 @@
 
     <VerticalStackLayout x:Name="Entire">
 
-        <!-- A Place to put the currently selected cell "namd" and "value" -->
         <Border
             StrokeThickness="1"
             BackgroundColor="PapayaWhip"
-            HeightRequest="50">
-            <HorizontalStackLayout>
-                <Label
+            HeightRequest="100">
+            <VerticalStackLayout>
+                
+                <!-- A Place to put the currently selected cell "namd" and "value" -->
+                <Border>
+                    <HorizontalStackLayout>
+                        <Label
                     x:Name="selectedCellName"
                     Text="cell name"
                     FontAttributes="Bold"
                     FontSize="25"
                     Margin="6"
-                    WidthRequest="50"/>
-                <Label
+                    WidthRequest="50"
+                    HeightRequest="40"/>
+                        <Label
                     x:Name="value"
                     Text="cell value: "
                     FontSize="18"
                     Margin="10"
                     WidthRequest="90"/>
-                <Label
+                        <Label
                     x:Name="selectedCellValue"
                     Text="cell value"
                     FontSize="18"
                     Margin="10"
                     WidthRequest="150"/>
-                <Label
+                        <Label
                     x:Name="contents"
                     Text="cell contents: "
                     FontSize="18"
                     Margin="10"
                     WidthRequest="120"/>
-                <Entry
+                        <Entry
                     x:Name="selectedCellEntry"
                     Text="cell contents"
                     FontSize="18"
@@ -61,7 +65,38 @@
                     Unfocused="WidgetEntryChanged"
                     Completed="FocusOnCellEntry"
                     WidthRequest="200"/>
-            </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- A Place to put the sum feature -->
+                <Border>
+                    <HorizontalStackLayout>
+                        <Label
+                        x:Name="sum"
+                        Text = "Sum ("
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        Margin="7"
+                        />
+                        <Entry
+                        x:Name="rowCol"
+                        Text = "enter row/col label"
+                        FontSize="18"
+                        Margin="4"
+                        WidthRequest="180"
+                        Completed="Sum"
+                        />
+                        <Label
+                        x:Name="sumValue"
+                        Text=") = 0"
+                        FontSize="20"
+                        Margin="7"
+                        />
+                    </HorizontalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+
         </Border>
 
         <!-- the column headers: A, B, C, ... -->
@@ -78,11 +113,11 @@
             <HorizontalStackLayout>
                 <VerticalStackLayout
                     x:Name="LeftLabels"
-                    BackgroundColor="GhostWhite">
+                    BackgroundColor="DarkSeaGreen">
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     x:Name="Grid"
-                    BackgroundColor="GhostWhite"
+                    BackgroundColor="DarkSeaGreen"
                     Loaded="FocusOnDefaultCell">
                 </VerticalStackLayout>
             </HorizontalStackLayout>
