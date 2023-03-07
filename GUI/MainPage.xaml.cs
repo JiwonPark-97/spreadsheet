@@ -11,7 +11,7 @@
 /// references used in the completion of the assignments are cited 
 /// in my README file.
 ///
-/// This File contains a partial class for MainPage.xaml. The MainPage class provides methods that speficies the spreadsheet GUI's behavior.
+/// This File contains a partial class for MainPage.xaml. The MainPage class provides methods that specifies the spreadsheet GUI's behavior.
 /// </summary>
 
 using SpreadsheetUtilities;
@@ -32,10 +32,9 @@ public partial class MainPage : ContentPage
     // keep track of cells on spreadsheet
 	private Dictionary<string, Entry> _cells;
 
-    // decide spreadsheet's size (rowheaders * rows)
-    private readonly char[] ROWHEADERS = "ABCDEFGHIJK".ToArray();
-    //private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
-	private readonly int ROWS = 50;
+    // spreadsheet size (ROWHEADERS * rows)
+    private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
+	private readonly int ROWS = 99;
 
 	/// <summary>
 	/// Open a window of spreadsheet GUI and initialize features.
@@ -286,35 +285,49 @@ public partial class MainPage : ContentPage
     }
 
     /// <summary>
-    /// Displays a help popup that contains a description of how to use the spreadsheet.
+    /// Displays a help pop up that contains a description of how to use the spreadsheet.
     /// </summary>
     private async void Help(object sender, EventArgs e)
 	{
         string help = "" 
             + Environment.NewLine 
+            + ""
+            + Environment.NewLine
+            + ""
+            + Environment.NewLine
+            + "" 
+            + Environment.NewLine
+            + "" 
+            + Environment.NewLine
+            + "" 
+            + Environment.NewLine
+            + "" 
+            + Environment.NewLine
             + "";
-        await DisplayAlert("How to use", "blah", "OK");
+        await DisplayAlert("How to use", help, "OK");
     }
 
     /// <summary>
-    /// Displays a popup for "what's this error?" menu. Explains possible errors.
+    /// Displays a pop up for "what's this error?" menu. Explains possible errors.
     /// </summary>
     private async void ErrorDescription(object sender, EventArgs e)
     {
-        string errorDescription = 
+        string errorDescription =
             "Circular Dependencies:"
             + Environment.NewLine
             + "     Circular dependencies are encountered."
             + Environment.NewLine
             + "     e.g. A1 = B2, B2 = C3, C3 = A1"
             + Environment.NewLine + Environment.NewLine
-            + "Invalid Directory:" 
+            + "Invalid Directory:"
             + Environment.NewLine
             + "     The given directory or the file doesn't exist."
             + Environment.NewLine
-            +"      Make sure not to include \\ at the end of directory."
+            + "      Make sure not to include \\ at the end of directory."
             + Environment.NewLine
-            + "     Example directory: C:\\Users\\UserName\\source\\repos\\CS3500\\spreadsheet\\GUI\\bin\\Debug"
+            + "      Example directory:"
+            + Environment.NewLine
+            + "     C:\\Users\\UserName\\source\\repos\\CS3500\\spreadsheet\\GUI\\bin\\Debug"
             + Environment.NewLine + Environment.NewLine
             + "Invalid Formula:"
             + Environment.NewLine
@@ -325,8 +338,15 @@ public partial class MainPage : ContentPage
             + "Formula error:"
             + Environment.NewLine
             + "     The input formula refers to a non-numeric value cell or contains division by 0."
+            + Environment.NewLine + Environment.NewLine
+            + "Invalid label:" 
             + Environment.NewLine
-            + "";
+            + "     The input row/column label is not valid."
+            + Environment.NewLine
+            + "         Valid row labels: 1-99"
+            + Environment.NewLine
+            + "         Valid column labels: A-Z"
+            ;
 
         await DisplayAlert("Possible errors", errorDescription, "OK");
     }
@@ -539,7 +559,7 @@ public partial class MainPage : ContentPage
 
         if (!validCol && !validRow)
         {
-            await DisplayAlert("Alert", "Label doesn't exist", "OK");
+            await DisplayAlert("Alert", "Invalid label", "OK");
             rowOrColLable.Text = "";
         }
 
@@ -630,7 +650,7 @@ public partial class MainPage : ContentPage
         for (int row = 0; row < ROWS; row++)
         {
             var horiz = new HorizontalStackLayout();
-            // Left Column Lables
+            // Left Column Labels
             horiz.Add(
                 new Border
                 {

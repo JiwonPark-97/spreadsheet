@@ -14,10 +14,12 @@
      
      This file contains items that create visual contents of a spreadsheet window,
      and works together with the code-behind MainPage.xaml.cs file.
-     Attributes of items hold string names of the methods in the MainPage.xaml.cs file that take appropriate actions. 
+     Attributes of items (MAUI class) hold string names of the methods in the MainPage.xaml.cs file that take appropriate actions. 
      -->
     
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             
+             
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GUI.MainPage">
 

@@ -21,9 +21,10 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 # Additional Features and Design Decisions:
     
     I added a "sum" feature which adds up values on the entire row or column.
-    User can enter either a lable of row (i.e. an int in range of 1-99) or a lable of column (i.e. A-Z)
+    User can enter either a label of row (i.e. 1-99) or a label of column (i.e. A-Z)
     and click "calculate" button to get the result.
 
+    Under help menu, there is "what's this error?" feature which displays a pop up that explains possible errors.
 
 # Time Tracking (Personal Software Practice):
 
@@ -34,17 +35,19 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
 
     Write a paragraph about how assigning tasks help you keep focused (pun intended) on "task".  
 
-    Assigning tasks on Github project helped me keep track of the requirements for this assignment.
+    Assigning tasks on Github project helped me keep focused on tasks for this assignment.
     
-
-    Write a second paragraph on best software practices that you employed to make your code better.
-
-    I tried to avoid repeated code, make the code self explanatory 
+    I tried to avoid repeated code (DRY) by adding helper methods and make the code self explanatory by using descriptive names.
+    When the code cannot be self explanatory, I added comments to make the code easier to understand. Also, I made multiple commits
+    with descriptive commit messages.
 
 # Comments to Evaluators:
     
-    When asking to save the data, I tried to call FileMenuSave method to avoid repeating code, but the next line was always excecuted before
-    FileMenuSave finishes. Therefore, I decided to copy and paste FileMenuSave to FileMenuNew and FileMenuOpen.
+    When asking to save the data, I tried to call FileMenuSave method to avoid repeated code, but the next line was always executed before
+    FileMenuSave finishes. Therefore, I decided to simply copy and paste FileMenuSave's code to FileMenuNew and FileMenuOpen.
+
+    The horizontal scroll bar does not scroll row headers (only cells). Since it is not safe to nest ScrollViews - informed in lecture - I did not 
+    fix this issue.
 
 # Consulted Peers:
 
@@ -60,7 +63,8 @@ Copyright:  CS 3500 and Jiwon Park - This work may not be copied for use in Acad
     6. Adding a newline into a string in C# - https://stackoverflow.com/questions/224236/adding-a-newline-into-a-string-in-c-sharp
     7. Fonts in .NET MAUI - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/fonts?view=net-maui-7.0
     8. Align and position .NET MAUI controls - https://learn.microsoft.com/en-us/dotnet/maui/user-interface/align-position?view=net-maui-7.0
-    9. Changing your MAUI application’s title bar colour  - https://putridparrot.com/blog/changing-your-maui-applications-title-bar-colour/
+    9. Changing your MAUI application’s title bar color  - https://putridparrot.com/blog/changing-your-maui-applications-title-bar-colour/
     10. Regex 101 - https://regex101.com/
-    11. 
+    11. Get started with XAML - https://learn.microsoft.com/en-us/dotnet/maui/xaml/fundamentals/get-started?view=net-maui-7.0
+    
 
