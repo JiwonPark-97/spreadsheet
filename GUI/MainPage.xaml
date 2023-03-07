@@ -9,10 +9,6 @@
             <MenuFlyoutItem Text="Save" Clicked="FileMenuSave" />
             <MenuFlyoutItem Text="Open" Clicked="FileMenuOpen" />
         </MenuBarItem>
-        <MenuBarItem Text="Theme">
-            <MenuFlyoutItem Text="Dark Theme" Clicked="DarkTheme" />
-            <MenuFlyoutItem Text="Light Theme" Clicked="ErrorDescription" />
-        </MenuBarItem>
         <MenuBarItem Text="Help">
             <MenuFlyoutItem Text="Help" Clicked="Help" />
             <MenuFlyoutItem Text="What's this error?" Clicked="ErrorDescription" />
@@ -83,14 +79,14 @@
                         Text = "enter row/col label"
                         FontSize="18"
                         Margin="4"
-                        WidthRequest="180"
+                        WidthRequest="175"
                         />
                         <Label
                         x:Name="sumValue"
                         Text=") = 0"
                         FontSize="20"
                         Margin="7"
-                        WidthRequest="140"
+                        WidthRequest="150"
                         />
                         <Button
                          x:Name="calculateButton"

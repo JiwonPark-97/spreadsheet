@@ -13,7 +13,7 @@ public partial class MainPage : ContentPage
 
     private readonly char[] ROWHEADERS = "ABCDEFGHIJK".ToArray();
     //private readonly char[] ROWHEADERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
-	private readonly int ROWS = 20;
+	private readonly int ROWS = 50;
 
 	/// <summary>
 	/// Open a window of spreadsheet GUI
@@ -479,10 +479,9 @@ public partial class MainPage : ContentPage
         else
         {
             int labelNum;
-
             if (int.TryParse(labelName, out labelNum))
             {
-                string pattern = string.Format("^[A-Z]" + labelNum);
+                string pattern = string.Format("^[A-Z]" + labelNum + "\\b");
                 foreach (string cellName in _cells.Keys)
                 {
                     if (Regex.IsMatch(cellName, pattern))
